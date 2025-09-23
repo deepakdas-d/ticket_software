@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import PasswordInput from "../components/Password";
-
+import "../style/SignIn.css";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -26,30 +26,46 @@ const SignIn = () => {
     try {
       await signIn(formData.username, formData.password);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Failed to sign in");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-      <div className="col-12 col-md-6">
-        <div className="card">
+    <div className="signin-container">
+      <div className="col-12 col-md-5 col-lg-4">
+        <div className="card signin-card">
           <div className="card-body">
-            <h2 className="card-title text-center mb-4">Sign In</h2>
+            <div>
+            <h2 className="card-title text-center">Admin Sign In</h2>
+            </div>
             {error && <div className="alert alert-danger">{error}</div>}
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="form-label">Username</label>
-                <input type="text" className="form-control" name="username" value={formData.username} onChange={handleChange} />
+                <label className="label">Username</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="Enter your username"
+                />
               </div>
               <div className="mb-3">
-                <label className="form-label">Password</label>
-             <PasswordInput value={formData.password} onChange={handleChange} />
-
+                <label className="label">Password</label>
+                <PasswordInput
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
               </div>
-              <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+              <button
+                type="submit"
+                className="btn btn-primary w-100"
+                disabled={loading}
+              >
                 {loading ? "Signing In..." : "Sign In"}
               </button>
             </form>

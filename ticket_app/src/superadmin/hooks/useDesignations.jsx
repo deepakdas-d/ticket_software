@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+// src/hooks/useDesignations.js
+import { useEffect, useState, useCallback } from "react";
 import { fetchDesignations } from "../services/designationService";
 
 export function useDesignations(show) {
@@ -6,22 +7,26 @@ export function useDesignations(show) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!show) return;
-
+  // ✅ useCallback so function reference is stable
+  const refreshDesignations = useCallback(async () => {
     setLoading(true);
-    fetchDesignations()
-      .then((data) => {
-        setDesignations(data);
-        setError(null);
-      })
-      .catch((err) => {
-        setError(err.message || "Failed to load designations");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [show]);
+    try {
+      const data = await fetchDesignations();
+      setDesignations(data);
+      setError(null);
+    } catch (err) {
+      setError(err.message || "Failed to load designations");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  return { designations, loading, error };
+  // Auto-fetch when modal opens
+  useEffect(() => {
+    if (show) {
+      refreshDesignations();
+    }
+  }, [show, refreshDesignations]);
+
+  return { designations, loading, error, refreshDesignations };
 }

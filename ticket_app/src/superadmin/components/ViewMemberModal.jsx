@@ -1,4 +1,19 @@
+import { useEffect, useState } from "react";
+import { useDesignations } from "../hooks/useDesignations";
+
 const ViewMemberModal = ({ show, member, onClose }) => {
+  const [designationName, setDesignationName] = useState("");
+
+  const { designations, loading } = useDesignations(show);
+
+  useEffect(() => {
+    if (member && designations.length > 0) {
+      // find the designation name from the list
+      const found = designations.find((d) => d.id === member.designation);
+      setDesignationName(found ? found.name : "");
+    }
+  }, [member, designations]);
+
   if (!member) return null;
 
   // Handle Escape key and backdrop click
@@ -44,25 +59,20 @@ const ViewMemberModal = ({ show, member, onClose }) => {
               <strong>Username:</strong> {member.username}
             </div>
             <div className="mb-3">
-              <strong>Phone:</strong> {member.phone}
+              <strong>Email:</strong> {member.email}
+            </div>
+            <div className="mb-3">
+              <strong>Phone:</strong> {member.phone_number}
             </div>
             <div className="mb-3">
               <strong>Designation:</strong>{" "}
-              <span
-                className={`badge ${
-                  member.designation === "Manager"
-                    ? "bg-primary"
-                    : member.designation === "Developer"
-                    ? "bg-info"
-                    : "bg-secondary"
-                }`}
-              >
-                {member.designation}
-              </span>
+              {loading ? (
+                <span>Loading...</span>
+              ) : (
+                <span className="badge bg-primary">{designationName}</span>
+              )}
             </div>
-            <div className="mb-3">
-              <strong>Created At:</strong> {member.createdAt}
-            </div>
+
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
