@@ -1,46 +1,48 @@
-/* SignIn.css */
-
 /* Full-page container */
 .signin-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #3586dc7a;
-
-}
-
-.label{
-    color: #000104;
-    font-weight: 600;
+  background-color: #f4f6f9;
+  padding: 1rem; /* prevents card from sticking to screen edges on mobile */
 }
 
 /* Card style */
 .signin-card {
+  width: 100%;
+  max-width: 400px;
   border: none;
   border-radius: 1rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   padding: 2rem;
-  background: linear-gradient(135deg, #0873de, #1a8cff);
+  background: #fff;
 
-  transition: transform 0.3s ease;
+  /* Lighter shadow for subtle elevation */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1),
+              0 8px 20px rgba(0, 0, 0, 0.12),
+              0 12px 30px rgba(0, 0, 0, 0.15);
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .signin-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12),
+              0 12px 25px rgba(0, 0, 0, 0.15),
+              0 18px 40px rgba(0, 0, 0, 0.18);
 }
 
-/* Card title with box */
-.signin-card .card-title {
-  font-weight: 700;
-  color: #1653d5;
-  margin-bottom: 1.5rem;
-  padding: 0.5rem 1rem;       /* Add padding inside the box */
-  border: 2px solid #1653d5; /* Border color matches text */
-  border-radius: 0.5rem;      /* Rounded corners */
-  text-align: center;         /* Center the text */
-  background-color: #e6f0ff;  /* Light background for contrast */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
+
+
+/* Labels */
+.label {
+  display: block;
+  text-align: left;
+  color: #000104;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
 }
 
 /* Input fields */
@@ -64,17 +66,33 @@
   background-color: #0f3fa0;
 }
 
-/* Error alert */
-.signin-card .alert-danger {
-  font-size: 0.9rem;
+/* Card title */
+.signin-card .card-title {
+  font-weight: 700;
+  color: #1653d5;
+  margin-bottom: 1.5rem;
   padding: 0.5rem 1rem;
+  border: 2px solid #1653d5;
+  border-radius: 0.5rem;
+  text-align: center;
+  background-color: #e6f0ff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive for small screens */
+/* Responsive tweaks */
 @media (max-width: 576px) {
   .signin-card {
-    margin: 1rem;
     padding: 1.5rem;
   }
+  .label {
+    font-size: 0.9rem;
+  }
+  .signin-card .form-control {
+    font-size: 0.9rem;
+    padding: 0.65rem 0.9rem;
+  }
+  .signin-card .btn-primary {
+    padding: 0.65rem;
+    font-size: 0.95rem;
+  }
 }
-
