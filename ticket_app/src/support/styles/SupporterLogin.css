@@ -1,0 +1,89 @@
+/* Container */
+.supporter-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f4f6f9;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card */
+.login-card {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  width: 380px;
+  text-align: center;
+}
+
+/* Title */
+.card-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1653d5;
+  margin-bottom: 1.5rem;
+}
+
+/* Error message */
+.error-message {
+  background: #ffe6e6;
+  color: #d93025;
+  padding: 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Form */
+.form-group {
+  text-align: left;
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.form-group input:focus {
+  border-color: #1653d5;
+  box-shadow: 0 0 0 3px rgba(22, 83, 213, 0.15);
+}
+
+/* Button */
+.btn-login {
+  width: 100%;
+  background: #1653d5;
+  color: #fff;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.btn-login:hover {
+  background: #0e3ca8;
+}
+
+.btn-login:disabled {
+  background: #9bb7f0;
+  cursor: not-allowed;
+}

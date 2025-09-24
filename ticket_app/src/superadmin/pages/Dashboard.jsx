@@ -26,7 +26,7 @@ const Dashboard = () => {
   // Redirect to signin if not logged in
   useEffect(() => {
     if (!isAuthLoading && !user) {
-      navigate("/signin");
+      navigate("/adminsignin");
     }
   }, [user, isAuthLoading, navigate]);
 

@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       clearAuth();
       setUser(null);
-      navigate("/signin");
+      navigate("/adminsignin");
       throw err;
     }
   };
@@ -191,7 +191,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setUser(null);
       clearAuth();
-      navigate("/signin");
+      navigate("/adminsignin");
       setLoading(false);
     }
   };

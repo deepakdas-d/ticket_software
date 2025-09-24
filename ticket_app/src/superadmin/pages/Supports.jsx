@@ -22,7 +22,7 @@ const SupportTeam = () => {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!isAuthLoading && !user) navigate("/signin");
+    if (!isAuthLoading && !user) navigate("/adminsignin");
   }, [user, isAuthLoading, navigate]);
 
   const handleOpenModal = (mode, member = null) => {
