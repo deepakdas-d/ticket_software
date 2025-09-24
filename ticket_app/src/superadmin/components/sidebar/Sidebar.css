@@ -5,20 +5,33 @@
   border-right: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fa;
+  background-color: #fff; /* main body white */
+}
+
+/* Header with blue background */
+.sidebar-header {
+  background-color: #1653d5; /* blue header */
+  color: #fff; /* white text */
+  padding: 20px 16px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
 }
 
 .sidebar-header h2 {
-  color: #1653d5;
-  font-weight: bold;
   margin: 0;
+  font-weight: bold;
+  font-size: 1.25rem;
 }
 
+/* User Info */
 .user-info {
-  padding: 10px 0;
+  padding: 10px 12px;
   border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
 }
 
+/* Menu */
 .menu .menu-item {
   display: flex;
   justify-content: space-between;
@@ -42,7 +55,7 @@
   font-weight: 500;
 }
 
-/* Submenu links */
+/* Submenu */
 .menu .submenu a {
   padding: 8px 14px;
   font-size: 0.9rem;

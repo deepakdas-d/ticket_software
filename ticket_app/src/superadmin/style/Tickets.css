@@ -1,0 +1,35 @@
+/* Tickets.css */
+
+/* Layout */
+.tickets-layout {
+  background-color: #f8f9fa;
+}
+
+.tickets-main {
+  overflow-y: auto;
+}
+
+/* Table */
+.tickets-table th {
+  font-weight: 600;
+}
+
+.tickets-table td {
+  vertical-align: middle;
+}
+
+/* Modal theme header */
+.theme-modal-header {
+  background-color: #1653d5; /* your theme blue */
+  color: #fff;
+}
+
+.theme-modal-header .btn-close {
+  filter: invert(1);
+}
+
+/* Image preview inside modal */
+.ticket-image-preview img {
+  max-height: 250px;
+  display: block;
+}
