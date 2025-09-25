@@ -5,28 +5,45 @@ import "../style/SignIn.css";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { signIn } = useContext(AuthContext);
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    // Clear field error as user types
+    setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
+    } else if (formData.username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters";
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
-    if (!formData.username || !formData.password) {
-      setError("Please fill in all fields");
-      return;
-    }
-
-    setLoading(true);
+    if (!validateForm()) return;
 
     try {
+      setLoading(true);
       await signIn(formData.username, formData.password);
     } catch (err) {
-      setError(err.message || "Failed to sign in");
+      setErrors({ general: err.message || "Failed to sign in" });
     } finally {
       setLoading(false);
     }
@@ -37,30 +54,41 @@ const SignIn = () => {
       <div className="col-12 col-md-5 col-lg-4">
         <div className="card signin-card">
           <div className="card-body">
-            <div>
             <h2 className="card-title text-center">Admin Sign In</h2>
-            </div>
-            {error && <div className="alert alert-danger">{error}</div>}
+
+            {errors.general && (
+              <div className="alert alert-danger">{errors.general}</div>
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label className="label">Username</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${errors.username ? "is-invalid" : ""}`}
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
                   placeholder="Enter your username"
                 />
+                {errors.username && (
+                  <div className="invalid-feedback">{errors.username}</div>
+                )}
               </div>
+
               <div className="mb-3">
                 <label className="label">Password</label>
                 <PasswordInput
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
+                  className={errors.password ? "is-invalid" : ""}
                 />
+                {errors.password && (
+                  <div className="invalid-feedback">{errors.password}</div>
+                )}
               </div>
+
               <button
                 type="submit"
                 className="btn btn-primary w-100"

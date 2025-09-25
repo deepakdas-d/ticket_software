@@ -1,0 +1,83 @@
+/* Layout */
+.complaints-layout {
+  display: flex;
+}
+
+.sidebar-container {
+  min-width: 250px;
+  background: #1653d5;
+  color: #fff;
+}
+
+/* Table Wrapper */
+.table-container {
+  flex-grow: 1;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(22, 83, 213, 0.15);
+}
+
+/* Title */
+.table-title {
+  color: #1653d5;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* DataTable Blue Theme */
+.blue-theme-table .rdt_TableHead {
+  /* background-color: #1653d5; */
+  color: #0f3ba5;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.blue-theme-table .rdt_TableRow {
+  font-size: 0.9rem;
+  background-color: #f9fbff;
+  transition: background 0.3s ease;
+}
+
+.blue-theme-table .rdt_TableRow:nth-child(odd) {
+  background-color: #f1f7ff;
+}
+
+.blue-theme-table .rdt_TableRow:hover {
+  background-color: #e6f0ff;
+  cursor: pointer;
+}
+
+/* Pagination */
+.blue-theme-table .sc-bcXHqe {
+  border-top: 1px solid #1653d5;
+  color: #1653d5;
+}
+
+.blue-theme-table .sc-gsFSXq {
+  border-radius: 50%;
+  height: 32px;
+  width: 32px;
+  padding: 0;
+  margin: 0 4px;
+  background-color: #fff;
+  border: 1px solid #1653d5;
+  color: #1653d5;
+  transition: all 0.3s ease;
+}
+
+.blue-theme-table .sc-gsFSXq:hover {
+  background-color: #1653d5;
+  color: #fff;
+}
+
+/* Action Button */
+.view-btn {
+  background-color: #1653d5 !important;
+  border: none !important;
+  font-weight: 500;
+}
+
+.view-btn:hover {
+  background-color: #0f3ba5 !important;
+}

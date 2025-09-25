@@ -1,31 +1,30 @@
 import React from "react";
 import { useSupporterAuth } from "../../hooks/useSupporterAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./SupporterSidebar.css";
 
 const Sidebar = () => {
   const { user, signOut } = useSupporterAuth();
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ get current path
 
-const handleLogout = async () => {
-  try {
-    await signOut();
-  } catch (err) {
-    console.error("Logout failed:", err);
-  } finally {
-    navigate("/supportsignin", { replace: true }); // replaces current history entry
-  }
-};
-
-
-    const goToProfile = () => {
-    navigate("/supportprofile"); // navigate to profile page
+  const handleLogout = async () => {
+    try {
+      await signOut();
+    } catch (err) {
+      console.error("Logout failed:", err);
+    } finally {
+      navigate("/supportsignin", { replace: true });
+    }
   };
 
-  // Built-in menu items
+  const goToProfile = () => {
+    navigate("/supportprofile");
+  };
+
   const menuItems = [
     { label: "📊 Dashboard", path: "/supportdashboard" },
-    { label: "🎫 My Tickets", path: "/supporter-tickets" },
+    { label: "🎫 My Tickets", path: "/supportertickets" },
     { label: "👥 Team", path: "/supporter-team" },
     { label: "⚙️ Settings", path: "/supporter-settings" },
   ];
@@ -33,12 +32,7 @@ const handleLogout = async () => {
   return (
     <aside className="sidebar">
       {/* Profile Section */}
-      <div className="sidebar-profile" onClick={goToProfile} style={{ cursor: "pointer" }}>
-        <img
-          src={user?.avatar || "https://via.placeholder.com/50"}
-          alt="Profile"
-          className="profile-avatar"
-        />
+      <div className="sidebar-profile" onClick={goToProfile}>
         <div className="profile-info">
           <h4>{user?.username || "Supporter"}</h4>
           <p>Team Member</p>
@@ -46,13 +40,21 @@ const handleLogout = async () => {
       </div>
 
       {/* Menu */}
-      <nav className="menu">
-        {menuItems.map((item, idx) => (
-          <a key={idx} href={item.path}>
-            {item.label}
-          </a>
-        ))}
-      </nav>
+  <nav className="menu">
+  {menuItems.map((item, idx) => {
+    const isActive = location.pathname === item.path;
+    return (
+      <a
+        key={idx}
+        href={item.path}
+        className={isActive ? "active" : ""}
+      >
+        {item.label}
+      </a>
+    );
+  })}
+</nav>
+
 
       {/* Logout */}
       <button className="logout-btn" onClick={handleLogout}>

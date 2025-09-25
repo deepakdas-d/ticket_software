@@ -4,7 +4,6 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import useTickets from "../services/TicketsService";
 import Sidebar from "../components/sidebar/Sidebar";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import "../style/Tickets.css";
 
 const Tickets = () => {
@@ -60,7 +59,7 @@ const Tickets = () => {
           </div>
 
           {/* Filter only if guest */}
-          {user?.is_guest && (
+          {/* {user?.is_guest && (
             <div>
               <select
                 className="form-select"
@@ -74,7 +73,7 @@ const Tickets = () => {
                 <option value="Closed">Closed</option>
               </select>
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="table-responsive shadow-sm rounded bg-white p-3">

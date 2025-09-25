@@ -1,20 +1,28 @@
+/* Sidebar Base */
 .sidebar {
   width: 240px;
   background: #1653d5;
   color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100vh;
   padding: 1rem 0;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Profile */
 .sidebar-profile {
   display: flex;
   align-items: center;
   padding: 0 1.5rem;
   margin-bottom: 2rem;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+.sidebar-profile:hover {
+  background: #0f3ba5;
+  border-radius: 8px;
 }
 
 .profile-avatar {
@@ -30,43 +38,84 @@
   font-size: 1rem;
   font-weight: 600;
 }
-
 .profile-info p {
   margin: 0;
   font-size: 0.85rem;
   color: #d0e0ff;
 }
 
+/* Menu */
 .menu {
   display: flex;
   flex-direction: column;
+  gap: 0.2rem;
 }
 
 .menu a {
-  padding: 0.8rem 1.5rem;
-  color: #fff;
+  position: relative;
+  padding: 0.9rem 1.5rem;
+  color: #ffffff;
   text-decoration: none;
   font-size: 0.95rem;
-  transition: background 0.2s;
+  border-left: 4px solid transparent;
+  overflow: hidden;
+  transition: color 0.3s ease, padding-left 0.3s ease;
+  z-index: 1;
+  font-weight: 500;
+}
+
+/* Battery Fill Effect */
+.menu a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background: #ffdd57; /* battery color */
+  transition: width 0.4s ease-in-out;
+  z-index: -1;
+  border-radius: 0 8px 8px 0;
+}
+
+.menu a:hover::before {
+  width: 100%;
 }
 
 .menu a:hover {
-  background: rgba(255, 255, 255, 0.2);
-  cursor: pointer;
+  color: #1653d5; /* optional: text contrast */
+  border-left: 4px solid #ffdd57;
+  padding-left: 1.8rem;
+  font-weight: 600;
 }
 
+/* Active Menu Item - Always Filled */
+.menu a.active::before {
+  width: 100%;
+}
+
+.menu a.active {
+  color: #1653d5;
+  border-left: 4px solid #ffdd57;
+  font-weight: 600;
+  padding-left: 1.8rem;
+}
+
+/* Logout Button */
 .logout-btn {
   background: #d93025;
   border: none;
   color: #fff;
   margin: 1rem 1.5rem;
-  padding: 0.6rem;
-  border-radius: 6px;
+  padding: 0.7rem;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.95rem;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
   background: #b1251a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
