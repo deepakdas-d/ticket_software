@@ -1,30 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import { Button } from "react-bootstrap";
-import { fetchComplaints } from "../services/SupportTicketService";
 import SupporterSidebar from "../components/SideBar/SupporterSidebar";
 import ComplaintModal from "../components/other/ComplaintModal";
-import "../styles/SupportTickets.css"; // ✅ Import CSS file
+import { useComplaints } from "../hooks/useComplaints"; 
+import "../styles/SupportTickets.css";
 
 const ComplaintTable = () => {
-  const [complaints, setComplaints] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { complaints, totalRows, loading, error, fetchData, refresh } = useComplaints();
   const [selectedComplaint, setSelectedComplaint] = useState(null);
-  const [error, setError] = useState(null);
+  const [perPage, setPerPage] = useState(10);
 
-  useEffect(() => {
-    const loadComplaints = async () => {
-      try {
-        const data = await fetchComplaints();
-        setComplaints(data);
-      } catch (err) {
-        setError("Could not load complaints");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadComplaints();
-  }, []);
+  // Handle pagination change
+  const handlePageChange = (page) => {
+    fetchData(page, perPage);
+  };
+
+  // Handle rows per page change
+  const handlePerRowsChange = async (newPerPage, page) => {
+    setPerPage(newPerPage);
+    fetchData(page, newPerPage);
+  };
+
+  // Callback to handle status update
+  const handleStatusUpdated = (updatedComplaint) => {
+    // Update complaints list
+    const updatedComplaints = complaints.map((complaint) =>
+      complaint.id === updatedComplaint.id ? { ...updatedComplaint } : complaint
+    );
+    setComplaints(updatedComplaints);
+    setSelectedComplaint(null); // Close modal by clearing selected complaint
+    refresh(1, perPage); // Refresh data
+  };
 
   const columns = [
     { name: "ID", selector: (row) => row.id, sortable: true },
@@ -47,8 +54,8 @@ const ComplaintTable = () => {
         </Button>
       ),
       ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
+      $allowOverflow: true,
+      $button: true,
     },
   ];
 
@@ -63,10 +70,17 @@ const ComplaintTable = () => {
       <div className="table-container">
         <h3 className="table-title">Complaints</h3>
 
+        {error && <div className="alert alert-danger">{error}</div>}
+
         <DataTable
           columns={columns}
           data={complaints}
+          progressPending={loading}
           pagination
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangeRowsPerPage={handlePerRowsChange}
+          onChangePage={handlePageChange}
           highlightOnHover
           striped
           responsive
@@ -78,6 +92,7 @@ const ComplaintTable = () => {
         <ComplaintModal
           complaint={selectedComplaint}
           onHide={() => setSelectedComplaint(null)}
+          onStatusUpdated={handleStatusUpdated}
         />
       </div>
     </div>

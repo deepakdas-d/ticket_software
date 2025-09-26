@@ -25,8 +25,6 @@ const Sidebar = () => {
   const menuItems = [
     { label: "📊 Dashboard", path: "/supportdashboard" },
     { label: "🎫 My Tickets", path: "/supportertickets" },
-    { label: "👥 Team", path: "/supporter-team" },
-    { label: "⚙️ Settings", path: "/supporter-settings" },
   ];
 
   return (

@@ -1,7 +1,46 @@
-import React from "react";
-import { Modal, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
+import { updateComplaintStatus } from "../../services/SupportTicketService";
 
-const ComplaintModal = ({ complaint, onHide }) => {
+const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
+  const [remarks, setRemarks] = useState("");
+  const [status, setStatus] = useState(complaint?.status || "Open");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+
+  // Sync status when complaint prop changes
+  useEffect(() => {
+    if (complaint) {
+      setStatus(complaint.status);
+      setRemarks(""); // Reset remarks when opening modal
+    }
+  }, [complaint]);
+
+  const handleUpdate = async () => {
+    if (!complaint) return;
+
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const result = await updateComplaintStatus(complaint.id, status, remarks);
+      setMessage({ type: "success", text: "Status updated successfully!" });
+      setStatus(result.status); // Update local status with server response
+      if (onStatusUpdated) {
+        onStatusUpdated(result); // Notify parent of update
+      }
+      // Close modal after 1-second delay to show success message
+      setTimeout(() => {
+        onHide();
+      }, 1000);
+    } catch (error) {
+      console.error(error);
+      setMessage({ type: "danger", text: error.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Modal show={!!complaint} onHide={onHide} centered size="lg">
       <Modal.Header closeButton>
@@ -10,6 +49,7 @@ const ComplaintModal = ({ complaint, onHide }) => {
       <Modal.Body>
         {complaint && (
           <div className="container-fluid">
+            {/* Complaint details */}
             <div className="row mb-2">
               <div className="col-sm-4 fw-bold">ID:</div>
               <div className="col-sm-8">{complaint.id}</div>
@@ -40,30 +80,66 @@ const ComplaintModal = ({ complaint, onHide }) => {
               <div className="col-sm-8">{complaint.description}</div>
             </div>
 
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">Status:</div>
-              <div className="col-sm-8">
-                <span className={`badge ${complaint.status === "Pending" ? "bg-warning text-dark" : complaint.status === "Resolved" ? "bg-success" : "bg-secondary"}`}>
-                  {complaint.status}
-                </span>
+            {/* Image field with preview */}
+            {complaint.image && (
+              <div className="row mb-3">
+                <div className="col-sm-4 fw-bold">Image:</div>
+                <div className="col-sm-8">
+                  <img
+                    src={complaint.image}
+                    alt="Complaint"
+                    className="img-fluid rounded border mb-2"
+                    style={{ maxHeight: "200px", objectFit: "cover" }}
+                  />
+                  <div>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => window.open(complaint.image, "_blank")}
+                    >
+                      Preview
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">Designation:</div>
-              <div className="col-sm-8">{complaint.designation?.name || "-"}</div>
-            </div>
+            {/* Update form */}
+            <hr />
+            <h6 className="fw-bold mb-3">Update Complaint</h6>
+            {message && <Alert variant={message.type}>{message.text}</Alert>}
 
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">Created At:</div>
-              <div className="col-sm-8">{new Date(complaint.created_at).toLocaleString()}</div>
-            </div>
+            <Form.Group className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <Form.Select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Remarks</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={remarks}
+                onChange={(e) => setRemarks(e.target.value)}
+                placeholder="Enter remarks..."
+              />
+            </Form.Group>
           </div>
         )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           Close
+        </Button>
+        <Button variant="primary" onClick={handleUpdate} disabled={loading}>
+          {loading ? <Spinner animation="border" size="sm" /> : "Update"}
         </Button>
       </Modal.Footer>
     </Modal>

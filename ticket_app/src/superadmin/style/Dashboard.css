@@ -1,55 +1,198 @@
-/* Dashboard.css */
+/* Dashboard.css - Enhanced with fade effects and detailed comments */
+
+/* Main Content Container Styling */
 .main-content {
-  overflow-y: auto;
-  height: 100vh;
-  background-color: #f1f3f5;
+  overflow-y: auto; /* Allow vertical scrolling when content overflows */
+  height: 100vh; /* Full viewport height */
+  background-color: #f1f3f5; /* Light gray background for subtle contrast */
+  transition: background-color 0.3s ease; /* Smooth background color transitions */
 }
 
+/* Card Base Styling with Enhanced Hover Effects */
 .card {
-  transition: transform 0.2s;
+  /* Smooth transitions for multiple properties on hover */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  opacity: 0.95; /* Slightly transparent by default */
+  border: none; /* Remove default border for cleaner look */
+  border-radius: 12px; /* Rounded corners for modern appearance */
 }
 
+/* Card Hover Effects - Lift and Glow */
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px); /* Lift card higher on hover */
+  opacity: 1; /* Full opacity on hover */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Enhanced shadow for depth */
 }
 
+/* Card Body Fade Effect */
+.card-body {
+  transition: all 0.3s ease; /* Smooth transitions for all properties */
+  opacity: 0.9; /* Slightly faded by default */
+}
+
+/* Card Body Hover - Full Visibility */
+.card:hover .card-body {
+  opacity: 1; /* Full opacity on card hover */
+}
+
+/* Chart Container Styling */
 .chart-container {
-  max-width: 100%;
-  height: 300px;
+  max-width: 100%; /* Responsive width */
+  height: 300px; /* Fixed height for consistent layout */
+  transition: opacity 0.4s ease; /* Fade transition for chart */
+  opacity: 0.9; /* Slightly transparent by default */
 }
 
+/* Chart Hover Effect */
+.chart-container:hover {
+  opacity: 1; /* Full opacity on hover */
+}
+
+/* Main Heading Styling */
 h1 {
-  font-weight: 700;
-  color: #343a40;
+  font-weight: 700; /* Bold font weight */
+  color: #343a40; /* Dark gray color for readability */
+  transition: color 0.3s ease, opacity 0.3s ease; /* Smooth color and opacity transitions */
+  opacity: 0.9; /* Slightly faded by default */
 }
 
+/* Main Heading Hover Effect */
+h1:hover {
+  opacity: 1; /* Full opacity on hover */
+  color: #212529; /* Darker shade on hover */
+}
+
+/* Card Title Styling */
 .card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #495057;
+  font-size: 1.25rem; /* Slightly larger than base font */
+  font-weight: 600; /* Semi-bold font weight */
+  color: #495057; /* Medium gray for subtle hierarchy */
+  transition: color 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+  opacity: 0.8; /* More faded by default */
 }
 
+/* Card Title Hover Effect (when parent card is hovered) */
+.card:hover .card-title {
+  opacity: 1; /* Full opacity when card is hovered */
+  color: #343a40; /* Darker color for better contrast */
+}
+
+/* Large Display Text for Statistics */
 .card-text.display-6 {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 2.5rem; /* Large font size for emphasis */
+  font-weight: 700; /* Bold weight for prominence */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth scaling and fade */
+  opacity: 0.85; /* Faded by default */
 }
 
+/* Statistics Text Hover Effect */
+.card:hover .card-text.display-6 {
+  opacity: 1; /* Full opacity on card hover */
+  transform: scale(1.05); /* Slight scaling effect for emphasis */
+}
+
+/* Primary Button Base Styling */
 .btn-primary {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #0d6efd; /* Bootstrap primary blue */
+  border-color: #0d6efd; /* Matching border color */
+  transition: all 0.3s ease; /* Smooth transitions for all properties */
+  opacity: 0.9; /* Slightly transparent by default */
+  transform: scale(1); /* Base scale for smooth scaling */
 }
 
+/* Primary Button Hover Effects */
 .btn-primary:hover {
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
+  background-color: #0b5ed7; /* Darker blue on hover */
+  border-color: #0a58ca; /* Even darker border */
+  opacity: 1; /* Full opacity on hover */
+  transform: scale(1.02); /* Slight scaling up */
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3); /* Blue glow effect */
 }
 
+/* Danger Button Base Styling */
 .btn-danger {
-  background-color: #dc3545;
-  border-color: #dc3545;
+  background-color: #dc3545; /* Bootstrap danger red */
+  border-color: #dc3545; /* Matching border color */
+  transition: all 0.3s ease; /* Smooth transitions */
+  opacity: 0.9; /* Slightly transparent by default */
+  transform: scale(1); /* Base scale */
 }
 
+/* Danger Button Hover Effects */
 .btn-danger:hover {
-  background-color: #bb2d3b;
-  border-color: #b02a37;
+  background-color: #bb2d3b; /* Darker red on hover */
+  border-color: #b02a37; /* Even darker border */
+  opacity: 1; /* Full opacity on hover */
+  transform: scale(1.02); /* Slight scaling up */
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3); /* Red glow effect */
+}
+
+/* Progress Bar Container Fade Effect */
+.progress {
+  transition: opacity 0.3s ease; /* Smooth opacity transition */
+  opacity: 0.8; /* Faded by default */
+}
+
+/* Progress Bar Hover Effect (when parent card is hovered) */
+.card:hover .progress {
+  opacity: 1; /* Full opacity when card is hovered */
+}
+
+/* Progress Bar Fill Animation */
+.progress-bar {
+  transition: width 0.5s ease, opacity 0.3s ease; /* Smooth width and opacity changes */
+}
+
+/* Action Cards Specific Styling */
+.row .col-md-6 .card {
+  transition: all 0.3s ease; /* Comprehensive transitions for action cards */
+}
+
+/* Action Card Hover Enhancement */
+.row .col-md-6 .card:hover {
+  transform: translateY(-5px) scale(1.02); /* Combined lift and scale effect */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); /* Softer shadow for action cards */
+}
+
+/* Spinner Loading Animation Enhancement */
+.spinner-border {
+  transition: opacity 0.3s ease; /* Fade transition for loading spinner */
+}
+
+/* Global Fade-in Animation for Page Load */
+@keyframes fadeIn {
+  from {
+    opacity: 0; /* Start invisible */
+    transform: translateY(20px); /* Start slightly below */
+  }
+  to {
+    opacity: 1; /* End fully visible */
+    transform: translateY(0); /* End at natural position */
+  }
+}
+
+/* Apply fade-in animation to main content */
+.main-content > * {
+  animation: fadeIn 0.6s ease-out; /* Fade in all direct children */
+}
+
+/* Staggered animation delays for cards */
+.row .col-md-6:nth-child(1) .card,
+.row .col-lg-3:nth-child(1) .card {
+  animation-delay: 0.1s; /* First card appears first */
+}
+
+.row .col-md-6:nth-child(2) .card,
+.row .col-lg-3:nth-child(2) .card {
+  animation-delay: 0.2s; /* Second card has slight delay */
+}
+
+.row .col-md-6:nth-child(3) .card,
+.row .col-lg-3:nth-child(3) .card {
+  animation-delay: 0.3s; /* Third card has more delay */
+}
+
+.row .col-md-6:nth-child(4) .card,
+.row .col-lg-3:nth-child(4) .card {
+  animation-delay: 0.4s; /* Fourth card appears last */
 }
