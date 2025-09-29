@@ -1,36 +1,90 @@
 /* Layout */
 .complaints-layout {
   display: flex;
+  flex-wrap: nowrap;
+  min-height: calc(100vh - 72px); /* subtract header height */
+  position: relative;
 }
 
+/* Header */
+.main-header {
+  background-color: #f1f7ff; /* Bootstrap primary blue */
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+h1 {
+    font-weight: 700;
+    color: #1653d5;
+}
+
+/* Sidebar Overlay */
 .sidebar-container {
-  min-width: 250px;
+  position: fixed; /* overlay everything including header */
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
   background: #1653d5;
   color: #fff;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%); /* hidden by default */
+  z-index: 2000;
+  overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
 }
 
-/* Table Wrapper */
+/* Sidebar open state */
+.sidebar-container.open {
+  transform: translateX(0);
+}
+
+/* Sidebar overlay backdrop */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  z-index: 1500;
+  display: none;
+}
+
+.sidebar-overlay.show {
+  display: block;
+}
+
+/* Table Container */
 .table-container {
   flex-grow: 1;
   padding: 20px;
+  margin-left: 0; /* no sidebar margin because sidebar overlays */
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(22, 83, 213, 0.15);
+  overflow-x: auto;
 }
 
-/* Title */
+/* Table Title */
 .table-title {
   color: #1653d5;
   font-weight: 700;
   margin-bottom: 20px;
+  font-size: 1.2rem;
 }
 
 /* DataTable Blue Theme */
 .blue-theme-table .rdt_TableHead {
-  /* background-color: #1653d5; */
   color: #0f3ba5;
   font-weight: 600;
   text-transform: uppercase;
+  font-size: 0.85rem;
 }
 
 .blue-theme-table .rdt_TableRow {
@@ -49,29 +103,31 @@
 }
 
 /* Pagination */
-.blue-theme-table .sc-bcXHqe {
+.blue-theme-table .rdt_Pagination {
   border-top: 1px solid #1653d5;
   color: #1653d5;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
 }
 
-.blue-theme-table .sc-gsFSXq {
+.blue-theme-table .rdt_Pagination button {
   border-radius: 50%;
   height: 32px;
   width: 32px;
   padding: 0;
-  margin: 0 4px;
+  margin: 4px;
   background-color: #fff;
   border: 1px solid #1653d5;
   color: #1653d5;
   transition: all 0.3s ease;
 }
 
-.blue-theme-table .sc-gsFSXq:hover {
+.blue-theme-table .rdt_Pagination button:hover {
   background-color: #1653d5;
   color: #fff;
 }
 
-/* Action Button */
+/* Action Buttons */
 .view-btn {
   background-color: #1653d5 !important;
   border: none !important;
@@ -80,4 +136,31 @@
 
 .view-btn:hover {
   background-color: #0f3ba5 !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .table-container {
+    padding: 15px;
+  }
+
+  .table-title {
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .blue-theme-table .rdt_TableHead {
+    font-size: 0.75rem;
+  }
+
+  .blue-theme-table .rdt_TableRow {
+    font-size: 0.8rem;
+  }
+
+  .view-btn {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
 }

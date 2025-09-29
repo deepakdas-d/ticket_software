@@ -43,7 +43,7 @@ const useTickets = () => {
           (acc, ticket) => {
             acc.total += 1;
             if (ticket.status === "open") acc.open += 1;
-            if (ticket.status === "in_progress") acc.in_progress += 1;
+            if (ticket.status === "In Progress") acc.in_progress += 1;
             if (ticket.status === "closed") acc.closed += 1;
             return acc;
           },

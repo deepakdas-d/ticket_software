@@ -1,40 +1,61 @@
 /* Container */
 .supporter-login-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background: #f4f6f9;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+}
+
+/* Header */
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #1653d5;
+  font-weight: bold;
 }
 
 /* Card */
-.login-card {
+.login-card,
+.quotes-card {
   background: #fff;
   padding: 2rem 2.5rem;
   border-radius: 12px;
   width: 380px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
-              0 8px 20px rgba(0, 0, 0, 0.15),
-              0 12px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.15);
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  margin-bottom: 2rem;
 }
 
 .login-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2),
-              0 16px 40px rgba(0, 0, 0, 0.25),
-              0 24px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 16px 40px rgba(0, 0, 0, 0.25);
   transform: translateY(-5px);
 }
 
-
-/* Title */
+/* Titles */
 .card-title {
   font-size: 1.6rem;
   font-weight: 700;
   color: #1653d5;
   margin-bottom: 1.5rem;
+}
+
+.quotes-card h3 {
+  color: #1653d5;
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+}
+
+/* Quote paragraph */
+.quotes-card p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
 }
 
 /* Error message */
@@ -68,7 +89,7 @@
   border-radius: 8px;
   outline: none;
   font-size: 0.95rem;
-  transition: border-color 0.2s ease-in-out;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .form-group input:focus {
@@ -87,14 +108,62 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.25s;
+  transition: background 0.25s, transform 0.2s;
 }
 
 .btn-login:hover {
   background: #0e3ca8;
+  transform: translateY(-2px);
 }
 
 .btn-login:disabled {
   background: #9bb7f0;
   cursor: not-allowed;
+}
+
+.fade-quote {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+/* Fade-up animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s forwards;
+}
+
+
+
+/* Stagger animation for child elements */
+.supporter-login-container .fade-up:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.supporter-login-container .fade-up:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.supporter-login-container .fade-up:nth-child(3) {
+  animation-delay: 0.5s;
+}
+.supporter-login-container .fade-up:nth-child(4) {
+  animation-delay: 0.7s;
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

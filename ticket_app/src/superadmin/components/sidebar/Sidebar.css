@@ -1,32 +1,31 @@
-/* Sidebar.css - Professional Enhanced Styling */
+/* Sidebar.css - White Themed Professional Sidebar */
 
 /* Main Sidebar Container */
 .sidebar {
-  width: 280px; /* Increased width for better spacing */
+  width: 280px;
   min-width: 280px;
   height: 100vh;
-  border-right: 2px solid #e9ecef; /* Slightly thicker border */
+  border-right: 2px solid #e9ecef;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%); /* Subtle gradient */
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05); /* Soft shadow for depth */
-  transition: all 0.3s ease; /* Smooth transitions */
-  z-index: 1000; /* Ensure sidebar stays on top */
+  background: #ffffff; /* solid white */
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  animation: slideInLeft 0.4s ease-out;
 }
 
-/* Header with Enhanced Blue Background */
+/* Header */
 .sidebar-header {
-  background: linear-gradient(135deg, #1653d5 0%, #0d47a1 100%); /* Gradient blue */
-  color: #fff;
-  padding: 24px 20px; /* Increased padding */
+  background-color: #f8f9fa; /* light gray header */
+  color: #1653d5; /* blue text */
+  padding: 24px 20px;
   text-align: center;
-  border-bottom: 3px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
-  box-shadow: 0 4px 12px rgba(22, 83, 213, 0.2); /* Blue glow */
+  border-bottom: 2px solid #e9ecef;
   position: relative;
   overflow: hidden;
 }
 
-/* Header decorative element */
 .sidebar-header::before {
   content: '';
   position: absolute;
@@ -34,181 +33,118 @@
   right: -20px;
   width: 100px;
   height: 200px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(22, 83, 213, 0.05);
   border-radius: 50%;
   transform: rotate(45deg);
 }
 
 .sidebar-header h2 {
   margin: 0;
-  font-weight: 700; /* Bolder font */
-  font-size: 1.4rem; /* Slightly larger */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
-  letter-spacing: 0.5px; /* Better letter spacing */
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
   position: relative;
   z-index: 1;
 }
 
-/* User Info Section Enhancement */
-.user-info {
-  padding: 16px 20px; /* Increased padding */
-  border-bottom: 1px solid #e9ecef;
-  display: flex;
-  align-items: center;
-  background-color: #f8f9fa; /* Light background */
-  transition: background-color 0.3s ease;
-}
-
-.user-info:hover {
-  background-color: #e9ecef; /* Darker on hover */
-}
-
 /* Menu Container */
 .menu {
-  padding: 12px 16px; /* Better spacing */
+  padding: 12px 16px;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
-/* Enhanced Menu Item Styling */
+/* Main Menu Item */
 .menu .menu-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 16px; /* Increased padding */
-  margin-bottom: 4px; /* Space between items */
-  border-radius: 12px; /* More rounded corners */
+  padding: 14px 16px;
+  margin-bottom: 4px;
+  border-radius: 12px;
   text-decoration: none;
-  color: #495057; /* Softer dark color */
-  font-weight: 500; /* Medium weight */
-  font-size: 0.95rem; /* Slightly larger text */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing */
+  color: #495057; /* dark gray */
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
-/* Menu item hover effect with gradient */
-.menu .menu-item:hover {
-  background: linear-gradient(135deg, #198754 0%, #20c997 100%); /* Green gradient */
-  color: #fff !important;
-  transform: translateX(4px); /* Slight slide effect */
-  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3); /* Green glow */
-}
-
-/* Active state for main links with enhanced styling */
-.menu .menu-item.active {
-  background: linear-gradient(135deg, #1653d5 0%, #0d6efd 100%); /* Blue gradient */
-  color: #fff !important;
-  font-weight: 600; /* Bolder when active */
-  transform: translateX(4px); /* Slide effect for active items */
-  box-shadow: 0 4px 16px rgba(22, 83, 213, 0.4); /* Strong blue glow */
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
-}
-
-/* Icon styling in menu items */
 .menu .menu-item span:first-child {
   display: flex;
   align-items: center;
   font-size: 1rem;
 }
 
-/* Icon spacing */
 .menu .menu-item .me-2 {
-  font-size: 1.1rem; /* Slightly larger icons */
-  margin-right: 12px !important; /* Better spacing */
+  font-size: 1.1rem;
+  margin-right: 12px;
   transition: transform 0.3s ease;
 }
 
-/* Icon animation on hover */
 .menu .menu-item:hover .me-2 {
-  transform: scale(1.1); /* Slight icon grow on hover */
+  transform: scale(1.1);
 }
 
-/* Submenu Container Enhancement */
-.menu .submenu {
-  margin-top: 8px;
-  margin-left: 20px; /* Better indentation */
-  padding-left: 16px; /* Additional padding */
-  border-left: 2px solid #e9ecef; /* Visual separator */
-  border-radius: 0 8px 8px 0; /* Rounded right corners */
-  background-color: rgba(248, 249, 250, 0.5); /* Subtle background */
+/* Hover & Active */
+.menu .menu-item:hover {
+  background-color: #e9ecef;
+  color: #1653d5 !important;
+  transform: translateX(4px);
 }
 
-/* Submenu Links Enhancement */
-.menu .submenu a {
-  padding: 10px 16px; /* Better padding */
-  margin-bottom: 4px; /* Space between submenu items */
-  font-size: 0.9rem;
-  border-radius: 8px; /* Rounded corners */
-  text-decoration: none;
-  color: #6c757d; /* Muted color for submenu */
-  font-weight: 400; /* Normal weight */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: block;
-  position: relative;
-  border: 1px solid transparent; /* For smooth border transition */
-}
-
-/* Submenu hover effects */
-.menu .submenu a:hover {
-  background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-  color: #fff !important;
-  transform: translateX(2px); /* Subtle slide */
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(25, 135, 84, 0.2);
-}
-
-/* Active submenu styling */
-.menu .submenu a.active {
-  background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%); /* Blue to purple */
-  color: #fff !important;
-  font-weight: 500;
-  transform: translateX(2px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 12px rgba(13, 110, 253, 0.3);
-}
-
-/* Logout Button Enhancement */
-.menu .btn-outline-danger {
-  margin-top: 20px;
-  padding: 12px 20px;
-  border-radius: 12px;
+.menu .menu-item.active {
+  background-color: #dee2e6;
+  color: #1653d5 !important;
   font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid #dc3545;
-  background-color: transparent;
-  color: #dc3545;
-  position: relative;
-  overflow: hidden;
+  transform: translateX(4px);
 }
 
-/* Logout button hover effect */
-.menu .btn-outline-danger:hover {
-  background: linear-gradient(135deg, #dc3545 0%, #bb2d3b 100%);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.3);
-  border-color: #dc3545;
-}
-
-/* Logout button active state */
-.menu .btn-outline-danger:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
-}
-
-/* Dropdown arrow styling */
+/* Dropdown arrow */
 .menu .menu-item span:last-child {
   font-size: 0.8rem;
   transition: transform 0.3s ease;
-  color: rgba(255, 255, 255, 0.7);
+  color: #495057;
 }
 
-/* Rotate arrow when submenu is open */
-/* .menu .menu-item:hover span:last-child {
-  transform: rotate(90deg);
-} */
+/* Submenu */
+.menu .submenu {
+  margin-top: 8px;
+  margin-left: 20px;
+  padding-left: 16px;
+  border-left: 2px solid #e9ecef;
+  border-radius: 0 8px 8px 0;
+  background-color: rgba(248, 249, 250, 0.5);
+}
 
-/* Scrollbar styling for menu */
+.menu .submenu a {
+  padding: 10px 16px;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #495057;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  display: block;
+  border: 1px solid transparent;
+}
+
+.menu .submenu a:hover {
+  background-color: #e9ecef;
+  color: #1653d5 !important;
+  transform: translateX(2px);
+}
+
+.menu .submenu a.active {
+  background-color: #dee2e6;
+  color: #1653d5 !important;
+  font-weight: 500;
+  transform: translateX(2px);
+}
+
+/* Scrollbar */
 .menu::-webkit-scrollbar {
   width: 4px;
 }
@@ -247,18 +183,8 @@
   }
 }
 
-/* Animation for sidebar entrance */
+/* Sidebar entrance animation */
 @keyframes slideInLeft {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.sidebar {
-  animation: slideInLeft 0.4s ease-out;
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }

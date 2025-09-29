@@ -76,12 +76,7 @@ return (
         </div>
       ))}
 
-      {/* Logout Button */}
-      {onLogout && (
-        <button className="btn btn-outline-danger mt-3 w-100" onClick={onLogout}>
-          🔒 Logout
-        </button>
-      )}
+ 
     </nav>
   </div>
 );

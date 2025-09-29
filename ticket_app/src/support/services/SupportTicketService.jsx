@@ -76,25 +76,26 @@ export async function updateComplaintStatus(complaintId, status, remarks) {
 //============Reassign=======================
 
 
-// export const updateComplaintDesignation = async (complaintId, designationId) => {
-//   const token = localStorage.getItem("accessToken");
+export const updateComplaintDesignation = async (complaintId, designationId) => {
+  const token = localStorage.getItem("accessToken");
 
-//   const response = await fetch(
-//     `${API_BASE_URL}/tickets/supporter/complaints/${complaintId}/reassign/`,
-//     {
-//       method: "PATCH",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: "••••••",
-//       },
-//       body: JSON.stringify({ designation_id: designationId }),
-//     }
-//   );
+  const response = await fetch(
+    `${API_BASE_URL}/tickets/supporter/complaints/${complaintId}/reassign/`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,   // ✅ correct
+      },
+      body: JSON.stringify({ designation_id: designationId }),
+    }
+  );
 
-//   if (!response.ok) {
-//     const err = await response.text();
-//     throw new Error(err || "Failed to update designation");
-//   }
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(err || "Failed to update designation");
+  }
 
-//   return response.json();
-// };
+  return response.json();
+};
+

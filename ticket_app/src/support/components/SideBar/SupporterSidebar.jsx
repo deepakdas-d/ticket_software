@@ -3,10 +3,13 @@ import { useSupporterAuth } from "../../hooks/useSupporterAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./SupporterSidebar.css";
 
+// Using react-icons for the silhouette
+import { FaUserCircle } from "react-icons/fa";
+
 const Sidebar = () => {
   const { user, signOut } = useSupporterAuth();
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ get current path
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -29,8 +32,16 @@ const Sidebar = () => {
 
   return (
     <aside className="sidebar">
+      {/* Header */}
+      {/* <div className="sidebar-header">
+        TECHFIFO INNOVATIONS
+      </div> */}
+
       {/* Profile Section */}
       <div className="sidebar-profile" onClick={goToProfile}>
+        <div className="profile-icon">
+          <FaUserCircle size={50} color="#fff" /> {/* Silhouette icon */}
+        </div>
         <div className="profile-info">
           <h4>{user?.username || "Supporter"}</h4>
           <p>Team Member</p>
@@ -38,21 +49,20 @@ const Sidebar = () => {
       </div>
 
       {/* Menu */}
-  <nav className="menu">
-  {menuItems.map((item, idx) => {
-    const isActive = location.pathname === item.path;
-    return (
-      <a
-        key={idx}
-        href={item.path}
-        className={isActive ? "active" : ""}
-      >
-        {item.label}
-      </a>
-    );
-  })}
-</nav>
-
+      <nav className="menu">
+        {menuItems.map((item, idx) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <a
+              key={idx}
+              href={item.path}
+              className={isActive ? "active" : ""}
+            >
+              {item.label}
+            </a>
+          );
+        })}
+      </nav>
 
       {/* Logout */}
       <button className="logout-btn" onClick={handleLogout}>
