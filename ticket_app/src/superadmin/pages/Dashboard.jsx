@@ -8,47 +8,41 @@ import useTicketCounts from "../services/useTicketCounts"; // ✅ using new serv
 import ErrorMessage from "../components/ErrorMessage";
 
 const Dashboard = () => {
-  const { user, signOut, loading: authLoading, isAuthLoading } = useContext(AuthContext);
+  const { user, loading: authLoading, isAuthLoading } = useContext(AuthContext);
   const navigate = useNavigate();
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
-  // ✅ renamed hook result to match new service
   const { counts, loading: countsLoading, error: countsError } = useTicketCounts();
 
-  // Redirect to signin if not logged in
   useEffect(() => {
     if (!isAuthLoading && !user) {
       navigate("/adminsignin");
     }
   }, [user, isAuthLoading, navigate]);
 
-  // Chart Data
   const chartData = {
     labels: ["Open Tickets", "In Progress", "Closed Tickets"],
-    counts: [counts.open, counts.in_progress, counts.closed],
+    counts: [counts.total, counts.in_progress, counts.closed],
   };
 
-  // Initialize Chart.js
   useEffect(() => {
     if (chartRef.current) {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-      
-      const ctx = chartRef.current.getContext('2d');
-      
+      if (chartInstance.current) chartInstance.current.destroy();
+
+      const ctx = chartRef.current.getContext("2d");
+
       const openGradient = ctx.createLinearGradient(0, 0, 0, 400);
-      openGradient.addColorStop(0, 'rgba(54, 162, 235, 0.8)');
-      openGradient.addColorStop(1, 'rgba(54, 162, 235, 0.2)');
-      
+      openGradient.addColorStop(0, "rgba(54, 162, 235, 0.8)");
+      openGradient.addColorStop(1, "rgba(54, 162, 235, 0.2)");
+
       const progressGradient = ctx.createLinearGradient(0, 0, 0, 400);
-      progressGradient.addColorStop(0, 'rgba(255, 193, 7, 0.8)');
-      progressGradient.addColorStop(1, 'rgba(255, 193, 7, 0.2)');
-      
+      progressGradient.addColorStop(0, "rgba(255, 193, 7, 0.8)");
+      progressGradient.addColorStop(1, "rgba(255, 193, 7, 0.2)");
+
       const closedGradient = ctx.createLinearGradient(0, 0, 0, 400);
-      closedGradient.addColorStop(0, 'rgba(40, 167, 69, 0.8)');
-      closedGradient.addColorStop(1, 'rgba(40, 167, 69, 0.2)');
+      closedGradient.addColorStop(0, "rgba(40, 167, 69, 0.8)");
+      closedGradient.addColorStop(1, "rgba(40, 167, 69, 0.2)");
 
       chartInstance.current = new Chart(chartRef.current, {
         type: "bar",
@@ -78,112 +72,75 @@ const Dashboard = () => {
           plugins: {
             title: {
               display: true,
-              text: 'Ticket Status Distribution',
+              text: "Ticket Status Distribution",
               font: {
                 size: 18,
-                weight: 'bold',
-                family: "'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif"
+                weight: "bold",
+                family: "'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
               },
-              color: '#2c3e50',
-              padding: 20
+              color: "#2c3e50",
+              padding: 20,
             },
             legend: {
               display: true,
-              position: 'top',
-              align: 'end',
+              position: "top",
+              align: "end",
               labels: {
-                font: {
-                  size: 12,
-                  weight: '500'
-                },
-                color: '#495057',
+                font: { size: 12, weight: "500" },
+                color: "#495057",
                 usePointStyle: true,
-                pointStyle: 'circle',
-                padding: 20
-              }
+                pointStyle: "circle",
+                padding: 20,
+              },
             },
             tooltip: {
               enabled: true,
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-              titleColor: '#fff',
-              bodyColor: '#fff',
-              borderColor: '#dee2e6',
+              backgroundColor: "rgba(0, 0, 0, 0.9)",
+              titleColor: "#fff",
+              bodyColor: "#fff",
+              borderColor: "#dee2e6",
               borderWidth: 1,
               cornerRadius: 8,
               displayColors: true,
-              font: {
-                size: 13
-              },
+              font: { size: 13 },
               callbacks: {
-                title: function(context) {
-                  return `${context[0].label}`;
-                },
-                label: function(context) {
+                title: (context) => `${context[0].label}`,
+                label: (context) => {
                   const total = context.dataset.data.reduce((a, b) => a + b, 0);
                   const percentage = ((context.parsed.y / total) * 100).toFixed(1);
                   return `Count: ${context.parsed.y} (${percentage}%)`;
-                }
-              }
-            }
+                },
+              },
+            },
           },
           scales: {
             x: {
-              grid: {
-                display: false
-              },
-              ticks: {
-                color: '#6c757d',
-                font: {
-                  size: 12,
-                  weight: '500'
-                }
-              },
-              border: {
-                color: '#e9ecef'
-              }
+              grid: { display: false },
+              ticks: { color: "#6c757d", font: { size: 12, weight: "500" } },
+              border: { color: "#e9ecef" },
             },
             y: {
               beginAtZero: true,
-              grid: {
-                color: 'rgba(0, 0, 0, 0.05)',
-                lineWidth: 1
-              },
+              grid: { color: "rgba(0, 0, 0, 0.05)", lineWidth: 1 },
               ticks: {
-                color: '#6c757d',
-                font: {
-                  size: 11
-                },
-                stepSize: Math.max(1, Math.ceil(Math.max(...chartData.counts) / 5))
+                color: "#6c757d",
+                font: { size: 11 },
+                stepSize: Math.max(1, Math.ceil(Math.max(...chartData.counts) / 5)),
               },
-              border: {
-                color: '#e9ecef'
-              }
+              border: { color: "#e9ecef" },
             },
           },
-          animation: {
-            duration: 2000,
-            easing: 'easeInOutQuart'
-          },
-          interaction: {
-            intersect: false,
-            mode: 'index'
-          }
+          animation: { duration: 2000, easing: "easeInOutQuart" },
+          interaction: { intersect: false, mode: "index" },
         },
       });
     }
-    
+
     return () => {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
+      if (chartInstance.current) chartInstance.current.destroy();
     };
   }, [chartData]);
 
-  // Calculate progress percentage for total tickets
-  const maxTickets = 200;
-  const progressPercentage = Math.min((counts.total / maxTickets) * 100, 100);
-
-  // ✅ FIX: use countsLoading instead of ticketsLoading
   if (isAuthLoading || countsLoading) {
     return (
       <div className="d-flex vh-100 justify-content-center align-items-center">
@@ -194,7 +151,6 @@ const Dashboard = () => {
     );
   }
 
-  // ✅ FIX: use countsError instead of error
   if (countsError) {
     return <ErrorMessage message={countsError} onRetry={() => window.location.reload()} />;
   }
@@ -205,7 +161,40 @@ const Dashboard = () => {
     <div className="d-flex vh-100">
       <Sidebar user={user} />
       <div className="main-content flex-grow-1 p-4">
-        {/* Cards and chart remain unchanged */}
+        {/* ✅ Cards Row */}
+        <div className="row mb-4">
+          <div className="col-md-4">
+            <div className="card shadow-sm border-0">
+              <div className="card-body text-center">
+                <h6 className="text-muted">Total Tickets</h6>
+                <h3 className="fw-bold text-primary">{counts.total}</h3>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="card shadow-sm border-0">
+              <div className="card-body text-center">
+                <h6 className="text-muted">In Progress</h6>
+                <h3 className="fw-bold text-warning">{counts.in_progress}</h3>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="card shadow-sm border-0">
+              <div className="card-body text-center">
+                <h6 className="text-muted">Closed</h6>
+                <h3 className="fw-bold text-success">{counts.closed}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ✅ Chart Section */}
+        <div className="card shadow-sm border-0">
+          <div className="card-body" style={{ height: "400px" }}>
+            <canvas ref={chartRef}></canvas>
+          </div>
+        </div>
       </div>
     </div>
   );

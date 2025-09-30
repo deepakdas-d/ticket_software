@@ -105,7 +105,7 @@
 .menu .menu-item span:last-child {
   font-size: 0.8rem;
   transition: transform 0.3s ease;
-  color: #495057;
+  color: #000;
 }
 
 /* Submenu */

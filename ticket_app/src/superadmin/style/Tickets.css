@@ -33,3 +33,15 @@
   max-height: 250px;
   display: block;
 }
+
+.filter-section {
+  overflow: hidden;
+  max-height: 500px; /* max height when visible */
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.filter-section.hide {
+  max-height: 0;
+  opacity: 0;
+}
