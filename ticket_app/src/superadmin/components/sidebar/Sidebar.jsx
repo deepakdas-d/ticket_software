@@ -9,7 +9,7 @@ const Sidebar = ({ user, menuItems, onLogout }) => {
   const { signOut } = useContext(AuthContext);
   // Default menu items
   const defaultMenu = [
-    { name: "Dashboard", path: "/dashboard", icon: "🏠" },
+    { name: "Dashboard", path: "/admindashboard", icon: "🏠" },
     {
       name: "Add Support Member",
       path: "/supports",

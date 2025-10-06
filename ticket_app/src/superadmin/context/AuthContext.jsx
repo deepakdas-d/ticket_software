@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AdminAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true); // New state for auth initialization
@@ -149,7 +149,7 @@ export const AuthProvider = ({ children }) => {
       persistAuth(userObj, { access: json.access, refresh: json.refresh });
       setUser(userObj);
 
-      navigate("/dashboard");
+      navigate("/admindashboard");
     } catch (err) {
       if (err.name === "TypeError") {
         throw new Error("Network error. Please check your connection.");

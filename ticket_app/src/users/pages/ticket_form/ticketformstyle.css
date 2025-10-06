@@ -1,0 +1,76 @@
+/* --- TICKET FORM PAGE STYLING --- */
+.ticket-form-page {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.ticket-form-page h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  color: #1e293b; /* dark slate */
+}
+
+.ticket-form-page form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ticket-form-page input[type="text"],
+.ticket-form-page textarea,
+.ticket-form-page input[type="file"] {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.2s ease;
+}
+
+.ticket-form-page input[type="text"]:focus,
+.ticket-form-page textarea:focus {
+  outline: none;
+  border-color: #3b82f6; /* blue highlight */
+}
+
+.ticket-form-page textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.ticket-form-page button[type="submit"] {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ticket-form-page button[type="submit"]:hover {
+  background-color: #2563eb;
+}
+
+/* Loading/alert styles if needed */
+.ticket-form-page .alert {
+  text-align: center;
+  color: #16a34a;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ticket-form-page {
+    margin: 20px;
+    padding: 20px;
+  }
+}
