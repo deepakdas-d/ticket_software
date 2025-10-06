@@ -40,3 +40,47 @@ export const registerSupporter = async (supporterData) => {
     throw error;
   }
 };
+
+//================Fetch all Permissions==========================
+export async function fetchPermissions() {
+  try {
+    console.log("Fetching permissions...");
+
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No access token found");
+    console.log("Using token:", token);
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    console.log("API_BASE_URL:", API_BASE_URL);
+
+    const res = await fetch(`${API_BASE_URL}/supporters/permissions/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Response status:", res.status);
+
+    if (!res.ok) {
+      let errorMsg = "";
+      try {
+        const data = await res.json();
+        console.error("Response JSON:", data);
+        errorMsg = data.detail || JSON.stringify(data);
+      } catch {
+        errorMsg = await res.text();
+        console.error("Response text:", errorMsg);
+      }
+      throw new Error(`Error ${res.status}: ${errorMsg}`);
+    }
+
+    const data = await res.json();
+    console.log("Permissions fetched successfully:", data);
+    return data; // array of permissions
+  } catch (error) {
+    console.error("Error fetching permissions:", error);
+    throw error;
+  }
+}

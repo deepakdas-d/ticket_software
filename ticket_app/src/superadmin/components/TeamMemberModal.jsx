@@ -1,16 +1,11 @@
+// TeamMemberModal.jsx
 import { useState, useEffect, useRef } from "react";
 import { useDesignations } from "../hooks/useDesignations";
 import { addDesignation } from "../services/designationService";
 import { useRegisterSupporter } from "../hooks/useRegisterSupporter";
+import { fetchPermissions, assignPermissions } from "../services/supporterService";
 
-const TeamMemberModal = ({
-  show,
-  mode,
-  member,
-  onClose,
-  fetchData,
-  update,
-}) => {
+const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -19,12 +14,20 @@ const TeamMemberModal = ({
     designation: "",
   });
 
+  // permissions
+  const [permissions, setPermissions] = useState([]);
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
+
   const [newDesignation, setNewDesignation] = useState("");
   const [addingDesignation, setAddingDesignation] = useState(false);
   const [designationError, setDesignationError] = useState("");
 
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
   const firstInputRef = useRef(null);
 
+  // hooks
   const {
     designations,
     loading: designationsLoading,
@@ -32,13 +35,9 @@ const TeamMemberModal = ({
     refreshDesignations,
   } = useDesignations(show);
 
-  const {
-    register,
-    loading: regLoading,
-    error: regError,
-  } = useRegisterSupporter();
+  const { register, loading: regLoading } = useRegisterSupporter();
 
-  // Pre-populate form
+  /** Pre-populate form when editing */
   useEffect(() => {
     if (mode === "edit" && member) {
       setFormData({
@@ -48,6 +47,13 @@ const TeamMemberModal = ({
         phone_number: member.phone_number || "",
         designation: member.designation || "",
       });
+
+      // ensure permissions are IDs only
+      setSelectedPermissions(
+        Array.isArray(member.permissions)
+          ? member.permissions.map((p) => (typeof p === "object" ? p.id : p))
+          : []
+      );
     } else {
       setFormData({
         username: "",
@@ -56,6 +62,7 @@ const TeamMemberModal = ({
         phone_number: "",
         designation: "",
       });
+      setSelectedPermissions([]);
     }
 
     if (show && firstInputRef.current) {
@@ -63,11 +70,29 @@ const TeamMemberModal = ({
     }
   }, [mode, member, show]);
 
+  /** Fetch permissions when modal opens */
+  useEffect(() => {
+    if (show) {
+      fetchPermissions()
+        .then((data) => setPermissions(data))
+        .catch((err) => console.error("Failed to load permissions:", err));
+    }
+  }, [show]);
+
+  /** Input change handler */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /** Toggle permission selection */
+  const handlePermissionChange = (id) => {
+    setSelectedPermissions((prev) =>
+      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
+    );
+  };
+
+  /** Add new designation */
   const handleDesignationAdd = async () => {
     if (!newDesignation.trim()) return;
     setAddingDesignation(true);
@@ -85,20 +110,33 @@ const TeamMemberModal = ({
     }
   };
 
+  /** Submit form (add or edit) */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+    setSubmitError("");
 
     try {
       if (mode === "add") {
-        await register(formData);
-        await fetchData(); // Refresh supporters list from parent
+        const payload = { ...formData, permission_ids: selectedPermissions };
+        await register(payload);
+        await fetchData(); // refresh list
       } else if (mode === "edit" && member?.id) {
-        await update(member.id, formData); // Update parent state directly
+        // 1. Update supporter details (without permissions)
+        const { permission_ids, ...basePayload } = formData;
+        await update(member.id, basePayload);
+
+        // 2. Assign permissions separately
+        await assignPermissions(member.id, selectedPermissions);
+        await fetchData();
       }
-      onClose(true); // Close modal with success
+
+      onClose(true);
     } catch (err) {
       console.error("Error submitting form:", err);
-      onClose(false); // Close modal with failure
+      setSubmitError(err.message || "Something went wrong. Try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -106,6 +144,7 @@ const TeamMemberModal = ({
     <div className={`modal fade ${show ? "show d-block" : ""}`} tabIndex="-1">
       <div className="modal-dialog">
         <div className="modal-content">
+          {/* Header */}
           <div className="modal-header">
             <h5 className="modal-title">
               {mode === "add" ? "Add New Team Member" : "Edit Team Member"}
@@ -116,6 +155,8 @@ const TeamMemberModal = ({
               onClick={() => onClose(false)}
             ></button>
           </div>
+
+          {/* Body */}
           <div className="modal-body">
             <form onSubmit={handleSubmit}>
               {/* Username */}
@@ -145,7 +186,7 @@ const TeamMemberModal = ({
                 />
               </div>
 
-              {/* Password - only show for "add" mode */}
+              {/* Password (only for add) */}
               {mode === "add" && (
                 <div className="mb-3">
                   <label className="form-label">Password</label>
@@ -224,6 +265,34 @@ const TeamMemberModal = ({
                 )}
               </div>
 
+              {/* Permissions */}
+              <div className="mb-3">
+                <label className="form-label">Permissions</label>
+                {permissions.length === 0 ? (
+                  <div>Loading permissions...</div>
+                ) : (
+                  <div className="d-flex flex-column">
+                    {permissions.map((perm) => (
+                      <div key={perm.id} className="form-check">
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          id={`perm-${perm.id}`}
+                          checked={selectedPermissions.includes(perm.id)}
+                          onChange={() => handlePermissionChange(perm.id)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`perm-${perm.id}`}
+                        >
+                          {perm.name} ({perm.codename})
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Footer */}
               <div className="modal-footer">
                 <button
@@ -236,9 +305,9 @@ const TeamMemberModal = ({
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={regLoading}
+                  disabled={regLoading || submitting}
                 >
-                  {regLoading
+                  {submitting
                     ? "Saving..."
                     : mode === "add"
                     ? "Add Team Member"
@@ -246,8 +315,10 @@ const TeamMemberModal = ({
                 </button>
               </div>
 
-              {/* Error Messages */}
-              {regError && <div className="text-danger mt-2">{regError}</div>}
+              {/* Error Message */}
+              {submitError && (
+                <div className="text-danger mt-2">{submitError}</div>
+              )}
             </form>
           </div>
         </div>
