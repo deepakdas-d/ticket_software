@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
-import { fetchDesignations } from "../../../superadmin/services/designationService";
+import { fetchDesignations } from "../../services/SupportServices";
 import { updateComplaintDesignation } from "../../services/SupportTicketService";
 
 const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {

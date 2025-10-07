@@ -1,73 +1,120 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SupporterSidebar from "../components/SideBar/SupporterSidebar";
-import { useSupporterAuthContext } from "../context/SupporterAuthProvider";
-import { getSupporterProfile } from "../services/SupportServices";
+import { getSupporterProfile, fetchDesignations } from "../services/SupportServices";
 import "../styles/SupporterProfile.css";
+import { FaBars, FaUserCircle } from "react-icons/fa";
 
 const SupporterProfile = () => {
-  const { user, isAuthLoading, login } = useSupporterAuthContext();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [designationName, setDesignationName] = useState("—");
+  const [profile, setProfile] = useState(null); // Local state for API data
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Fetch profile + map designation
   useEffect(() => {
-    if (!isAuthLoading && !user) {
-      navigate("/supportsignin");
-    }
-  }, [user, isAuthLoading, navigate]);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfileWithDesignation = async () => {
       try {
-        const profile = await getSupporterProfile();
-        if (profile) {
-          login(profile); // refresh context with latest data
+        const data = await getSupporterProfile();
+        if (!data) {
+          navigate("/supportsignin");
+          return;
         }
+
+        // Fetch all designations
+        const designations = await fetchDesignations();
+
+        // Map designation name
+        const matchedDesignation = designations.find(
+          (d) => d.id === data.designation
+        );
+        setDesignationName(matchedDesignation?.name || "—");
+
+        // Set profile state
+        setProfile({ ...data, designation_name: matchedDesignation?.name || "—" });
       } catch (err) {
-        console.error("Failed to fetch supporter profile:", err);
+        console.error("Failed to fetch profile or designation:", err);
+        navigate("/supportsignin");
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    if (user) {
-      fetchProfile();
-    }
-  }, [user, login]);
+    fetchProfileWithDesignation();
+  }, [navigate]);
 
-  if (isAuthLoading) {
-    return <p className="loading">Loading profile...</p>;
+  if (isLoading || !profile) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner-border text-primary" role="status" />
+        <p>Loading profile...</p>
+      </div>
+    );
   }
 
   return (
     <div className="supporter-dashboard">
-      <SupporterSidebar />
+      {/* Sidebar overlay */}
+      <div
+        className={`sidebar-overlay ${isSidebarOpen ? "show" : ""}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
 
+      {/* Sidebar */}
+      <div className={`sidebar-container ${isSidebarOpen ? "open" : ""}`}>
+        <SupporterSidebar />
+      </div>
+
+      {/* Main content */}
       <main className="main-content">
         <header className="topbar">
+          <button
+            className="menu-btn"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            <FaBars size={20} />
+          </button>
           <h1>My Profile</h1>
         </header>
 
         <section className="profile-content">
-          <div className="profile-card">
+          <div className="profile-card shadow">
             <div className="avatar-section">
-              <img
-                src={user?.avatar || "https://via.placeholder.com/100"}
-                alt="Profile"
-                className="profile-avatar-large"
-              />
+              {profile?.avatar ? (
+                <img
+                  src={profile.avatar}
+                  alt="Profile"
+                  className="profile-avatar-large"
+                />
+              ) : (
+                <FaUserCircle size={100} color="#ccc" />
+              )}
+              <h2 className="mt-3">{profile?.username}</h2>
+              <span className="badge bg-primary">
+                Designation: {designationName}
+              </span>
             </div>
 
             <div className="profile-details">
-              <p>
-                <strong>Username:</strong> {user?.username || "—"}
-              </p>
-              <p>
-                <strong>Email:</strong> {user?.email || "—"}
-              </p>
-              <p>
-                <strong>Phone:</strong> {user?.phone_number || "—"}
-              </p>
-              <p>
-                <strong>Designation:</strong> {user?.designation || "—"}
-              </p>
+              <div className="detail-row">
+                <strong>Email:</strong> <span>{profile?.email || "—"}</span>
+              </div>
+              <div className="detail-row">
+                <strong>Phone:</strong>{" "}
+                <span>{profile?.phone_number || "—"}</span>
+              </div>
+
+              {profile?.permissions?.length > 0 && (
+                <div className="detail-row">
+                  <strong>Permissions:</strong>
+                  <ul>
+                    {profile.permissions.map((p) => (
+                      <li key={p.id}>{p.name}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </section>

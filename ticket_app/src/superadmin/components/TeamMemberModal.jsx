@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { useDesignations } from "../hooks/useDesignations";
 import { addDesignation } from "../services/designationService";
 import { useRegisterSupporter } from "../hooks/useRegisterSupporter";
-import { fetchPermissions, assignPermissions } from "../services/supporterService";
+import { fetchPermissions } from "../services/supporterService";
+import {assignPermissions}from "../services/supportTeamService"
 
 const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => {
   const [formData, setFormData] = useState({

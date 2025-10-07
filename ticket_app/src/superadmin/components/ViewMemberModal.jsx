@@ -1,14 +1,39 @@
 import { useEffect, useState } from "react";
 import { useDesignations } from "../hooks/useDesignations";
+import { fetchPermissions } from "../services/supporterService";
 
 const ViewMemberModal = ({ show, member, onClose }) => {
   const [designationName, setDesignationName] = useState("");
+  const [allPermissions, setAllPermissions] = useState([]);
+  const [memberPermissions, setMemberPermissions] = useState([]);
 
-  const { designations, loading } = useDesignations(show);
+  const { designations, loading: designationsLoading } = useDesignations(show);
 
+  // 🔹 Load permissions list when modal opens
+  useEffect(() => {
+    if (show) {
+      fetchPermissions()
+        .then((data) => setAllPermissions(data))
+        .catch((err) => console.error("Failed to load permissions:", err));
+    }
+  }, [show]);
+
+  // 🔹 Map permission IDs from member to full names
+  useEffect(() => {
+    if (member && allPermissions.length > 0) {
+      const matched = member.permissions
+        ?.map((p) => {
+          const permId = typeof p === "object" ? p.id : p;
+          return allPermissions.find((perm) => perm.id === permId);
+        })
+        .filter(Boolean);
+      setMemberPermissions(matched || []);
+    }
+  }, [member, allPermissions]);
+
+  // 🔹 Find designation name
   useEffect(() => {
     if (member && designations.length > 0) {
-      // find the designation name from the list
       const found = designations.find((d) => d.id === member.designation);
       setDesignationName(found ? found.name : "");
     }
@@ -16,18 +41,10 @@ const ViewMemberModal = ({ show, member, onClose }) => {
 
   if (!member) return null;
 
-  // Handle Escape key and backdrop click
-  const handleKeyDown = (e) => {
-    if (e.key === "Escape") {
-      onClose();
-    }
-  };
-
-  const handleBackdropClick = (e) => {
-    if (e.target.classList.contains("modal")) {
-      onClose();
-    }
-  };
+  // Handle Escape and backdrop
+  const handleKeyDown = (e) => e.key === "Escape" && onClose();
+  const handleBackdropClick = (e) =>
+    e.target.classList.contains("modal") && onClose();
 
   return (
     <div
@@ -43,6 +60,7 @@ const ViewMemberModal = ({ show, member, onClose }) => {
     >
       <div className="modal-dialog" role="document">
         <div className="modal-content">
+          {/* Header */}
           <div className="modal-header">
             <h5 className="modal-title" id="viewMemberModalLabel">
               View Team Member
@@ -54,6 +72,8 @@ const ViewMemberModal = ({ show, member, onClose }) => {
               aria-label="Close"
             ></button>
           </div>
+
+          {/* Body */}
           <div className="modal-body">
             <div className="mb-3">
               <strong>Username:</strong> {member.username}
@@ -66,14 +86,39 @@ const ViewMemberModal = ({ show, member, onClose }) => {
             </div>
             <div className="mb-3">
               <strong>Designation:</strong>{" "}
-              {loading ? (
+              {designationsLoading ? (
                 <span>Loading...</span>
               ) : (
                 <span className="badge bg-primary">{designationName}</span>
               )}
             </div>
 
+            {/* 🔹 Permissions */}
+            <div className="mb-3">
+              <strong>Permissions:</strong>
+              {allPermissions.length === 0 ? (
+                <div>Loading permissions...</div>
+              ) : memberPermissions.length === 0 ? (
+                <div>No permissions assigned.</div>
+              ) : (
+                <ul className="list-group mt-2">
+                  {memberPermissions.map((perm) => (
+                    <li
+                      key={perm.id}
+                      className="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                      {perm.name}
+                      <span className="badge bg-secondary">
+                        {perm.codename}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
+
+          {/* Footer */}
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
               Close

@@ -134,11 +134,11 @@ export const deleteSupporter = async (id) => {
 
 //============Assign Permissions to Supporter=========================
 export async function assignPermissions(supporterId, permissionIds) {
-  const token = localStorage.getItem("token"); // adjust if you store token differently
+      const token = localStorage.getItem("accessToken");// adjust if you store token differently
   const API_BASE_URL = import.meta.env.VITE_API_URL;
-
+  console.log("Using token:", token);
   const response = await fetch(
-    `${API_BASE_URL}/api/supporters/${supporterId}/assign-permissions/`,
+    `${API_BASE_URL}/supporters/${supporterId}/assign-permissions/`,
     {
       method: "POST",
       headers: {
