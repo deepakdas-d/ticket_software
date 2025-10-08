@@ -18,7 +18,13 @@ export const fetchComplaints = async (page = 1, perPage = 10) => {
         },
       }
     );
-    console.log("Raw response:", response);
+
+    if (response.status === 403) {
+      const errData = await response.json();
+      const error = new Error(errData.detail || "Permission denied");
+      error.status = 403;
+      throw error;
+    }
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
@@ -26,14 +32,15 @@ export const fetchComplaints = async (page = 1, perPage = 10) => {
 
     const data = await response.json();
     return {
-      complaints: data.results || data, // Adjust based on your API response structure
-      totalRows: data.count || data.length, // Total number of complaints
+      complaints: data.results || data,
+      totalRows: data.count || data.length,
     };
   } catch (error) {
     console.error("Failed to fetch complaints:", error);
     throw error;
   }
 };
+
 
 //================update the UI of the Complaint==================
 export async function updateComplaintStatus(complaintId, status, remarks) {

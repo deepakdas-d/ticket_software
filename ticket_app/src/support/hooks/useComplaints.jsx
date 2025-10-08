@@ -10,12 +10,14 @@ export const useComplaints = () => {
   // Fetch complaints with pagination
   const fetchData = useCallback(async (page, perPage) => {
     setLoading(true);
+    setError(null);
     try {
       const { complaints, totalRows } = await fetchComplaints(page, perPage);
       setComplaints(complaints);
       setTotalRows(totalRows);
     } catch (err) {
-      setError("Could not load complaints");
+      // ✅ Preserve full error object, not just a string
+      setError(err);
     } finally {
       setLoading(false);
     }

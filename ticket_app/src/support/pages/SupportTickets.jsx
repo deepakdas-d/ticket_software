@@ -4,19 +4,21 @@ import { Button } from "react-bootstrap";
 import SupporterSidebar from "../components/SideBar/SupporterSidebar";
 import ComplaintModal from "../components/other/ComplaintModal";
 import ReassignModal from "../components/other/ReassignModal";
+import PermissionDenied from "../components/other/PermissionDenied"; 
 import { useComplaints } from "../hooks/useComplaints"; 
 import "../styles/SupportTickets.css";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const ComplaintTable = () => {
   const { complaints, totalRows, loading, error, fetchData, refresh } = useComplaints();
+
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [perPage, setPerPage] = useState(10);
 
   const [showReassign, setShowReassign] = useState(false);
   const [complaintForReassign, setComplaintForReassign] = useState(null);
-  
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // start closed
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   // Pagination handlers
@@ -69,9 +71,6 @@ const ComplaintTable = () => {
           </Button>
         </div>
       ),
-      $ignoreRowClick: true,
-      $allowOverflow: true,
-      $button: true,
       width: "160px",
     },
   ];
@@ -81,6 +80,19 @@ const ComplaintTable = () => {
     headCells: { style: { padding: "14px 10px", fontWeight: "600" } },
     cells: { style: { padding: "12px 10px" } },
   };
+
+  // ✅ Handle 403 or generic errors
+  if (error?.status === 403) {
+    return <PermissionDenied message={error.message || "You do not have permission to view this section."} />;
+  }
+
+  if (error && error.status !== 403) {
+    return (
+      <div className="alert alert-danger m-4">
+        <strong>Error:</strong> {error.message || "Something went wrong while loading complaints."}
+      </div>
+    );
+  }
 
   return (
     <div className="main-wrapper">
@@ -93,7 +105,7 @@ const ComplaintTable = () => {
           onClick={toggleSidebar}
           style={{ position: "absolute", top: "1rem", left: "1rem", zIndex: 1100 }}
         >
-         {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+          {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
         </Button>
       </header>
 
@@ -112,8 +124,6 @@ const ComplaintTable = () => {
       <div className="complaints-layout">
         <div className="table-container">
           <h3 className="table-title">Complaints</h3>
-
-          {error && <div className="alert alert-danger">{error}</div>}
 
           <DataTable
             columns={columns}
