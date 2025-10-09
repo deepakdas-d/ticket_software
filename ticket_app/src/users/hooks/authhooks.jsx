@@ -21,8 +21,7 @@ export const useLogin = () => {
       if (data.access && data.refresh) {
         login(data.access, data.refresh);
       }
-
-      navigate("/helpdesk-dashboard");
+      navigate("/ProfilePage");
       return true;
     } catch (err) {
       setError(err.message);

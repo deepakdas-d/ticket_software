@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 
 
@@ -128,6 +128,8 @@ export const updatePassword = async (email, newPassword, confirmPassword) => {
   if (!res.ok) throw new Error(data.detail || "Password update failed");
   return data;
 };
+
+
 export const getRaisedTickets = async (authToken) => {
   const res = await fetch(`${BASE_URL}/tickets/complaints/`, {
     method: "GET",
@@ -142,4 +144,55 @@ export const getRaisedTickets = async (authToken) => {
   }
 
   return await res.json(); // returns an array
+
+
 };
+
+/**
+ * Fetch details of a specific ticket by its ID.
+ * @param {string} ticketId
+ * @param {string} authToken
+ * @returns {Promise<Object>} Ticket details JSON
+ */
+export const getTicketDetails = async (ticketId, authToken) => {
+  const res = await fetch(`${BASE_URL}/tickets/complaints/by-ticket/${ticketId}/`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch ticket details");
+  }
+
+  return await res.json();
+};
+
+/**
+ * Append a new description or image to a ticket
+ * @param {number|string} id - internal ticket database ID
+ * @param {string} authToken
+ * @param {string} description
+ * @param {File|null} image
+ * @returns {Promise<Object>}
+ */
+export const updateTicketDescription = async (id, authToken, description, image = null) => {
+  const formData = new FormData();
+  formData.append("description", description || "");
+  if (image) formData.append("image", image);
+
+  const res = await fetch(`${BASE_URL}/tickets/complaints/${id}/append-description/`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${authToken}` },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errorData = await res.text();
+    throw new Error(errorData || "Failed to update ticket");
+  }
+
+  return await res.json();
+};
+
