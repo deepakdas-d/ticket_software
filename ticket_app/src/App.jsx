@@ -18,6 +18,7 @@ import SupporterLogin from "./support/pages/SupporterLogin";
 import SupporterDashboard from "./support/pages/SupporterDashboard";
 import SupporterProfile from "./support/pages/SupporterProfile";
 import ComplaintTable from "./support/pages/SupportTickets";
+import MessagesPage from "./support/pages/MessagesPage";
 import SupporterProtectedRoute from "./support/components/other/SupporterProtectedRoute";
 {
   /* //==================== User Routes ====================// */
@@ -35,50 +36,58 @@ import TicketDetailPage from "./users/pages/ticket_detials/ticket_details";
 import DashboardLayout from "./users/pages/dashboard/dashboard";
 import { AuthProvider } from "./users/context/authcontext";
 
-
 function App() {
   return (
     <BrowserRouter>
-    <AuthProvider>
-      <AdminAuthProvider>
-        <SupporterAuthProvider>
-          <Routes>
-            {/* //==================== Supporter Routes ====================// */}
-            <Route path="/supportsignin" element={<SupporterLogin />} />
-            <Route
-              path="/supportdashboard"
-              element={
-                <SupporterProtectedRoute>
-                  <SupporterDashboard />
-                </SupporterProtectedRoute>
-              }
-            />
+      <AuthProvider>
+        <AdminAuthProvider>
+          <SupporterAuthProvider>
+            <Routes>
+              {/* //==================== Supporter Routes ====================// */}
+              <Route path="/supportsignin" element={<SupporterLogin />} />
+              <Route
+                path="/supportdashboard"
+                element={
+                  <SupporterProtectedRoute>
+                    <SupporterDashboard />
+                  </SupporterProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/supportprofile"
-              element={
-                <SupporterProtectedRoute>
-                  <SupporterProfile />
-                </SupporterProtectedRoute>
-              }
-            />
-            <Route
-              path="/supportertickets"
-              element={
-                <SupporterProtectedRoute>
-                  <ComplaintTable />
-                </SupporterProtectedRoute>
-              }
-            />
+              <Route
+                path="/supportprofile"
+                element={
+                  <SupporterProtectedRoute>
+                    <SupporterProfile />
+                  </SupporterProtectedRoute>
+                }
+              />
+              <Route
+                path="/supportertickets"
+                element={
+                  <SupporterProtectedRoute>
+                    <ComplaintTable />
+                  </SupporterProtectedRoute>
+                }
+              />
 
-            {/* //==================== SuperAdmin Routes ====================// */}
-            <Route path="/users" element={<Users />} />
-            <Route path="/admintickets" element={<Tickets />} />
-            <Route path="/supports" element={<SupportTeam />} />
-            <Route path="/adminsignin" element={<SignIn />} />
-            <Route path="/admindashboard" element={<Dashboard />} />
-            {/* //==================== User Routes ====================// */}
-           
+              <Route
+                path="/messages/:ticket_id"
+                element={
+                  <SupporterProtectedRoute>
+                    <MessagesPage />
+                  </SupporterProtectedRoute>
+                }
+              />
+
+              {/* //==================== SuperAdmin Routes ====================// */}
+              <Route path="/users" element={<Users />} />
+              <Route path="/admintickets" element={<Tickets />} />
+              <Route path="/supports" element={<SupportTeam />} />
+              <Route path="/adminsignin" element={<SignIn />} />
+              <Route path="/admindashboard" element={<Dashboard />} />
+              {/* //==================== User Routes ====================// */}
+
               {/* Public routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -95,14 +104,16 @@ function App() {
                 <Route path="/ticket/new" element={<TicketFormPage />} />
                 <Route path="/tickets" element={<TicketsPage />} />
                 <Route path="/ticketdetials" element={<TicketDetailPage />} />
-                <Route path="/tickets/:ticketId" element={<TicketDetailPage />} />
+                <Route
+                  path="/tickets/:ticketId"
+                  element={<TicketDetailPage />}
+                />
               </Route>
               {/* Default route */}
               <Route path="/" element={<Login />} />
-           
-          </Routes>
-        </SupporterAuthProvider>
-      </AdminAuthProvider>
+            </Routes>
+          </SupporterAuthProvider>
+        </AdminAuthProvider>
       </AuthProvider>
     </BrowserRouter>
   );

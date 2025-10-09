@@ -4,21 +4,22 @@ import { Button } from "react-bootstrap";
 import SupporterSidebar from "../components/SideBar/SupporterSidebar";
 import ComplaintModal from "../components/other/ComplaintModal";
 import ReassignModal from "../components/other/ReassignModal";
-import PermissionDenied from "../components/other/PermissionDenied"; 
-import { useComplaints } from "../hooks/useComplaints"; 
+import PermissionDenied from "../components/other/PermissionDenied";
+import { useComplaints } from "../hooks/useComplaints";
+import { useNavigate } from "react-router-dom";
 import "../styles/SupportTickets.css";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const ComplaintTable = () => {
   const { complaints, totalRows, loading, error, fetchData, refresh } = useComplaints();
+  const navigate = useNavigate();
 
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [perPage, setPerPage] = useState(10);
-
   const [showReassign, setShowReassign] = useState(false);
   const [complaintForReassign, setComplaintForReassign] = useState(null);
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   // Pagination handlers
@@ -28,7 +29,7 @@ const ComplaintTable = () => {
     fetchData(page, newPerPage);
   };
 
-  // Modals refresh handlers
+  // Modal refresh handlers
   const handleStatusUpdated = () => {
     setSelectedComplaint(null);
     refresh(1, perPage);
@@ -69,9 +70,17 @@ const ComplaintTable = () => {
           >
             Reassign
           </Button>
+          <Button
+            variant="info"
+            size="sm"
+            style={{ whiteSpace: "nowrap" }}
+            onClick={() => navigate(`/messages/${row.ticket_id}`)}
+          >
+            Messages
+          </Button>
         </div>
       ),
-      width: "160px",
+      width: "220px",
     },
   ];
 
@@ -81,7 +90,6 @@ const ComplaintTable = () => {
     cells: { style: { padding: "12px 10px" } },
   };
 
-  // ✅ Handle 403 or generic errors
   if (error?.status === 403) {
     return <PermissionDenied message={error.message || "You do not have permission to view this section."} />;
   }
@@ -96,7 +104,6 @@ const ComplaintTable = () => {
 
   return (
     <div className="main-wrapper">
-      {/* Header */}
       <header className="main-header">
         <h1>Techfifo Innovations</h1>
         <Button
@@ -109,18 +116,15 @@ const ComplaintTable = () => {
         </Button>
       </header>
 
-      {/* Sidebar overlay */}
       <div
         className={`sidebar-overlay ${isSidebarOpen ? "show" : ""}`}
         onClick={() => setIsSidebarOpen(false)}
       ></div>
 
-      {/* Sidebar */}
       <div className={`sidebar-container ${isSidebarOpen ? "open" : ""}`}>
         <SupporterSidebar />
       </div>
 
-      {/* Main Content */}
       <div className="complaints-layout">
         <div className="table-container">
           <h3 className="table-title">Complaints</h3>
@@ -142,7 +146,6 @@ const ComplaintTable = () => {
             customStyles={customStyles}
           />
 
-          {/* Modals */}
           <ComplaintModal
             complaint={selectedComplaint}
             onHide={() => setSelectedComplaint(null)}

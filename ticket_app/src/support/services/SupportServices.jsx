@@ -67,36 +67,57 @@ export async function fetchDesignations() {
   }
 }
 
-//fetch ticket Reports for analytics in dashboard/
+// ✅ Fetch ticket reports for analytics in dashboard (with debug logs)
 export async function fetchTicketReports() {
+  console.log("📡 [fetchTicketReports] Function called");
+
   try {
     const token = localStorage.getItem("accessToken");
+    console.log("🔑 [fetchTicketReports] Token found:", !!token);
+
     if (!token) throw new Error("No access token found");
 
     const API_BASE_URL = import.meta.env.VITE_API_URL;
+    const url = `${API_BASE_URL}/tickets/reports/`;
+    console.log("🌐 [fetchTicketReports] API URL:", url);
 
-    const res = await fetch(`${API_BASE_URL}/tickets/reports/`, {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    console.log("📨 [fetchTicketReports] Request headers:", headers);
+
+    console.time("⏱️ [fetchTicketReports] Request duration");
+    const res = await fetch(url, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
     });
+    console.timeEnd("⏱️ [fetchTicketReports] Request duration");
+
+    console.log("📥 [fetchTicketReports] Response status:", res.status);
 
     if (!res.ok) {
+      console.warn("⚠️ [fetchTicketReports] Non-OK response received");
+
       let errorMsg = "";
       try {
         const data = await res.json();
+        console.warn("🚫 [fetchTicketReports] Error response JSON:", data);
         errorMsg = data.detail || JSON.stringify(data);
       } catch {
         errorMsg = await res.text();
+        console.warn("🚫 [fetchTicketReports] Error response (text):", errorMsg);
       }
+
       throw new Error(`Error ${res.status}: ${errorMsg}`);
     }
 
-    return await res.json();
+    const data = await res.json();
+    console.log("✅ [fetchTicketReports] Data received:", data);
+
+    return data;
   } catch (error) {
-    console.error("Error fetching ticket reports:", error);
+    console.error("🔥 [fetchTicketReports] Error fetching ticket reports:", error);
     throw error;
   }
 }

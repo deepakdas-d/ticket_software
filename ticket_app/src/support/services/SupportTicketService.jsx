@@ -4,42 +4,57 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 //=========== Fetch Complaints==============
 // Fetch Complaints with Pagination
 export const fetchComplaints = async (page = 1, perPage = 10) => {
+  console.log("📡 [fetchComplaints] Called with:", { page, perPage });
+
   try {
     const token = localStorage.getItem("accessToken");
-    console.log("Fetching complaints with token:", token);
+    console.log("🔑 [fetchComplaints] Access token:", token ? "Token found" : "No token found");
 
-    const response = await fetch(
-      `${API_BASE_URL}/tickets/supporter/complaints/?page=${page}&per_page=${perPage}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      }
-    );
+    const url = `${API_BASE_URL}/tickets/supporter/complaints/?page=${page}&per_page=${perPage}`;
+    console.log("🌐 [fetchComplaints] Fetching from URL:", url);
+
+    const headers = {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+    };
+    console.log("📨 [fetchComplaints] Headers:", headers);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers,
+    });
+
+    console.log("📥 [fetchComplaints] Response status:", response.status);
 
     if (response.status === 403) {
       const errData = await response.json();
+      console.warn("🚫 [fetchComplaints] Permission denied:", errData);
       const error = new Error(errData.detail || "Permission denied");
       error.status = 403;
       throw error;
     }
 
     if (!response.ok) {
+      console.error("❌ [fetchComplaints] HTTP error:", response.status);
       throw new Error(`Error: ${response.status}`);
     }
 
     const data = await response.json();
-    return {
+    console.log("✅ [fetchComplaints] Data received:", data);
+
+    const result = {
       complaints: data.results || data,
       totalRows: data.count || data.length,
     };
+    console.log("📊 [fetchComplaints] Parsed result:", result);
+
+    return result;
   } catch (error) {
-    console.error("Failed to fetch complaints:", error);
+    console.error("🔥 [fetchComplaints] Failed to fetch complaints:", error);
     throw error;
   }
 };
+
 
 
 //================update the UI of the Complaint==================
