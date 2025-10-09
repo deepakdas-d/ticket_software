@@ -95,6 +95,7 @@ function App() {
                 <Route path="/ticket/new" element={<TicketFormPage />} />
                 <Route path="/tickets" element={<TicketsPage />} />
                 <Route path="/ticketdetials" element={<TicketDetailPage />} />
+                <Route path="/tickets/:ticketId" element={<TicketDetailPage />} />
               </Route>
               {/* Default route */}
               <Route path="/" element={<Login />} />

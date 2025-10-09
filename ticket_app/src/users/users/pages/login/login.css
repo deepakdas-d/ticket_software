@@ -1,0 +1,261 @@
+/* Login.css */
+
+/* Container and Layout */
+
+.login-container {
+  min-height: 100vh !important;
+  width: 100vw !important;
+  background-color: #f9fafb;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 3rem 1rem;
+  
+}
+
+.login-wrapper {
+  max-width: 28rem;
+  width: 100%;
+}
+
+/* Header */
+.login-header {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.login-title {
+  margin-top: 1.5rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Form Card */
+.login-card {
+  margin-top: 2rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Form Fields */
+.form-group {
+  margin-bottom: 1rem;
+}       
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Buttons */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  border: none;
+  font-size: 0.875rem;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
+}
+
+.btn-secondary:focus {
+  box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.3);
+}
+
+/* Register Link */
+.register-link {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.register-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.register-text a {
+  font-weight: 500;
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.register-text a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .login-container {
+    padding: 2rem 1rem;
+  }
+  
+  .login-card {
+    padding: 1.5rem;
+  }
+  
+  .login-title {
+    font-size: 1.5rem;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Focus States for Accessibility */
+.form-input:focus,
+.btn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+/* Error States (Optional) */
+.form-input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+.ticket-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.ticket-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.ticket-text a {
+  font-weight: 500;
+  color: #16a34a;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.ticket-text a:hover {
+  color: #15803d;
+  text-decoration: underline;
+}
+.error-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alert-box {
+  background-color: #fee2e2;   /* light red background */
+  color: #b91c1c;              /* dark red text */
+  padding: 0.75rem 1rem;
+  border: 1px solid #fca5a5;   /* border red */
+  border-radius: 0.375rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+.forgot-password-link {
+  text-align: right;
+
+}
+
+/* 🔹 Header Section */
+.app-header {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.logo-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.header-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #3c7adf; /* slate-800 */
+}
+
+.header-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  color: #64748b; /* slate-500 */
+  font-weight: 400;
+}
+
+
