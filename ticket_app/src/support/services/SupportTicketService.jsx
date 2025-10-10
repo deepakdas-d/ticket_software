@@ -7,7 +7,7 @@ export const fetchComplaints = async (page = 1, perPage = 10) => {
   console.log("📡 [fetchComplaints] Called with:", { page, perPage });
 
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("SupporteraccessToken");
     console.log("🔑 [fetchComplaints] Access token:", token ? "Token found" : "No token found");
 
     const url = `${API_BASE_URL}/tickets/supporter/complaints/?page=${page}&per_page=${perPage}`;
@@ -59,7 +59,7 @@ export const fetchComplaints = async (page = 1, perPage = 10) => {
 
 //================update the UI of the Complaint==================
 export async function updateComplaintStatus(complaintId, status, remarks) {
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("SupporteraccessToken");
 
   if (!token) {
     throw new Error("No access token found");
@@ -99,7 +99,7 @@ export async function updateComplaintStatus(complaintId, status, remarks) {
 
 
 export const updateComplaintDesignation = async (complaintId, designationId) => {
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("SupporteraccessToken");
 
   const response = await fetch(
     `${API_BASE_URL}/tickets/supporter/complaints/${complaintId}/reassign-designation/`,

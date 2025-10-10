@@ -4,7 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getSupporterProfile = async () => {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("SupporteraccessToken");
     console.log("Fetching supporter profile with token:", token);
 
     const response = await fetch(`${API_BASE_URL}/supporters/profile/`, {
@@ -36,7 +36,7 @@ export const getSupporterProfile = async () => {
 //fetch designations for reassignment
 export async function fetchDesignations() {
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("SupporteraccessToken");
     if (!token) throw new Error("No access token found");
 
     const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -72,7 +72,7 @@ export async function fetchTicketReports() {
   console.log("📡 [fetchTicketReports] Function called");
 
   try {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("SupporteraccessToken");
     console.log("🔑 [fetchTicketReports] Token found:", !!token);
 
     if (!token) throw new Error("No access token found");

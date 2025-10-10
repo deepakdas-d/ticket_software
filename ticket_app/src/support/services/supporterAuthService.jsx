@@ -30,8 +30,8 @@ export const supporterLogin = async (username, password) => {
     }
 
     // ✅ Store tokens in localStorage
-    if (json.access) localStorage.setItem("accessToken", json.access);
-    if (json.refresh) localStorage.setItem("refreshToken", json.refresh);
+    if (json.access) localStorage.setItem("SupporteraccessToken", json.access);
+    if (json.refresh) localStorage.setItem("SupporterrefreshToken", json.refresh);
 
     return json; // { access, refresh, username, email }
   } catch (err) {
@@ -45,7 +45,7 @@ export const supporterLogin = async (username, password) => {
 //================== Refresh Token =================
 export const refreshAccessToken = async () => {
   try {
-    const refreshToken = localStorage.getItem("refreshToken");
+    const refreshToken = localStorage.getItem("SupporterrefreshToken");
     if (!refreshToken) throw new Error("No refresh token found");
 
     const response = await fetch(`${API_BASE_URL}/supporters/refresh/`, {

@@ -5,7 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 const messageService = {
   getMessages: async (ticket_id) => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("SupporteraccessToken");
       const headers = {
         "Content-Type": "application/json",
         ...(token && { Authorization: `Bearer ${token}` }),
@@ -25,7 +25,7 @@ const messageService = {
 
   sendMessage: async (ticket_id, message) => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("SupporteraccessToken");
       const headers = {
         "Content-Type": "application/json",
         ...(token && { Authorization: `Bearer ${token}` }),
