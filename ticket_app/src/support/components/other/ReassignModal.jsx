@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Form, Spinner } from "react-bootstrap";
-import { fetchDesignations } from "../../services/SupportServices";
+import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
+import { fetchDesignations, getSupporterProfile } from "../../services/SupportServices";
 import { updateComplaintDesignation } from "../../services/SupportTicketService";
 
 const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
@@ -9,7 +9,29 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [selectedDesignation, setSelectedDesignation] = useState("");
+  const [hasReassignPermission, setHasReassignPermission] = useState(false);
 
+  // Fetch supporter profile and check permissions
+  useEffect(() => {
+    if (show) {
+      const fetchPermissions = async () => {
+        try {
+          const profile = await getSupporterProfile();
+          const canReassign = profile.permissions.some(
+            (perm) => perm.codename === "reassign_complaints"
+          );
+          setHasReassignPermission(canReassign);
+        } catch (error) {
+          console.error("Error fetching supporter profile:", error);
+          setHasReassignPermission(false);
+        }
+      };
+
+      fetchPermissions();
+    }
+  }, [show]);
+
+  // Fetch designations
   useEffect(() => {
     if (show) {
       setLoading(true);
@@ -26,7 +48,8 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
   }, [show]);
 
   const handleSave = async () => {
-    if (!selectedDesignation) return;
+    if (!selectedDesignation || !hasReassignPermission) return;
+
     try {
       setSaving(true);
       const updated = await updateComplaintDesignation(
@@ -43,45 +66,74 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} centered size="lg">
       <Modal.Header closeButton>
         <Modal.Title>Reassign Complaint</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {loading ? (
-          <Spinner animation="border" />
+          <div className="d-flex justify-content-center">
+            <Spinner animation="border" />
+          </div>
         ) : error ? (
-          <div className="text-danger">{error}</div>
+          // Handle errors
+          error.status === 403 ? (
+            <Alert variant="warning" className="mt-3">
+              You do not have permission to reassign this complaint.
+            </Alert>
+          ) : (
+            <Alert variant="danger" className="mt-3">
+              {error.detail || "Something went wrong."}
+            </Alert>
+          )
         ) : (
-          <Form>
-            <Form.Group>
-              <Form.Label>Select Designation</Form.Label>
-              <Form.Select
-                value={selectedDesignation}
-                onChange={(e) => setSelectedDesignation(e.target.value)}
-              >
-                <option value="">-- Select --</option>
-                {designations.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.name}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Form>
+          <>
+            {!hasReassignPermission ? (
+              <Alert variant="warning" className="mt-3">
+                You do not have permission to reassign this complaint.
+              </Alert>
+            ) : (
+              <Form>
+                <Form.Group className="mb-3">
+                  <Form.Label>Select Designation</Form.Label>
+                  <Form.Select
+                    value={selectedDesignation}
+                    onChange={(e) => setSelectedDesignation(e.target.value)}
+                    disabled={!hasReassignPermission}
+                  >
+                    <option value="">-- Select --</option>
+                    {designations.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Form>
+            )}
+          </>
         )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           Cancel
         </Button>
-        <Button
-          variant="primary"
-          onClick={handleSave}
-          disabled={!selectedDesignation || saving}
-        >
-          {saving ? "Saving..." : "Reassign"}
-        </Button>
+        {hasReassignPermission && (
+          <Button
+            variant="primary"
+            onClick={handleSave}
+            disabled={!selectedDesignation || saving}
+          >
+            {saving ? (
+              <>
+                <Spinner animation="border" size="sm" className="me-2" />
+                Saving...
+              </>
+            ) : (
+              "Reassign"
+            )}
+          </Button>
+        )}
       </Modal.Footer>
     </Modal>
   );

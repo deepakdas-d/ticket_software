@@ -102,7 +102,7 @@ export const updateComplaintDesignation = async (complaintId, designationId) => 
   const token = localStorage.getItem("accessToken");
 
   const response = await fetch(
-    `${API_BASE_URL}/tickets/supporter/complaints/${complaintId}/reassign/`,
+    `${API_BASE_URL}/tickets/supporter/complaints/${complaintId}/reassign-designation/`,
     {
       method: "PATCH",
       headers: {

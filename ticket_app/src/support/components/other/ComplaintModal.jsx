@@ -1,12 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
 import { updateComplaintStatus } from "../../services/SupportTicketService";
-
+import { getSupporterProfile } from "../../services/SupportServices";
 const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
   const [remarks, setRemarks] = useState("");
   const [status, setStatus] = useState(complaint?.status || "Open");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [hasUpdatePermission, setHasUpdatePermission] = useState(false);
+
+  // Fetch supporter profile and check permissions
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const profile = await getSupporterProfile();
+        const canUpdate = profile.permissions.some(
+          (perm) => perm.codename === "update_status"
+        );
+        setHasUpdatePermission(canUpdate);
+      } catch (error) {
+        console.error("Error fetching supporter profile:", error);
+        setHasUpdatePermission(false);
+      }
+    };
+
+    fetchPermissions();
+  }, []);
 
   // Sync status when complaint prop changes
   useEffect(() => {
@@ -17,7 +36,7 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
   }, [complaint]);
 
   const handleUpdate = async () => {
-    if (!complaint) return;
+    if (!complaint || !hasUpdatePermission) return;
 
     setLoading(true);
     setMessage(null);
@@ -25,11 +44,10 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
     try {
       const result = await updateComplaintStatus(complaint.id, status, remarks);
       setMessage({ type: "success", text: "Status updated successfully!" });
-      setStatus(result.status); // Update local status with server response
+      setStatus(result.status);
       if (onStatusUpdated) {
-        onStatusUpdated(result); // Notify parent of update
+        onStatusUpdated(result);
       }
-      // Close modal after 1-second delay to show success message
       setTimeout(() => {
         onHide();
       }, 1000);
@@ -42,7 +60,7 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
   };
 
   return (
-    <Modal show={!!complaint} onHide={onHide} centered size="lg">
+    <Modal show={!!complaint} onHide={onHide} centered size="xl">
       <Modal.Header closeButton>
         <Modal.Title>Complaint Details</Modal.Title>
       </Modal.Header>
@@ -105,32 +123,43 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
             )}
 
             {/* Update form */}
-            <hr />
-            <h6 className="fw-bold mb-3">Update Complaint</h6>
-            {message && <Alert variant={message.type}>{message.text}</Alert>}
+            {hasUpdatePermission && (
+              <>
+                <hr />
+                <h6 className="fw-bold mb-3">Update Complaint</h6>
+                {message && <Alert variant={message.type}>{message.text}</Alert>}
 
-            <Form.Group className="mb-3">
-              <Form.Label>Status</Form.Label>
-              <Form.Select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value="Open">Open</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Closed">Closed</option>
-              </Form.Select>
-            </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Status</Form.Label>
+                  <Form.Select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    disabled={!hasUpdatePermission}
+                  >
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Closed">Closed</option>
+                  </Form.Select>
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Remarks</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-                placeholder="Enter remarks..."
-              />
-            </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Remarks</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                    placeholder="Enter remarks..."
+                    disabled={!hasUpdatePermission}
+                  />
+                </Form.Group>
+              </>
+            )}
+            {!hasUpdatePermission && (
+              <Alert variant="warning" className="mt-3">
+                You do not have permission to update this complaint.
+              </Alert>
+            )}
           </div>
         )}
       </Modal.Body>
@@ -138,9 +167,11 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleUpdate} disabled={loading}>
-          {loading ? <Spinner animation="border" size="sm" /> : "Update"}
-        </Button>
+        {hasUpdatePermission && (
+          <Button variant="primary" onClick={handleUpdate} disabled={loading}>
+            {loading ? <Spinner animation="border" size="sm" /> : "Update"}
+          </Button>
+        )}
       </Modal.Footer>
     </Modal>
   );
