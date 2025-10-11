@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
 import { updateComplaintStatus } from "../../services/SupportTicketService";
 import { getSupporterProfile } from "../../services/SupportServices";
+import "./ComplaintModal.css";
+
 const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
   const [remarks, setRemarks] = useState("");
   const [status, setStatus] = useState(complaint?.status || "Open");
@@ -9,7 +11,7 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
   const [message, setMessage] = useState(null);
   const [hasUpdatePermission, setHasUpdatePermission] = useState(false);
 
-  // Fetch supporter profile and check permissions
+  // Fetch supporter profile and check if user has permission to update status
   useEffect(() => {
     const fetchPermissions = async () => {
       try {
@@ -27,14 +29,15 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
     fetchPermissions();
   }, []);
 
-  // Sync status when complaint prop changes
+  // Sync status and reset remarks when complaint changes
   useEffect(() => {
     if (complaint) {
       setStatus(complaint.status);
-      setRemarks(""); // Reset remarks when opening modal
+      setRemarks("");
     }
   }, [complaint]);
 
+  // Handle updating complaint status
   const handleUpdate = async () => {
     if (!complaint || !hasUpdatePermission) return;
 
@@ -42,17 +45,22 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
     setMessage(null);
 
     try {
+      // Call API to update status
       const result = await updateComplaintStatus(complaint.id, status, remarks);
-      setMessage({ type: "success", text: "Status updated successfully!" });
-      setStatus(result.status);
+
+      // Notify parent component about successful update
       if (onStatusUpdated) {
-        onStatusUpdated(result);
+        onStatusUpdated({
+          complaint: result,
+          successMessage: "Status updated successfully!"
+        });
       }
-      setTimeout(() => {
-        onHide();
-      }, 1000);
+
+      // Close modal immediately after update
+      onHide();
     } catch (error) {
       console.error(error);
+      // Show error message inside modal if update fails
       setMessage({ type: "danger", text: error.message });
     } finally {
       setLoading(false);
@@ -60,81 +68,79 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
   };
 
   return (
-    <Modal show={!!complaint} onHide={onHide} centered size="xl">
-      <Modal.Header closeButton>
+    <Modal show={!!complaint} onHide={onHide} className="complaint-modal">
+      {/* Modal Header */}
+      <Modal.Header closeButton className="complaint-modal-header">
         <Modal.Title>Complaint Details</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+
+      {/* Modal Body */}
+      <Modal.Body className="complaint-modal-body">
         {complaint && (
           <div className="container-fluid">
-            {/* Complaint details */}
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">ID:</div>
-              <div className="col-sm-8">{complaint.id}</div>
+            {/* Complaint Details */}
+            <div className="detail-row">
+              <span className="detail-label">ID:</span>
+              <span className="detail-value">{complaint.id}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Customer:</span>
+              <span className="detail-value">{complaint.customer_name}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Email:</span>
+              <span className="detail-value">{complaint.customer_email}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Phone:</span>
+              <span className="detail-value">{complaint.customer_phone}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Subject:</span>
+              <span className="detail-value">{complaint.subject}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Description:</span>
+              <span className="detail-value">{complaint.description}</span>
             </div>
 
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">Customer:</div>
-              <div className="col-sm-8">{complaint.customer_name}</div>
-            </div>
-
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">Email:</div>
-              <div className="col-sm-8">{complaint.customer_email}</div>
-            </div>
-
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">Phone:</div>
-              <div className="col-sm-8">{complaint.customer_phone}</div>
-            </div>
-
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">Subject:</div>
-              <div className="col-sm-8">{complaint.subject}</div>
-            </div>
-
-            <div className="row mb-2">
-              <div className="col-sm-4 fw-bold">Description:</div>
-              <div className="col-sm-8">{complaint.description}</div>
-            </div>
-
-            {/* Image field with preview */}
+            {/* Image Preview */}
             {complaint.image && (
-              <div className="row mb-3">
-                <div className="col-sm-4 fw-bold">Image:</div>
-                <div className="col-sm-8">
+              <div className="detail-row image-row">
+                <span className="detail-label">Image:</span>
+                <div className="detail-value">
                   <img
                     src={complaint.image}
                     alt="Complaint"
-                    className="img-fluid rounded border mb-2"
-                    style={{ maxHeight: "200px", objectFit: "cover" }}
+                    className="complaint-image"
                   />
-                  <div>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      onClick={() => window.open(complaint.image, "_blank")}
-                    >
-                      Preview
-                    </Button>
-                  </div>
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    className="preview-btn"
+                    onClick={() => window.open(complaint.image, "_blank")}
+                  >
+                    View Full Size
+                  </Button>
                 </div>
               </div>
             )}
 
-            {/* Update form */}
+            {/* Update Form Section (only if user has permission) */}
             {hasUpdatePermission && (
               <>
-                <hr />
-                <h6 className="fw-bold mb-3">Update Complaint</h6>
+                <div className="section-divider"></div>
+                <h6 className="update-section-title">Update Complaint</h6>
+
                 {message && <Alert variant={message.type}>{message.text}</Alert>}
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Status</Form.Label>
+                  <Form.Label className="form-label-custom">Status</Form.Label>
                   <Form.Select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                     disabled={!hasUpdatePermission}
+                    className="form-control-custom"
                   >
                     <option value="Open">Open</option>
                     <option value="In Progress">In Progress</option>
@@ -143,7 +149,7 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Remarks</Form.Label>
+                  <Form.Label className="form-label-custom">Remarks</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={3}
@@ -151,10 +157,13 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
                     onChange={(e) => setRemarks(e.target.value)}
                     placeholder="Enter remarks..."
                     disabled={!hasUpdatePermission}
+                    className="form-control-custom"
                   />
                 </Form.Group>
               </>
             )}
+
+            {/* Message if user has no permission */}
             {!hasUpdatePermission && (
               <Alert variant="warning" className="mt-3">
                 You do not have permission to update this complaint.
@@ -163,12 +172,23 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
           </div>
         )}
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+
+      {/* Modal Footer */}
+      <Modal.Footer className="complaint-modal-footer">
+        <Button
+          variant="secondary"
+          onClick={onHide}
+          className="btn-close-custom"
+        >
           Close
         </Button>
         {hasUpdatePermission && (
-          <Button variant="primary" onClick={handleUpdate} disabled={loading}>
+          <Button
+            variant="primary"
+            onClick={handleUpdate}
+            disabled={loading}
+            className="btn-update-custom"
+          >
             {loading ? <Spinner animation="border" size="sm" /> : "Update"}
           </Button>
         )}

@@ -1,134 +1,38 @@
-/* Sidebar Base */
-.sidebar {
-  width: 240px;
-  background: #1653d5;
+/* Supporter Sidebar Container */
+.supporter-sidebar {
+  width: 250px;
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
   color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 100vh;
-  padding: 1rem 0;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-}
-
-.sidebar-header {
-  background-color: #1653d5; /* Blue background */
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  padding: 15px 0;
-  letter-spacing: 1px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-/* Profile */
-.sidebar-profile {
-  display: flex;
-  align-items: center;
-  padding: 0 1.5rem;
-  margin-bottom: 2rem;
-  transition: background 0.3s ease;
-  cursor: pointer;
-}
-.sidebar-profile:hover {
-  background: #0f3ba5;
-  border-radius: 8px;
-}
-
-.profile-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 1rem;
-}
-
-.profile-info h4 {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
-.profile-info p {
-  margin: 0;
-  font-size: 0.85rem;
-  color: #d0e0ff;
-}
-
-/* Menu */
-.menu {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.menu a {
-  position: relative;
-  padding: 0.9rem 1.5rem;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 0.95rem;
-  border-left: 4px solid transparent;
-  overflow: hidden;
-  transition: color 0.3s ease, padding-left 0.3s ease;
-  z-index: 1;
-  font-weight: 500;
-}
-
-/* Battery Fill Effect */
-.menu a::before {
-  content: "";
-  position: absolute;
+  padding: 1.5rem 1rem;
+  min-height: 100vh;
+  position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 0;
-  background: whitesmoke; /* battery color */
-  transition: width 0.4s ease-in-out;
-  z-index: -1;
-  border-radius: 0 8px 8px 0;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
 }
 
-.menu a:hover::before {
-  width: 100%;
+/* Sidebar hidden on mobile by default */
+@media (max-width: 768px) {
+  .supporter-sidebar {
+    transform: translateX(-100%);
+  }
+  .supporter-sidebar.open {
+    transform: translateX(0);
+  }
 }
 
-.menu a:hover {
-  color: #1653d5; /* optional: text contrast */
-  border-left: 4px solid #ffdd57;
-  padding-left: 1.8rem;
-  font-weight: 600;
-}
-
-/* Active Menu Item - Always Filled */
-.menu a.active::before {
-  width: 100%;
-}
-
-.menu a.active {
-  color: #1653d5;
-  border-left: 4px solid #ffdd57;
-  font-weight: 600;
-  padding-left: 1.8rem;
-}
-
-/* Logout Button */
-.logout-btn {
-  background: #d93025;
-  border: none;
-  color: #fff;
-  margin: 1rem 1.5rem;
-  padding: 0.7rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-  background: #b1251a;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+/* Header */
+.sidebar-header {
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-align: center;
+  color: #a8d0e6;
+  margin-bottom: 2rem;
 }
 
 /* Profile Section */
@@ -137,11 +41,19 @@
   align-items: center;
   gap: 10px;
   padding: 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
   cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.sidebar-profile:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .profile-icon {
-  flex-shrink: 0;
+  color: #fff;
 }
 
 .profile-info h4 {
@@ -153,6 +65,55 @@
 .profile-info p {
   margin: 0;
   font-size: 0.85rem;
-  color: #ccc;
+  color: #d0e0ff;
 }
+
+/* Navigation */
+.supporter-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  flex-grow: 1;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nav-btn.active {
+  background-color: #4a90e2;
+  font-weight: bold;
+}
+
+/* Logout Button */
+.btn-logout {
+  background-color: #0077b6;
+  border: none;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.btn-logout:hover {
+  background-color: #0096c7;
+}
+
+
 

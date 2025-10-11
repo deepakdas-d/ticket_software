@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import DataTable from "react-data-table-component";
-import { Button } from "react-bootstrap";
+import { Button, Form, Row, Col } from "react-bootstrap";
 import SupporterSidebar from "../components/SideBar/SupporterSidebar";
 import ComplaintModal from "../components/other/ComplaintModal";
 import ReassignModal from "../components/other/ReassignModal";
@@ -8,53 +8,127 @@ import PermissionDenied from "../components/other/PermissionDenied";
 import { useComplaints } from "../hooks/useComplaints";
 import { useNavigate } from "react-router-dom";
 import "../styles/SupportTickets.css";
-import { FaBars, FaTimes } from "react-icons/fa";
 
 const ComplaintTable = () => {
-  const { complaints, totalRows, loading, error, fetchData, refresh } = useComplaints();
+  const { complaints, loading, error, refresh } = useComplaints();
   const navigate = useNavigate();
 
   const [selectedComplaint, setSelectedComplaint] = useState(null);
-  const [perPage, setPerPage] = useState(10);
+  const [alertMessage, setAlertMessage] = useState(null);
   const [showReassign, setShowReassign] = useState(false);
   const [complaintForReassign, setComplaintForReassign] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    status: "",
+    customer_name: "",
+    subject: "",
+    search: "",
+  });
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
-  // Pagination handlers
-  const handlePageChange = (page) => fetchData(page, perPage);
-  const handlePerRowsChange = (newPerPage, page) => {
-    setPerPage(newPerPage);
-    fetchData(page, newPerPage);
+  // Mapping for filter values
+  const statusMap = {
+    open: "open",
+    in_progress: "In Progress",
+    closed: "Closed",
   };
 
-  // Modal refresh handlers
-  const handleStatusUpdated = () => {
-    setSelectedComplaint(null);
-    refresh(1, perPage);
+  // Handle filter changes
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
   };
+
+  // Reset filters
+  const resetFilters = () => {
+    setFilters({ status: "", customer_name: "", subject: "", search: "" });
+  };
+
+  // Client-side filtering
+  const filteredComplaints = useMemo(() => {
+    return complaints.filter((complaint) => {
+      const matchesStatus =
+        !filters.status || complaint.status === statusMap[filters.status];
+
+      const matchesCustomer =
+        !filters.customer_name ||
+        complaint.customer_name
+          .toLowerCase()
+          .includes(filters.customer_name.toLowerCase());
+
+      const matchesSubject =
+        !filters.subject ||
+        complaint.subject.toLowerCase().includes(filters.subject.toLowerCase());
+
+      const matchesSearch =
+        !filters.search ||
+        Object.values(complaint).some((val) =>
+          String(val).toLowerCase().includes(filters.search.toLowerCase())
+        );
+
+      return (
+        matchesStatus && matchesCustomer && matchesSubject && matchesSearch
+      );
+    });
+  }, [complaints, filters]);
+
+  // Modal handlers
+  const handleStatusUpdated = ({ complaint, successMessage }) => {
+    // Update any complaint list state here if needed
+    setAlertMessage(successMessage);
+
+    // Auto-hide alert after 3 seconds
+    setTimeout(() => setAlertMessage(null), 3000);
+  };
+
   const handleReassigned = () => {
     setComplaintForReassign(null);
     setShowReassign(false);
-    refresh(1, perPage);
+    refresh();
   };
 
   const columns = [
-    { name: "ID", selector: (row) => row.id, sortable: true },
-    { name: "Customer", selector: (row) => row.customer_name, sortable: true },
-    { name: "Email", selector: (row) => row.customer_email },
-    { name: "Phone", selector: (row) => row.customer_phone },
-    { name: "Subject", selector: (row) => row.subject },
-    { name: "Status", selector: (row) => row.status, sortable: true },
+    { name: "ID", selector: (row) => row.id, sortable: true, width: "80px" },
     {
-      name: "Action",
+      name: "Customer",
+      selector: (row) => row.customer_name,
+      sortable: true,
+      width: "150px",
+    },
+    {
+      name: "Email",
+      selector: (row) => row.customer_email,
+      sortable: true,
+      width: "200px",
+    },
+    { name: "Phone", selector: (row) => row.customer_phone, width: "130px" },
+    {
+      name: "Subject",
+      selector: (row) => row.subject,
+      sortable: true,
+      width: "200px",
+      wrap: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => row.status,
+      sortable: true,
+      width: "120px",
       cell: (row) => (
-        <div style={{ display: "flex", gap: "10px" }}>
+        <span
+          className={`status-badge status-${row.status
+            .toLowerCase()
+            .replace(" ", "-")}`}
+        >
+          {row.status}
+        </span>
+      ),
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <div className="action-buttons">
           <Button
             variant="primary"
             size="sm"
-            style={{ whiteSpace: "nowrap" }}
             onClick={() => setSelectedComplaint(row)}
           >
             View
@@ -62,7 +136,6 @@ const ComplaintTable = () => {
           <Button
             variant="warning"
             size="sm"
-            style={{ whiteSpace: "nowrap" }}
             onClick={() => {
               setComplaintForReassign(row);
               setShowReassign(true);
@@ -73,85 +146,164 @@ const ComplaintTable = () => {
           <Button
             variant="info"
             size="sm"
-            style={{ whiteSpace: "nowrap" }}
             onClick={() => navigate(`/messages/${row.ticket_id}`)}
           >
             Messages
           </Button>
         </div>
       ),
-      width: "220px",
+      width: "230px",
+      right: true,
     },
   ];
 
-  const customStyles = {
-    rows: { style: { minHeight: "60px" } },
-    headCells: { style: { padding: "14px 10px", fontWeight: "600" } },
-    cells: { style: { padding: "12px 10px" } },
-  };
-
-  if (error?.status === 403) {
-    return <PermissionDenied message={error.message || "You do not have permission to view this section."} />;
-  }
-
-  if (error && error.status !== 403) {
+  if (error?.status === 403)
+    return <PermissionDenied message={error.message || "Access denied."} />;
+  if (error)
     return (
       <div className="alert alert-danger m-4">
-        <strong>Error:</strong> {error.message || "Something went wrong while loading complaints."}
+        <strong>Error:</strong> {error.message || "Failed to load complaints."}
       </div>
     );
-  }
 
   return (
     <div className="main-wrapper">
-      <header className="main-header">
-        <h1>Techfifo Innovations</h1>
-        <Button
-          variant="light"
-          size="sm"
-          onClick={toggleSidebar}
-          style={{ position: "absolute", top: "1rem", left: "1rem", zIndex: 1100 }}
-        >
-          {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-        </Button>
-      </header>
-
       <div
         className={`sidebar-overlay ${isSidebarOpen ? "show" : ""}`}
         onClick={() => setIsSidebarOpen(false)}
-      ></div>
-
+      />
       <div className={`sidebar-container ${isSidebarOpen ? "open" : ""}`}>
         <SupporterSidebar />
       </div>
 
       <div className="complaints-layout">
         <div className="table-container">
-          <h3 className="table-title">Complaints</h3>
+          <h1 className="table-title">Complaints Management</h1>
+          {/* ✅ Success alert */}
+          {alertMessage && (
+            <div
+              className="alert alert-success alert-dismissible fade show"
+              role="alert"
+            >
+              {alertMessage}
+              <button
+                type="button"
+                className="btn-close"
+                aria-label="Close"
+                onClick={() => setAlertMessage(null)}
+              ></button>
+            </div>
+          )}
 
-          <DataTable
-            columns={columns}
-            data={complaints}
-            progressPending={loading}
-            pagination
-            paginationServer
-            paginationTotalRows={totalRows}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-            highlightOnHover
-            striped
-            responsive
-            defaultSortFieldId={1}
-            className="blue-theme-table"
-            customStyles={customStyles}
-          />
+          <div className="filter-bar">
+            <Form>
+              <Row className="g-3">
+                <Col xs={12} md={3}>
+                  <Form.Group>
+                    <Form.Label>Status</Form.Label>
+                    <Form.Select
+                      name="status"
+                      value={filters.status}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">All Statuses</option>
+                      <option value="open">Open</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="closed">Closed</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group>
+                    <Form.Label>Customer Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="customer_name"
+                      value={filters.customer_name}
+                      onChange={handleFilterChange}
+                      placeholder="Filter by name"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group>
+                    <Form.Label>Subject</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="subject"
+                      value={filters.subject}
+                      onChange={handleFilterChange}
+                      placeholder="Filter by subject"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12} md={3}>
+                  <Form.Group>
+                    <Form.Label>Search All</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="search"
+                      value={filters.search}
+                      onChange={handleFilterChange}
+                      placeholder="Search everything..."
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={12}>
+                  <Button variant="secondary" onClick={resetFilters}>
+                    Reset Filters
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </div>
+
+          <div className="table-wrapper">
+            <DataTable
+              columns={columns}
+              data={filteredComplaints}
+              progressPending={loading}
+              pagination
+              paginationPerPage={10}
+              paginationRowsPerPageOptions={[10, 20, 30, 50]}
+              highlightOnHover
+              striped
+              responsive
+              customStyles={{
+                table: { style: { minWidth: "1100px" } },
+                headRow: {
+                  style: {
+                    backgroundColor: "#1e3c72",
+                    color: "#fff",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    minHeight: "50px",
+                  },
+                },
+                rows: {
+                  style: {
+                    minHeight: "60px",
+                    fontSize: "14px",
+                    "&:nth-of-type(odd)": { backgroundColor: "#f9fbff" },
+                    "&:hover": {
+                      backgroundColor: "#e6f0ff",
+                      cursor: "pointer",
+                    },
+                  },
+                },
+                cells: { style: { padding: "12px 10px" } },
+              }}
+              noDataComponent={
+                <div className="no-data">No complaints found</div>
+              }
+            />
+          </div>
 
           <ComplaintModal
             complaint={selectedComplaint}
             onHide={() => setSelectedComplaint(null)}
             onStatusUpdated={handleStatusUpdated}
           />
-
           <ReassignModal
             complaint={complaintForReassign}
             show={showReassign}

@@ -8,11 +8,10 @@ import { FaBars, FaUserCircle } from "react-icons/fa";
 const SupporterProfile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [designationName, setDesignationName] = useState("—");
-  const [profile, setProfile] = useState(null); // Local state for API data
+  const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch profile + map designation
   useEffect(() => {
     const fetchProfileWithDesignation = async () => {
       try {
@@ -22,16 +21,11 @@ const SupporterProfile = () => {
           return;
         }
 
-        // Fetch all designations
         const designations = await fetchDesignations();
-
-        // Map designation name
         const matchedDesignation = designations.find(
           (d) => d.id === data.designation
         );
         setDesignationName(matchedDesignation?.name || "—");
-
-        // Set profile state
         setProfile({ ...data, designation_name: matchedDesignation?.name || "—" });
       } catch (err) {
         console.error("Failed to fetch profile or designation:", err);
@@ -55,18 +49,15 @@ const SupporterProfile = () => {
 
   return (
     <div className="supporter-dashboard">
-      {/* Sidebar overlay */}
       <div
         className={`sidebar-overlay ${isSidebarOpen ? "show" : ""}`}
         onClick={() => setIsSidebarOpen(false)}
       ></div>
 
-      {/* Sidebar */}
       <div className={`sidebar-container ${isSidebarOpen ? "open" : ""}`}>
         <SupporterSidebar />
       </div>
 
-      {/* Main content */}
       <main className="main-content">
         <header className="topbar">
           <button
@@ -75,7 +66,17 @@ const SupporterProfile = () => {
           >
             <FaBars size={20} />
           </button>
-          <h1>My Profile</h1>
+          <h1
+  style={{
+    background: "linear-gradient(180deg, #1e3c72, #2a5298)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    fontWeight: "700"
+  }}
+>
+  My Profile
+</h1>
+
         </header>
 
         <section className="profile-content">
@@ -88,7 +89,7 @@ const SupporterProfile = () => {
                   className="profile-avatar-large"
                 />
               ) : (
-                <FaUserCircle size={100} color="#ccc" />
+                <FaUserCircle size={100} color="#2a5298" />
               )}
               <h2 className="mt-3">{profile?.username}</h2>
               <span className="badge bg-primary">

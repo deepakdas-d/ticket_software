@@ -67,7 +67,7 @@ export async function fetchDesignations() {
   }
 }
 
-// ✅ Fetch ticket reports for analytics in dashboard (with debug logs)
+// ✅ Fetch ticket reports for analytics in dashboard
 export async function fetchTicketReports() {
   console.log("📡 [fetchTicketReports] Function called");
 

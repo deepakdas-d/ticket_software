@@ -1,57 +1,42 @@
-/* Layout */
+/* Main Layout */
+.main-wrapper {
+  position: relative;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
 .complaints-layout {
   display: flex;
-  flex-wrap: nowrap;
-  min-height: calc(100vh - 72px); /* subtract header height */
-  position: relative;
+  min-height: 100vh;
 }
 
-/* Header */
-.main-header {
-  background-color: #f1f7ff; /* Bootstrap primary blue */
-  padding: 1rem 2rem;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-h1 {
-    font-weight: 700;
-    color: #1653d5;
-}
-
-/* Sidebar Overlay */
+/* Sidebar */
 .sidebar-container {
-  position: fixed; /* overlay everything including header */
+  position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   width: 250px;
-  background: #1653d5;
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
   color: #fff;
   transition: transform 0.3s ease;
-  transform: translateX(-100%); /* hidden by default */
+  transform: translateX(-100%);
   z-index: 2000;
   overflow-y: auto;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Sidebar open state */
 .sidebar-container.open {
   transform: translateX(0);
 }
 
-/* Sidebar overlay backdrop */
 .sidebar-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1500;
   display: none;
 }
@@ -62,105 +47,310 @@ h1 {
 
 /* Table Container */
 .table-container {
-  flex-grow: 1;
-  padding: 20px;
-  margin-left: 0; /* no sidebar margin because sidebar overlays */
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(22, 83, 213, 0.15);
-  overflow-x: auto;
+  flex: 1;
+  padding: 30px;
+  margin-left: 0;
+  background: #fff;
 }
 
-/* Table Title */
 .table-title {
-  color: #1653d5;
+  color: #1e3c72;
   font-weight: 700;
-  margin-bottom: 20px;
-  font-size: 1.2rem;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
 }
 
-/* DataTable Blue Theme */
-.blue-theme-table .rdt_TableHead {
-  color: #0f3ba5;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85rem;
+/* Filter Bar */
+.filter-bar {
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
 }
 
-.blue-theme-table .rdt_TableRow {
-  font-size: 0.9rem;
-  background-color: #f9fbff;
-  transition: background 0.3s ease;
-}
-
-.blue-theme-table .rdt_TableRow:nth-child(odd) {
-  background-color: #f1f7ff;
-}
-
-.blue-theme-table .rdt_TableRow:hover {
-  background-color: #e6f0ff;
-  cursor: pointer;
-}
-
-/* Pagination */
-.blue-theme-table .rdt_Pagination {
-  border-top: 1px solid #1653d5;
-  color: #1653d5;
-  font-size: 0.85rem;
-  flex-wrap: wrap;
-}
-
-.blue-theme-table .rdt_Pagination button {
-  border-radius: 50%;
-  height: 32px;
-  width: 32px;
-  padding: 0;
-  margin: 4px;
-  background-color: #fff;
-  border: 1px solid #1653d5;
-  color: #1653d5;
-  transition: all 0.3s ease;
-}
-
-.blue-theme-table .rdt_Pagination button:hover {
-  background-color: #1653d5;
+.filter-bar .form-label {
   color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.filter-bar .form-control,
+.filter-bar .form-select {
+  border-radius: 8px;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  color: #1e3c72;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+}
+
+.filter-bar .form-control:focus,
+.filter-bar .form-select:focus {
+  border-color: #2a5298;
+  box-shadow: 0 0 0 0.2rem rgba(42, 82, 152, 0.25);
+  background: #fff;
+}
+
+.filter-bar .btn {
+  font-size: 0.9rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: #fff;
+  color: #1e3c72;
+  border: 2px solid #fff;
+}
+
+.filter-bar .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: #f8f9fa;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+/* DataTable Customizations */
+.rdt_Table {
+  min-width: 1100px;
+}
+
+.rdt_TableHeadRow {
+  background: #1e3c72 !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-bottom: 2px solid #2a5298;
+}
+
+.rdt_TableCol {
+  color: #fff !important;
+  padding: 16px 12px !important;
+}
+
+.rdt_TableRow {
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #e6f0ff;
+}
+
+.rdt_TableRow:nth-of-type(odd) {
+  background-color: #f9fbff;
+}
+
+.rdt_TableRow:nth-of-type(even) {
+  background-color: #fff;
+}
+
+.rdt_TableRow:hover {
+  background-color: #e6f0ff !important;
+  transform: scale(1.002);
+  box-shadow: 0 2px 8px rgba(30, 60, 114, 0.1);
+}
+
+.rdt_TableCell {
+  padding: 14px 12px !important;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-open {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #1976d2;
+}
+
+.status-In-Progress {
+  background: #fff3e0;
+  color: #f57c00;
+  border: 1px solid #f57c00;
+}
+
+.status-closed {
+  background: #e8f5e9;
+  color: #388e3c;
+  border: 1px solid #388e3c;
 }
 
 /* Action Buttons */
-.view-btn {
-  background-color: #1653d5 !important;
-  border: none !important;
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.action-buttons .btn {
+  font-size: 12px;
+  padding: 6px 12px;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.action-buttons .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.action-buttons .btn-primary {
+  background: #1976d2;
+  border-color: #1976d2;
+}
+
+.action-buttons .btn-warning {
+  background: #f57c00;
+  border-color: #f57c00;
+  color: #fff;
+}
+
+.action-buttons .btn-info {
+  background: #0288d1;
+  border-color: #0288d1;
+}
+
+/* Pagination */
+.rdt_Pagination {
+  border-top: 2px solid #1e3c72;
+  padding: 16px;
+  background: #f9fbff;
+}
+
+.rdt_Pagination button {
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 0 4px;
+  background: #fff;
+  border: 1px solid #1e3c72;
+  color: #1e3c72;
+  transition: all 0.2s ease;
   font-weight: 500;
 }
 
-.view-btn:hover {
-  background-color: #0f3ba5 !important;
+.rdt_Pagination button:hover:not(:disabled) {
+  background: #1e3c72;
+  color: #fff;
+  transform: translateY(-2px);
 }
 
-/* Responsive Adjustments */
+.rdt_Pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* No Data Component */
+.no-data {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Scrollbar */
+.table-wrapper::-webkit-scrollbar {
+  height: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f7ff;
+  border-radius: 5px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
+  border-radius: 5px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #1653d5;
+}
+
+/* Responsive Design */
 @media (max-width: 992px) {
+  .table-container {
+    padding: 20px;
+  }
+
+  .table-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .filter-bar {
+    padding: 15px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .action-buttons .btn {
+    width: 100%;
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+}
+
+@media (max-width: 768px) {
   .table-container {
     padding: 15px;
   }
 
   .table-title {
-    font-size: 1rem;
-    text-align: center;
+    font-size: 1.3rem;
+  }
+
+  .filter-bar {
+    padding: 12px;
+  }
+
+  .filter-bar .form-label {
+    font-size: 0.85rem;
+  }
+
+  .filter-bar .form-control,
+  .filter-bar .form-select {
+    font-size: 0.85rem;
+    padding: 8px 10px;
   }
 }
 
 @media (max-width: 576px) {
-  .blue-theme-table .rdt_TableHead {
-    font-size: 0.75rem;
+  .table-container {
+    padding: 10px;
   }
 
-  .blue-theme-table .rdt_TableRow {
-    font-size: 0.8rem;
+  .table-title {
+    font-size: 1.2rem;
   }
 
-  .view-btn {
-    font-size: 0.75rem;
+  .rdt_TableCol,
+  .rdt_TableCell {
+    font-size: 12px !important;
+    padding: 10px 8px !important;
+  }
+
+  .status-badge {
+    font-size: 10px;
     padding: 4px 8px;
   }
 }

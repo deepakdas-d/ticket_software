@@ -1,12 +1,10 @@
 import React from "react";
 import { useSupporterAuth } from "../../hooks/useSupporterAuth";
 import { useNavigate, useLocation } from "react-router-dom";
+import { FaUserCircle, FaTimes } from "react-icons/fa";
 import "./SupporterSidebar.css";
 
-// Using react-icons for the silhouette
-import { FaUserCircle } from "react-icons/fa";
-
-const Sidebar = () => {
+const SupporterSidebar = ({ isOpen, onClose }) => {
   const { user, signOut } = useSupporterAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,6 +21,7 @@ const Sidebar = () => {
 
   const goToProfile = () => {
     navigate("/supportprofile");
+    onClose();
   };
 
   const menuItems = [
@@ -31,45 +30,42 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
-      {/* Header */}
-      {/* <div className="sidebar-header">
-        TECHFIFO INNOVATIONS
-      </div> */}
+    <aside className={`supporter-sidebar ${isOpen ? "open" : ""}`}>
+  
 
-      {/* Profile Section */}
+      <div className="sidebar-header">Support Panel</div>
+
       <div className="sidebar-profile" onClick={goToProfile}>
-        <div className="profile-icon">
-          <FaUserCircle size={50} color="#fff" /> {/* Silhouette icon */}
-        </div>
+        <FaUserCircle size={48} className="profile-icon" />
         <div className="profile-info">
           <h4>{user?.username || "Supporter"}</h4>
           <p>Team Member</p>
         </div>
       </div>
 
-      {/* Menu */}
-      <nav className="menu">
+      <nav className="supporter-sidebar-nav">
         {menuItems.map((item, idx) => {
           const isActive = location.pathname === item.path;
           return (
-            <a
+            <button
               key={idx}
-              href={item.path}
-              className={isActive ? "active" : ""}
+              className={`nav-btn ${isActive ? "active" : ""}`}
+              onClick={() => {
+                navigate(item.path);
+                onClose();
+              }}
             >
               {item.label}
-            </a>
+            </button>
           );
         })}
       </nav>
 
-      {/* Logout */}
-      <button className="logout-btn" onClick={handleLogout}>
+      <button className="btn-logout" onClick={handleLogout}>
         🔒 Logout
       </button>
     </aside>
   );
 };
 
-export default Sidebar;
+export default SupporterSidebar;

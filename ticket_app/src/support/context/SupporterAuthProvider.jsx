@@ -32,7 +32,7 @@ export const SupporterAuthProvider = ({ children }) => {
     setUser(userObj);
     setTokens(tokenObj);
 
-    navigate("/supportdashboard");
+    window.location.replace("/supportdashboard");
   };
 
   const logout = async () => {

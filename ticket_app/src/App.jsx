@@ -1,29 +1,28 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-{
-  /* //==================== SuperAdmin Routes ====================// */
-}
 
+// ==================== Context Providers ==================== //
 import { AdminAuthProvider } from "./superadmin/context/AuthContext";
 import { SupporterAuthProvider } from "./support/context/SupporterAuthProvider";
+import { AuthProvider } from "./users/context/authcontext";
+
+// ==================== SuperAdmin Pages ==================== //
 import SignIn from "./superadmin/pages/SuperAdmin_SignIn";
 import Dashboard from "./superadmin/pages/Dashboard";
 import Tickets from "./superadmin/pages/Tickets";
 import SupportTeam from "./superadmin/pages/Supports";
 import Users from "./superadmin/pages/Users";
-{
-  /* //==================== Supporter Routes ====================// */
-}
 
+// ==================== Supporter Pages ==================== //
 import SupporterLogin from "./support/pages/SupporterLogin";
 import SupporterDashboard from "./support/pages/SupporterDashboard";
 import SupporterProfile from "./support/pages/SupporterProfile";
 import ComplaintTable from "./support/pages/SupportTickets";
 import MessagesPage from "./support/pages/MessagesPage";
 import SupporterProtectedRoute from "./support/components/other/SupporterProtectedRoute";
-{
-  /* //==================== User Routes ====================// */
-}
+import RedirectIfAuthenticated from "./support/components/other/RedirectIfAuthenticated";
+import SupporterLayout from "./support/components/Layout/SupporterLayout";
 
+// ==================== User Pages ==================== //
 import Login from "./users/pages/login/login";
 import Register from "./users/pages/register/register";
 import ForgotPassword from "./users/pages/forgotpassword/request_otp";
@@ -34,7 +33,6 @@ import TicketFormPage from "./users/pages/ticket_form/ticketformpages";
 import TicketsPage from "./users/pages/ticket_form/ticketpage";
 import TicketDetailPage from "./users/pages/ticket_detials/ticket_details";
 import DashboardLayout from "./users/pages/dashboard/dashboard";
-import { AuthProvider } from "./users/context/authcontext";
 
 function App() {
   return (
@@ -43,72 +41,63 @@ function App() {
         <AdminAuthProvider>
           <SupporterAuthProvider>
             <Routes>
-              {/* //==================== Supporter Routes ====================// */}
+              {/* ==================== SUPPORTER ROUTES ==================== */}
               <Route path="/supportsignin" element={<SupporterLogin />} />
               <Route
-                path="/supportdashboard"
+                path="/supportsignin"
                 element={
-                  <SupporterProtectedRoute>
-                    <SupporterDashboard />
-                  </SupporterProtectedRoute>
+                  <RedirectIfAuthenticated>
+                    <SupporterLogin />
+                  </RedirectIfAuthenticated>
                 }
               />
 
+              {/* Persistent Sidebar Layout for all supporter pages */}
               <Route
-                path="/supportprofile"
                 element={
                   <SupporterProtectedRoute>
-                    <SupporterProfile />
+                    <SupporterLayout />
                   </SupporterProtectedRoute>
                 }
-              />
-              <Route
-                path="/supportertickets"
-                element={
-                  <SupporterProtectedRoute>
-                    <ComplaintTable />
-                  </SupporterProtectedRoute>
-                }
-              />
+              >
+                <Route
+                  path="/supportdashboard"
+                  element={<SupporterDashboard />}
+                />
+                <Route path="/supportprofile" element={<SupporterProfile />} />
+                <Route path="/supportertickets" element={<ComplaintTable />} />
+                <Route path="/messages/:ticket_id" element={<MessagesPage />} />
+              </Route>
 
-              <Route
-                path="/messages/:ticket_id"
-                element={
-                  <SupporterProtectedRoute>
-                    <MessagesPage />
-                  </SupporterProtectedRoute>
-                }
-              />
-
-              {/* //==================== SuperAdmin Routes ====================// */}
-              <Route path="/users" element={<Users />} />
-              <Route path="/admintickets" element={<Tickets />} />
-              <Route path="/supports" element={<SupportTeam />} />
+              {/* ==================== SUPERADMIN ROUTES ==================== */}
               <Route path="/adminsignin" element={<SignIn />} />
               <Route path="/admindashboard" element={<Dashboard />} />
-              {/* //==================== User Routes ====================// */}
+              <Route path="/admintickets" element={<Tickets />} />
+              <Route path="/supports" element={<SupportTeam />} />
+              <Route path="/users" element={<Users />} />
 
-              {/* Public routes */}
+              {/* ==================== USER ROUTES ==================== */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
-              {/* Old dashboard route (if you still need it) */}
               <Route
                 path="/helpdesk-dashboard"
                 element={<HelpdeskDashboard />}
               />
               <Route path="/raise-ticket" element={<RaiseTicket />} />
-              {/* Protected routes with Sidebar layout */}
+
+              {/* User layout with sidebar */}
               <Route element={<DashboardLayout />}>
                 <Route path="/ProfilePage" element={<ProfilePage />} />
                 <Route path="/ticket/new" element={<TicketFormPage />} />
                 <Route path="/tickets" element={<TicketsPage />} />
-                <Route path="/ticketdetials" element={<TicketDetailPage />} />
+                <Route path="/ticketdetails" element={<TicketDetailPage />} />
                 <Route
                   path="/tickets/:ticketId"
                   element={<TicketDetailPage />}
                 />
               </Route>
+
               {/* Default route */}
               <Route path="/" element={<Login />} />
             </Routes>

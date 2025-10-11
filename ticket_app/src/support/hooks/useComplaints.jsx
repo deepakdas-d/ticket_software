@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { fetchComplaints } from "../services/SupportTicketService";
 
 export const useComplaints = () => {
@@ -7,7 +7,6 @@ export const useComplaints = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch complaints with pagination
   const fetchData = useCallback(async (page, perPage) => {
     setLoading(true);
     setError(null);
@@ -16,14 +15,17 @@ export const useComplaints = () => {
       setComplaints(complaints);
       setTotalRows(totalRows);
     } catch (err) {
-      // ✅ Preserve full error object, not just a string
       setError(err);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Refresh data by resetting and refetching
+  // Fetch data on mount
+  useEffect(() => {
+    fetchData(1, 10);
+  }, [fetchData]);
+
   const refresh = useCallback((page = 1, perPage = 10) => {
     fetchData(page, perPage);
   }, [fetchData]);
