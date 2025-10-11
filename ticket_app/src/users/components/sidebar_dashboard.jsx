@@ -17,7 +17,7 @@ function Sidebar({ onLogout, navigateTo, className, isMobile, closeSidebar }) {
       </div>
 
       <nav className="sidebar-nav">
-        <button onClick={() => navigateTo("/ProfilePage")}>Profile</button>
+        <button onClick={() => navigateTo("/profile")}>Dashboard</button>
         <button onClick={() => navigateTo("/ticket/new")}>Raise Ticket</button>
         <button onClick={() => navigateTo("/tickets")}>Previous Tickets</button>
       </nav>

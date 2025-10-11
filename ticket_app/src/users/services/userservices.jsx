@@ -196,3 +196,50 @@ export const updateTicketDescription = async (id, authToken, description, image 
   return await res.json();
 };
 
+// ✅ Fetch messages for a specific ticket
+export const getTicketMessages = async (ticketId, authToken) => {
+  const BASE_URL = import.meta.env.VITE_API_URL;
+
+  const res = await fetch(`${BASE_URL}/tickets/complaints/${ticketId}/messages/`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch ticket messages");
+  }
+
+  return res.json();
+};
+
+/**
+ * Send a new message to a ticket
+ * @param {string} ticketId - ID of the ticket
+ * @param {string} message - Message text to send
+ * @param {string} authToken - User authentication token
+ * @returns {Promise<Object>} - The saved message object
+ */
+export const sendTicketMessage = async (ticketId, message, authToken) => {
+  if (!message.trim()) throw new Error("Message cannot be empty");
+
+  const res = await fetch(`${BASE_URL}/tickets/complaints/${ticketId}/messages/send/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({ message }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText || "Failed to send message");
+  }
+
+  return res.json(); // Returns the saved message object
+};
+
+
+

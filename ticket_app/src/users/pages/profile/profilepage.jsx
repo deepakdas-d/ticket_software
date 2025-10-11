@@ -130,9 +130,9 @@ function ProfilePage() {
                 <div key={index} className="ticket-item">
                   <div className="ticket-content">
                     <div className="ticket-header">
-                      <h4 className="ticket-title">
-                        {complaint.title || `Ticket #${complaint.id}`}
-                      </h4>
+                      <h6 className="ticket-title">
+                        {complaint.title || `Ticket #${complaint.ticket_id}`}
+                      </h6>
                       <span className={`ticket-status status-${complaint.status}`}>
                         {complaint.status}
                       </span>

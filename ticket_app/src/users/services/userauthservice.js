@@ -17,41 +17,15 @@ export const loginUser = async (email, password) => {
   return response.json();
 };
 
-export const registerUser = async ({ username, email, password, phone }) => {
-  console.log("🟢 [registerUser] Starting user registration...");
-   console.log("🌐 [registerUser] Base URL:", BASE_URL);
-  console.log("➡️ Request Data:", { username, email, phone });
-
+export const registerUser = async (userData) => {
   try {
     const response = await fetch(`${BASE_URL}/users/register/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        phone_number: phone,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
     });
-
-    console.log("📩 [registerUser] Response status:", response.status);
-
-    const responseData = await response.json().catch(() => {
-      console.warn("⚠️ Failed to parse JSON response");
-      return null;
-    });
-
-    if (!response.ok) {
-      console.error("❌ [registerUser] Registration failed:", responseData);
-      throw new Error(responseData?.detail || "Registration failed");
-    }
-
-    console.log("✅ [registerUser] Registration successful:", responseData);
-    return responseData;
+    return response.json();
   } catch (error) {
-    console.error("🚨 [registerUser] Error occurred:", error);
     throw error;
   }
 };
@@ -74,4 +48,20 @@ export const logoutUser = async (authToken, refreshToken, logout) => {
     console.error("Logout error:", err);
   }
 };
+
+// Get messages for a specific ticket
+
+export const verifyOtp = async (email, otp) => {
+  try {
+    const res = await fetch(`${BASE_URL}/users/verify-email/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    });
+    return res.json();
+  } catch (err) {
+    throw err;
+  }
+};
+
 

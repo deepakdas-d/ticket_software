@@ -21,7 +21,7 @@ export const useLogin = () => {
       if (data.access && data.refresh) {
         login(data.access, data.refresh);
       }
-      navigate("/ProfilePage");
+      navigate("/profile");
       return true;
     } catch (err) {
       setError(err.message);

@@ -33,6 +33,7 @@ import TicketFormPage from "./users/pages/ticket_form/ticketformpages";
 import TicketsPage from "./users/pages/ticket_form/ticketpage";
 import TicketDetailPage from "./users/pages/ticket_detials/ticket_details";
 import DashboardLayout from "./users/pages/dashboard/dashboard";
+import ProtectedRoute from "./users/components/protectedRoute";
 
 function App() {
   return (
@@ -77,29 +78,31 @@ function App() {
               <Route path="/users" element={<Users />} />
 
               {/* ==================== USER ROUTES ==================== */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route
-                path="/helpdesk-dashboard"
-                element={<HelpdeskDashboard />}
-              />
-              <Route path="/raise-ticket" element={<RaiseTicket />} />
+                  
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/raise-ticket" element={<RaiseTicket />} />
+        <Route path="/" element={<Login />} />
 
-              {/* User layout with sidebar */}
-              <Route element={<DashboardLayout />}>
-                <Route path="/ProfilePage" element={<ProfilePage />} />
-                <Route path="/ticket/new" element={<TicketFormPage />} />
-                <Route path="/tickets" element={<TicketsPage />} />
-                <Route path="/ticketdetails" element={<TicketDetailPage />} />
-                <Route
-                  path="/tickets/:ticketId"
-                  element={<TicketDetailPage />}
-                />
-              </Route>
+        {/* Protected routes */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/ticket/new" element={<TicketFormPage />} />
+          <Route path="/tickets" element={<TicketsPage />} />
+          <Route path="/ticket-details" element={<TicketDetailPage />} />
+          <Route path="/tickets/:ticketId" element={<TicketDetailPage />} />
+        </Route>
 
-              {/* Default route */}
-              <Route path="/" element={<Login />} />
+        {/* Optional old route */}
+        <Route path="/helpdesk-dashboard" element={<HelpdeskDashboard />} />
             </Routes>
           </SupporterAuthProvider>
         </AdminAuthProvider>
