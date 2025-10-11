@@ -33,7 +33,7 @@ import TicketFormPage from "./users/pages/ticket_form/ticketformpages";
 import TicketsPage from "./users/pages/ticket_form/ticketpage";
 import TicketDetailPage from "./users/pages/ticket_detials/ticket_details";
 import DashboardLayout from "./users/pages/dashboard/dashboard";
-import ProtectedRoute from "./users/components/protectedRoute";
+import ProtectedRoute from "./users/components/ProtectedRoute";
 
 function App() {
   return (
