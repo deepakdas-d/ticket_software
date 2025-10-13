@@ -133,7 +133,7 @@ function RegisterForm() {
     navigate("/login");
   };
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setErrors({});
 

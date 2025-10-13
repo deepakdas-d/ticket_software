@@ -129,7 +129,7 @@ const Tickets = () => {
                 <option value="All">All Status</option>
                 <option value="Open">Open</option>
                 <option value="Closed">Closed</option>
-                <option value="In Progress">In Progress</option>
+                <option value="in_progress">In Progress</option>
               </select>
             </div>
 
