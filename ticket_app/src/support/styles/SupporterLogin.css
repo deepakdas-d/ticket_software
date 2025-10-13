@@ -15,7 +15,7 @@
   text-align: center;
   margin-bottom: 2rem;
   font-size: 2rem;
-  color: #1653d5;
+  color: #17315b;
   font-weight: bold;
 }
 
@@ -41,7 +41,7 @@
 .card-title {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #1653d5;
+  color: #17315b;
   margin-bottom: 1.5rem;
 }
 
@@ -61,7 +61,7 @@
 /* Error message */
 .error-message {
   background: #ffe6e6;
-  color: #d93025;
+  color: #d931256c;
   padding: 0.6rem;
   border-radius: 6px;
   margin-bottom: 1rem;
@@ -98,9 +98,10 @@
 }
 
 /* Button */
+/* Button with gradient */
 .btn-login {
   width: 100%;
-  background: #1653d5;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%);
   color: #fff;
   padding: 0.7rem;
   border: none;
@@ -108,18 +109,21 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.25s, transform 0.2s;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .btn-login:hover {
-  background: #0e3ca8;
+  background: linear-gradient(135deg, #17315b 0%, #203e7c 50%);
   transform: translateY(-2px);
 }
 
 .btn-login:disabled {
-  background: #9bb7f0;
+  background: #9bb7f0; /* can keep a muted gradient if desired */
   cursor: not-allowed;
 }
+
+
+
 
 .fade-quote {
   font-size: 1rem;

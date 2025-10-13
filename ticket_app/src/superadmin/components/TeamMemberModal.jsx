@@ -1,12 +1,19 @@
-// TeamMemberModal.jsx
 import { useState, useEffect, useRef } from "react";
 import { useDesignations } from "../hooks/useDesignations";
 import { addDesignation } from "../services/designationService";
 import { useRegisterSupporter } from "../hooks/useRegisterSupporter";
 import { fetchPermissions } from "../services/supporterService";
-import {assignPermissions}from "../services/supportTeamService"
-
-const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => {
+import { assignPermissions } from "../services/supportTeamService";
+import "./modal.css"
+const TeamMemberModal = ({
+  show,
+  mode,
+  member,
+  onClose,
+  fetchData,
+  update,
+  onSuccess, // ✅ callback for toast messages
+}) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -15,7 +22,6 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
     designation: "",
   });
 
-  // permissions
   const [permissions, setPermissions] = useState([]);
   const [selectedPermissions, setSelectedPermissions] = useState([]);
 
@@ -28,7 +34,6 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
 
   const firstInputRef = useRef(null);
 
-  // hooks
   const {
     designations,
     loading: designationsLoading,
@@ -38,7 +43,6 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
 
   const { register, loading: regLoading } = useRegisterSupporter();
 
-  /** Pre-populate form when editing */
   useEffect(() => {
     if (mode === "edit" && member) {
       setFormData({
@@ -49,7 +53,6 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
         designation: member.designation || "",
       });
 
-      // ensure permissions are IDs only
       setSelectedPermissions(
         Array.isArray(member.permissions)
           ? member.permissions.map((p) => (typeof p === "object" ? p.id : p))
@@ -71,7 +74,6 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
     }
   }, [mode, member, show]);
 
-  /** Fetch permissions when modal opens */
   useEffect(() => {
     if (show) {
       fetchPermissions()
@@ -80,72 +82,89 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
     }
   }, [show]);
 
-  /** Input change handler */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  /** Toggle permission selection */
   const handlePermissionChange = (id) => {
     setSelectedPermissions((prev) =>
       prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
     );
   };
 
-  /** Add new designation */
-  const handleDesignationAdd = async () => {
-    if (!newDesignation.trim()) return;
-    setAddingDesignation(true);
-    setDesignationError("");
+const handleDesignationAdd = async () => {
+  if (!newDesignation.trim()) return;
+  setAddingDesignation(true);
+  setDesignationError("");
 
-    try {
-      const added = await addDesignation(newDesignation.trim());
-      setNewDesignation("");
-      await refreshDesignations();
-      setFormData((prev) => ({ ...prev, designation: added.id }));
-    } catch (err) {
-      setDesignationError(err.message || "Failed to add designation");
-    } finally {
-      setAddingDesignation(false);
+  try {
+    const added = await addDesignation(newDesignation.trim());
+    setNewDesignation("");
+    await refreshDesignations();
+    setFormData((prev) => ({ ...prev, designation: added.id }));
+  } catch (err) {
+    // Extract the value only
+    const message =
+      err.message || (typeof err === "object" && Object.values(err)[0]) || "Failed to add designation";
+    setDesignationError(message);
+  } finally {
+    setAddingDesignation(false);
+  }
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setSubmitting(true);
+  setSubmitError("");
+
+  try {
+    if (mode === "add") {
+      const payload = { ...formData, permission_ids: selectedPermissions };
+      await register(payload);
+      await fetchData();
+      onSuccess && onSuccess("Supporter created successfully!");
+    } else if (mode === "edit" && member?.id) {
+      const { permission_ids, ...basePayload } = formData;
+      await update(member.id, basePayload);
+      await assignPermissions(member.id, selectedPermissions);
+      await fetchData();
+      onSuccess && onSuccess("Supporter updated successfully!");
     }
-  };
 
-  /** Submit form (add or edit) */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setSubmitError("");
+    onClose(true);
+  } catch (err) {
+  console.error("Error submitting form:", err);
 
+  let message = "Something went wrong. Try again.";
+
+  if (err instanceof Error) {
     try {
-      if (mode === "add") {
-        const payload = { ...formData, permission_ids: selectedPermissions };
-        await register(payload);
-        await fetchData(); // refresh list
-      } else if (mode === "edit" && member?.id) {
-        // 1. Update supporter details (without permissions)
-        const { permission_ids, ...basePayload } = formData;
-        await update(member.id, basePayload);
-
-        // 2. Assign permissions separately
-        await assignPermissions(member.id, selectedPermissions);
-        await fetchData();
+      // Try to parse JSON if message is stringified JSON
+      const parsed = JSON.parse(err.message);
+      const values = Object.values(parsed);
+      if (values.length > 0) {
+        message = Array.isArray(values[0]) ? values[0][0] : values[0];
       }
-
-      onClose(true);
-    } catch (err) {
-      console.error("Error submitting form:", err);
-      setSubmitError(err.message || "Something went wrong. Try again.");
-    } finally {
-      setSubmitting(false);
+    } catch {
+      // fallback to raw message if not JSON
+      message = err.message;
     }
-  };
+  } else if (typeof err === "string") {
+    message = err;
+  }
+
+  setSubmitError(message);
+}
+ finally {
+    setSubmitting(false);
+  }
+};
 
   return (
     <div className={`modal fade ${show ? "show d-block" : ""}`} tabIndex="-1">
       <div className="modal-dialog">
         <div className="modal-content">
-          {/* Header */}
           <div className="modal-header">
             <h5 className="modal-title">
               {mode === "add" ? "Add New Team Member" : "Edit Team Member"}
@@ -157,7 +176,6 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
             ></button>
           </div>
 
-          {/* Body */}
           <div className="modal-body">
             <form onSubmit={handleSubmit}>
               {/* Username */}
@@ -187,7 +205,7 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
                 />
               </div>
 
-              {/* Password (only for add) */}
+              {/* Password */}
               {mode === "add" && (
                 <div className="mb-3">
                   <label className="form-label">Password</label>
@@ -221,7 +239,7 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
                 {designationsLoading ? (
                   <div>Loading designations...</div>
                 ) : designationsError ? (
-                  <div className="text-danger">{designationsError}</div>
+                  <div className="error-container">{designationsError}</div>
                 ) : (
                   <>
                     <select
@@ -260,7 +278,7 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
                     )}
 
                     {designationError && (
-                      <div className="text-danger mt-1">{designationError}</div>
+                      <div className="error-container">{designationError}</div>
                     )}
                   </>
                 )}
@@ -316,10 +334,8 @@ const TeamMemberModal = ({ show, mode, member, onClose, fetchData, update }) => 
                 </button>
               </div>
 
-              {/* Error Message */}
-              {submitError && (
-                <div className="text-danger mt-2">{submitError}</div>
-              )}
+              {/* Friendly Submit Error */}
+              {submitError && <div className="error-container">{submitError}</div>}
             </form>
           </div>
         </div>

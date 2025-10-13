@@ -1,189 +1,177 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom"; // needed for redirection
-import { Button, Modal } from "react-bootstrap";
-import useUsers from "../services/UserService";
-import { AuthContext } from "../context/AuthContext";
-import Sidebar from "../components/sidebar/Sidebar";
+import React, { useState } from 'react';
+import useUsers from '../services/UserService'; // Adjust path as needed
+import '../style/Users.css'; // Import the CSS file
 
-import "../style/Users.css";
-
-const Users = () => {
-  const navigate = useNavigate();
-
-  // Auth context
-  const { user, isAuthLoading } = useContext(AuthContext);
-
-  // Users data
+const UsersPage = () => {
   const { users, loading, error } = useUsers();
-
-  // State
-  const [showGuestsOnly, setShowGuestsOnly] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
+  const itemsPerPage = 10;
 
-  // Filter users based on guest toggle
-  const filteredUsers = showGuestsOnly
-    ? users.filter((u) => u.is_guest)
-    : users;
+  // Filter users based on search
+  const filteredUsers = users.filter(user =>
+    user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.phone_number?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!isAuthLoading && !user) {
-      navigate("/adminsignin");
-    }
-  }, [user, isAuthLoading, navigate]);
+  // Pagination
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
 
-  // Auth loading state
-  if (isAuthLoading || !user) {
-    return (
-      <div className="d-flex justify-content-center align-items-center p-5">
-        <div className="spinner-border text-primary" role="status"></div>
-        <span className="ms-2">Checking authentication...</span>
-      </div>
-    );
-  }
+  // Handle view user
+  const handleViewUser = (user) => {
+    setSelectedUser(user);
+  };
 
-  // Users loading state
-  if (loading) {
-    return (
-      <div className="loading-container d-flex align-items-center justify-content-center p-5">
-        <div className="spinner-border text-primary" role="status" />
-        <span className="ms-2">Loading users...</span>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="alert alert-danger mt-3" role="alert">
-        ⚠️ {error}
-      </div>
-    );
-  }
+  // Close modal
+  const handleCloseModal = () => {
+    setSelectedUser(null);
+  };
 
   return (
-    <div className="d-flex">
-      <Sidebar user={user} />
+    <div className="container">
+      <div className="header">
+        <h1 className="title">User Management</h1>
+        <p className="subtitle">Manage and monitor user accounts</p>
+      </div>
 
-      <div className="users-container container mt-4">
-        {/* Header & Filter */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h2 className="users-title text-primary">User Management</h2>
-          <div className="form-check form-switch">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="guestFilter"
-              checked={showGuestsOnly}
-              onChange={() => setShowGuestsOnly(!showGuestsOnly)}
-            />
-            <label className="form-check-label" htmlFor="guestFilter">
-              Show Guests Only
-            </label>
+      <div className="content">
+        {loading && (
+          <div className="status-container">
+            <div className="spinner"></div>
+            <p className="loading-text">Loading users...</p>
           </div>
-        </div>
+        )}
 
-        {/* Users Table */}
-        <div className="table-responsive shadow-sm">
-          <table className="table table-striped table-hover align-middle users-table">
-            <thead className="table-primary">
-              <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Guest</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    <td>{user.phone_number}</td>
-                    <td>
-                      {user.is_guest ? (
-                        <span className="badge bg-warning text-dark">
-                          Guest
-                        </span>
-                      ) : (
-                        <span className="badge bg-success">Registered</span>
-                      )}
-                    </td>
-                    <td>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        onClick={() => setSelectedUser(user)}
-                      >
-                        View
-                      </Button>
-                    </td>
+        {error && (
+          <div className="error-container">
+            <span className="error-icon">⚠️</span>
+            <p className="error-text">{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <>
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Search by username, email, role, or phone..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="search-input"
+              />
+              <span className="result-count">
+                {filteredUsers.length} user{filteredUsers.length !== 1 ? 's' : ''} found
+              </span>
+            </div>
+
+            <div className="table-container">
+              <table className="table">
+                <thead className="thead">
+                  <tr>
+                    <th className="th">ID</th>
+                    <th className="th">Username</th>
+                    <th className="th">Email</th>
+                    <th className="th">Phone</th>
+                    <th className="th">Role</th>
+                    <th className="th">Created At</th>
+                    <th className="th">Actions</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="text-center text-muted">
-                    No users found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody>
+                  {paginatedUsers.length > 0 ? (
+                    paginatedUsers.map((user) => (
+                      <tr key={user.id} className="tr">
+                        <td className="td">{user.id}</td>
+                        <td className="td">{user.username || "N/A"}</td>
+                        <td className="td">{user.email || "N/A"}</td>
+                        <td className="td">{user.phone_number || "N/A"}</td>
+                        <td className="td">
+                          <span className="role-badge">
+                            {user.role || "User"}
+                          </span>
+                        </td>
+                        <td className="td">
+                          {user.created_at
+                            ? new Date(user.created_at).toLocaleDateString()
+                            : "N/A"}
+                        </td>
+                        <td className="td">
+                          <button
+                            onClick={() => handleViewUser(user)}
+                            className="view-button"
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="no-data">
+                        No users found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
 
-        {/* User Details Modal */}
-        {selectedUser && (
-          <Modal
-            show={!!selectedUser}
-            onHide={() => setSelectedUser(null)}
-            centered
-          >
-            <Modal.Header closeButton className="modal-header-custom">
-              <Modal.Title>User Details</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="user-avatar-container mb-3 text-center">
-                <img
-                  src={`https://ui-avatars.com/api/?name=${selectedUser.username}&background=random`}
-                  alt={selectedUser.username}
-                  className="user-avatar rounded-circle"
-                />
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={`pagination-button ${currentPage === 1 ? 'pagination-button-disabled' : ''}`}
+                >
+                  Previous
+                </button>
+                <span className="page-info">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className={`pagination-button ${currentPage === totalPages ? 'pagination-button-disabled' : ''}`}
+                >
+                  Next
+                </button>
               </div>
-              <p>
-                <strong>ID:</strong> {selectedUser.id}
-              </p>
-              <p>
-                <strong>Username:</strong> {selectedUser.username}
-              </p>
-              <p>
-                <strong>Email:</strong> {selectedUser.email}
-              </p>
-              <p>
-                <strong>Phone:</strong> {selectedUser.phone_number}
-              </p>
-              <p>
-                <strong>Status:</strong>{" "}
-                {selectedUser.is_guest ? (
-                  <span className="badge bg-warning text-dark">Guest</span>
-                ) : (
-                  <span className="badge bg-success">Registered</span>
-                )}
-              </p>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => setSelectedUser(null)}>
+            )}
+          </>
+        )}
+
+        {selectedUser && (
+          <div className="modal">
+            <div className="modal-content">
+              <button
+                onClick={handleCloseModal}
+                className="modal-close"
+              >
                 Close
-              </Button>
-            </Modal.Footer>
-          </Modal>
+              </button>
+              <h2 className="modal-title">User Details</h2>
+              <p><strong>ID:</strong> {selectedUser.id}</p>
+              <p><strong>Username:</strong> {selectedUser.username || "N/A"}</p>
+              <p><strong>Email:</strong> {selectedUser.email || "N/A"}</p>
+              <p><strong>Phone:</strong> {selectedUser.phone_number || "N/A"}</p>
+              <p><strong>Role:</strong> {selectedUser.role || "User"}</p>
+              <p><strong>Created At:</strong> {selectedUser.created_at
+                ? new Date(selectedUser.created_at).toLocaleDateString()
+                : "N/A"}</p>
+            </div>
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-export default Users;
+export default UsersPage;

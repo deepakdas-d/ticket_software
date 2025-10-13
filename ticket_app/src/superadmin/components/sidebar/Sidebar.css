@@ -5,7 +5,7 @@
   top: 20px;
   left: 20px;
   z-index: 1100;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e97c8 100%);
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%);
   border: none;
   border-radius: 12px;
   padding: 12px;
@@ -72,7 +72,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e97c8 100%);
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%);
   box-shadow: 4px 0 20px rgba(30, 60, 114, 0.2);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
@@ -342,7 +342,7 @@
 }
 
 .logout-btn {
-  background: rgba(255, 99, 99, 0.2);
+  background: rgba(255, 99, 99, 0.912);
   border: 1px solid rgba(255, 99, 99, 0.3);
   color: rgba(255, 255, 255, 0.9);
   padding: 8px 16px;

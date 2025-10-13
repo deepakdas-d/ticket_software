@@ -83,6 +83,10 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
               <span className="detail-label">ID:</span>
               <span className="detail-value">{complaint.id}</span>
             </div>
+               <div className="detail-row">
+              <span className="detail-label">Ticket_ID:</span>
+              <span className="detail-value">{complaint.ticket_id}</span>
+            </div>
             <div className="detail-row">
               <span className="detail-label">Customer:</span>
               <span className="detail-value">{complaint.customer_name}</span>

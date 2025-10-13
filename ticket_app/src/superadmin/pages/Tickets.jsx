@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import useTickets from "../services/TicketsService";
-import Sidebar from "../components/sidebar/Sidebar";
 import "../style/Tickets.css";
+import FriendlyError from "../components/FriendlyError";
 
 const Tickets = () => {
   const { user, isAuthLoading } = React.useContext(AuthContext);
   const navigate = useNavigate();
-  const { tickets, loading, error } = useTickets();
+  const { tickets, loading, error, fetchData } = useTickets();
 
   const [showFilters, setShowFilters] = useState(true); // filter toggle
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -86,31 +86,28 @@ const Tickets = () => {
     );
   if (error)
     return (
-      <div className="alert alert-danger text-center m-3 animate-fade-in">
-        ⚠️ Failed to load tickets: {error}
-      </div>
+      <FriendlyError
+        message="We couldn’t load your tickets right now. Please try again."
+        onRetry={fetchData}
+      />
     );
 
   return (
     <div className="d-flex vh-100 tickets-layout">
-      <Sidebar user={user} />
-
-      <div className="flex-grow-1 p-3 p-md-4 bg-light tickets-main">
-        <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-          <div className="mb-2 mb-md-0">
-            <h2
-              className="fw-bold animate-slide-in text-white p-2 rounded"
-              style={{ background: "#1653d5" }}
-            >
-              Customer Complaints
-            </h2>
-
-            <p className="text-muted mb-0">
-              Manage and track all customer support tickets.
-            </p>
-          </div>
+      <div className="flex-grow-1 p-3 p-md-4 tickets-main">
+        <div className="mb-2 mb-md-0">
+          <h2
+            className="fw-bold animate-slide-in text-white p-2 rounded theme-header"
+          >
+            Customer Complaints
+          </h2>
+          <p className="text-muted mb-0">
+            Manage and track all customer support tickets.
+          </p>
+        </div>
+        <div className="d-flex justify-content-end mb-3">
           <button
-            className="btn btn-outline-primary animate-fade-in"
+            className="btn btn-sm btn-outline-primary animate-fade-in filter-button"
             onClick={() => setShowFilters((prev) => !prev)}
           >
             {showFilters ? "Hide Filters" : "Show Filters"}

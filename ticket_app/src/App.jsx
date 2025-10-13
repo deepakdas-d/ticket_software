@@ -33,6 +33,7 @@ import TicketsPage from "./users/pages/ticket_form/ticketpage";
 import TicketDetailPage from "./users/pages/ticket_detials/ticket_details";
 import DashboardLayout from "./users/pages/dashboard/dashboard";
 import ProtectedRoute from "./users/components/ProtectedRoute";
+import AdminLayout from "./superadmin/components/layouts/AdminLayout";
 
 function App() {
   return (
@@ -43,14 +44,7 @@ function App() {
             <Routes>
               {/* ==================== SUPPORTER ROUTES ==================== */}
               <Route path="/supportsignin" element={<SupporterLogin />} />
-              <Route
-                path="/supportsignin"
-                element={
-                 
-                    <SupporterLogin />
-                  
-                }
-              />
+              <Route path="/supportsignin" element={<SupporterLogin />} />
 
               {/* Persistent Sidebar Layout for all supporter pages */}
               <Route
@@ -70,38 +64,48 @@ function App() {
               </Route>
 
               {/* ==================== SUPERADMIN ROUTES ==================== */}
+              {/* Public route */}
               <Route path="/adminsignin" element={<SignIn />} />
-              <Route path="/admindashboard" element={<Dashboard />} />
-              <Route path="/admintickets" element={<Tickets />} />
-              <Route path="/supports" element={<SupportTeam />} />
-              <Route path="/users" element={<Users />} />
+              {/* Protected admin layout */}
+              <Route element={<AdminLayout />}>
+                <Route path="/admindashboard" element={<Dashboard />} />
+                <Route path="/admintickets" element={<Tickets />} />
+                <Route path="/supports" element={<SupportTeam />} />
+                <Route path="/users" element={<Users />} />
+              </Route>
 
               {/* ==================== USER ROUTES ==================== */}
-                  
-        {/* Public routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/raise-ticket" element={<RaiseTicket />} />
-        <Route path="/" element={<Login />} />
 
-        {/* Protected routes */}
-        <Route
-          element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/ticket/new" element={<TicketFormPage />} />
-          <Route path="/tickets" element={<TicketsPage />} />
-          <Route path="/ticket-details" element={<TicketDetailPage />} />
-          <Route path="/tickets/:ticketId" element={<TicketDetailPage />} />
-        </Route>
+              {/* Public routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/raise-ticket" element={<RaiseTicket />} />
+              <Route path="/" element={<Login />} />
 
-        {/* Optional old route */}
-        <Route path="/helpdesk-dashboard" element={<HelpdeskDashboard />} />
+              {/* Protected routes */}
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/ticket/new" element={<TicketFormPage />} />
+                <Route path="/tickets" element={<TicketsPage />} />
+                <Route path="/ticket-details" element={<TicketDetailPage />} />
+                <Route
+                  path="/tickets/:ticketId"
+                  element={<TicketDetailPage />}
+                />
+              </Route>
+
+              {/* Optional old route */}
+              <Route
+                path="/helpdesk-dashboard"
+                element={<HelpdeskDashboard />}
+              />
             </Routes>
           </SupporterAuthProvider>
         </AdminAuthProvider>

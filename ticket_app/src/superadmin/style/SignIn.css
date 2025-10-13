@@ -32,9 +32,6 @@
               0 18px 40px rgba(0, 0, 0, 0.18);
 }
 
-
-
-
 /* Labels */
 .label {
   display: block;
@@ -53,26 +50,31 @@
 }
 
 /* Buttons */
+/* Buttons with gradient */
 .signin-card .btn-primary {
-  background-color: #1653d5;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%);
   border: none;
   padding: 0.75rem;
   font-weight: 600;
   border-radius: 0.5rem;
-  transition: background-color 0.3s ease;
+  color: #fff; /* Ensure text is readable */
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .signin-card .btn-primary:hover {
-  background-color: #0f3fa0;
+  /* Slightly darker gradient on hover */
+  background: linear-gradient(135deg, #17315b 0%, #203e7c 50%);
+  transform: translateY(-2px); /* Optional subtle lift */
 }
+
 
 /* Card title */
 .signin-card .card-title {
   font-weight: 700;
-  color: #1653d5;
+  color: #17315b;
   margin-bottom: 1.5rem;
   padding: 0.5rem 1rem;
-  border: 2px solid #1653d5;
+  border: 2px solid #17315b;
   border-radius: 0.5rem;
   text-align: center;
   background-color: #e6f0ff;

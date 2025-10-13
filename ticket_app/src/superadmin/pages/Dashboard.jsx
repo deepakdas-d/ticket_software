@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/sidebar/Sidebar";
 import Chart from "chart.js/auto";
 import "../style/Dashboard.css";
-import useTicketCounts from "../services/useTicketCounts"; // ✅ using new service
+import useTicketCounts from "../services/useTicketCounts"; //  using new service
 import ErrorMessage from "../components/ErrorMessage";
 
 const Dashboard = () => {
@@ -159,7 +159,7 @@ const Dashboard = () => {
 
   return (
     <div className="d-flex vh-100">
-      <Sidebar user={user} />
+     
       <div className="main-content flex-grow-1 p-4">
         {/* ✅ Cards Row */}
         <div className="row mb-4">

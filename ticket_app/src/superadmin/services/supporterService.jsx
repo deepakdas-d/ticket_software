@@ -33,7 +33,7 @@ export const registerSupporter = async (supporterData) => {
     const data = await res.json();
 
     // Success alert
-    window.alert("Supporter registered successfully!");
+    // window.alert("Supporter registered successfully!");
 
     return data;
   } catch (error) {

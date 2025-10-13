@@ -63,7 +63,7 @@ export const refreshAccessToken = async () => {
     }
 
     // ✅ Store new access token
-    if (json.access) localStorage.setItem("accessToken", json.access);
+    if (json.access) localStorage.setItem("SupporteraccessToken", json.access);
 
     return json; // { access: newAccessToken }
   } catch (err) {

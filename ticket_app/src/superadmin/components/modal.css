@@ -1,0 +1,12 @@
+.error-container {
+  background-color: #fff4e5; /* soft pastel orange */
+  color: #6b3e00; /* dark brown text */
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  border: 1px solid #ffd8a8; /* subtle border */
+}

@@ -2,38 +2,53 @@ import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import Sidebar from "../components/sidebar/Sidebar";
 import TeamMemberModal from "../components/TeamMemberModal";
 import ViewMemberModal from "../components/ViewMemberModal";
 import { useSupporters } from "../hooks/useSupporters";
 import { fetchDesignations } from "../services/designationService";
+import FriendlyError from "../components/FriendlyError";
+import ToastMessage from "../components/Toast/ToastMessage";
 import "../style/SupportTeam.css";
 
 const SupportTeam = () => {
   const { user, isAuthLoading } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { supporters, loading, error, fetchData, update, remove } = useSupporters();
-  const [showAddEditModal, setShowAddEditModal] = useState(false);
-  const [showViewModal, setShowViewModal] = useState(false);
-  const [modalMode, setModalMode] = useState("add");
-  const [selectedMember, setSelectedMember] = useState(null);
+  const { supporters, loading, error, fetchData, update, remove } =
+    useSupporters();
+
+  // --- Unified modal state ---
+  const [modalState, setModalState] = useState({
+    type: null, // "add" | "edit" | "view"
+    member: null,
+    show: false,
+  });
+
   const [submitting, setSubmitting] = useState(false);
   const [designations, setDesignations] = useState([]);
   const [designationMap, setDesignationMap] = useState({});
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+  const [confirmDelete, setConfirmDelete] = useState({
+    show: false,
+    memberId: null,
+  });
 
+  // --- Redirect unauthenticated users ---
   useEffect(() => {
     if (!isAuthLoading && !user) navigate("/adminsignin");
   }, [user, isAuthLoading, navigate]);
 
+  // --- Load Designations ---
   useEffect(() => {
     const loadDesignations = async () => {
       try {
         const data = await fetchDesignations();
         setDesignations(data);
         const map = {};
-        data.forEach((d) => {
-          map[d.id] = d.name;
-        });
+        data.forEach((d) => (map[d.id] = d.name));
         setDesignationMap(map);
       } catch (err) {
         console.error("Failed to fetch designations:", err);
@@ -42,42 +57,38 @@ const SupportTeam = () => {
     loadDesignations();
   }, []);
 
-  const handleOpenModal = (mode, member = null) => {
-    setModalMode(mode);
-    setSelectedMember(member);
-    setShowAddEditModal(mode !== "view");
-    setShowViewModal(mode === "view");
+  // --- Modal Control ---
+  const openModal = (type, member = null) => {
+    setModalState({ type, member, show: true });
   };
 
-  const handleCloseModal = () => {
-    setShowAddEditModal(false);
-    setShowViewModal(false);
-    setSelectedMember(null);
+  const closeModal = () => {
+    setModalState({ type: null, member: null, show: false });
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this team member?")) {
-      try {
-        setSubmitting(true);
-        await remove(id);
-      } catch (err) {
-        alert(err.message || "Failed to delete supporter");
-      } finally {
-        setSubmitting(false);
-      }
-    }
+  // --- Toast Helper ---
+  const showToast = (message, type = "success", duration = 3000) => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: "", type }), duration);
+  };
+
+  // --- Delete Handler ---
+  const handleDelete = (id) => {
+    setConfirmDelete({ show: true, memberId: id });
   };
 
   const getDesignationName = (id) => designationMap[id] || "Unknown";
 
-  // DataTable columns
+  // --- DataTable columns ---
   const columns = [
     {
       name: "ID",
       selector: (row) => row.id,
       sortable: true,
       width: "80px",
-      cell: (row) => <span className="fw-semibold text-primary">#{row.id}</span>,
+      cell: (row) => (
+        <span className="fw-semibold text-primary">#{row.id}</span>
+      ),
     },
     {
       name: "Username",
@@ -131,14 +142,14 @@ const SupportTeam = () => {
         <div className="btn-group btn-group-sm" role="group">
           <button
             className="btn btn-outline-primary action-btn"
-            onClick={() => handleOpenModal("view", row)}
+            onClick={() => openModal("view", row)}
             title="View Details"
           >
             <i className="bi bi-eye-fill"></i>
           </button>
           <button
             className="btn btn-outline-secondary action-btn"
-            onClick={() => handleOpenModal("edit", row)}
+            onClick={() => openModal("edit", row)}
             title="Edit Member"
           >
             <i className="bi bi-pencil-fill"></i>
@@ -157,7 +168,7 @@ const SupportTeam = () => {
     },
   ];
 
-  // DataTable custom styles
+  // --- Table styles ---
   const customStyles = {
     table: {
       style: {
@@ -168,7 +179,6 @@ const SupportTeam = () => {
     },
     headCells: {
       style: {
-        background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
         color: "white",
         fontWeight: 600,
         textTransform: "uppercase",
@@ -188,7 +198,8 @@ const SupportTeam = () => {
       style: {
         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         "&:hover": {
-          background: "linear-gradient(90deg, rgba(33, 150, 243, 0.05) 0%, rgba(33, 150, 243, 0.02) 100%)",
+          background:
+            "linear-gradient(90deg, rgba(33, 150, 243, 0.05) 0%, rgba(33, 150, 243, 0.02) 100%)",
           transform: "translateX(4px)",
           boxShadow: "-4px 0 0 #2196f3",
         },
@@ -200,8 +211,15 @@ const SupportTeam = () => {
 
   return (
     <div className="d-flex vh-100 overflow-auto">
-      <Sidebar user={user} />
       <div className="main-content flex-grow-1 p-4 overflow-auto">
+        {toast.show && (
+          <ToastMessage
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast({ ...toast, show: false })}
+          />
+        )}
+
         <div className="content-header fade-in">
           <h1 className="mb-2">
             <i className="bi bi-people-fill me-3"></i>
@@ -221,7 +239,7 @@ const SupportTeam = () => {
           </div>
           <button
             className="btn btn-primary add-btn"
-            onClick={() => handleOpenModal("add")}
+            onClick={() => openModal("add")}
             disabled={submitting}
           >
             <i className="bi bi-plus-circle-fill me-2"></i>
@@ -234,26 +252,24 @@ const SupportTeam = () => {
             <div className="spinner-border text-primary" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
-            <p className="mt-3 text-muted fw-semibold">Loading team members...</p>
+            <p className="mt-3 text-muted fw-semibold">
+              Loading team members...
+            </p>
           </div>
         ) : error ? (
-          <div className="alert alert-danger fade-in">
-            <h4 className="alert-heading">
-              <i className="bi bi-exclamation-triangle-fill me-2"></i>
-              Error Loading Data
-            </h4>
-            <p className="mb-3">{error}</p>
-            <button className="btn btn-danger" onClick={fetchData}>
-              <i className="bi bi-arrow-clockwise me-2"></i>Retry
-            </button>
-          </div>
+          <FriendlyError
+            message="We couldn’t load your team members right now. Please try again."
+            onRetry={fetchData}
+          />
         ) : (
           <div className="card shadow-lg team-card fade-in">
             <div className="card-body p-0">
-              <div className="p-4 pb-3 border-bottom" style={{ borderColor: "rgba(33, 150, 243, 0.1)" }}>
+              <div
+                className="p-4 pb-3 border-bottom"
+                style={{ borderColor: "rgba(33, 150, 243, 0.1)" }}
+              >
                 <h5 className="card-title mb-0">
-                  <i className="bi bi-list-ul me-2"></i>
-                  All Team Members
+                  <i className="bi bi-list-ul me-2"></i>All Team Members
                 </h5>
               </div>
 
@@ -268,10 +284,10 @@ const SupportTeam = () => {
                   </p>
                   <button
                     className="btn btn-primary add-btn"
-                    onClick={() => handleOpenModal("add")}
+                    onClick={() => openModal("add")}
                   >
-                    <i className="bi bi-plus-circle-fill me-2"></i>
-                    Add Your First Member
+                    <i className="bi bi-plus-circle-fill me-2"></i>Add Your
+                    First Member
                   </button>
                 </div>
               ) : (
@@ -287,30 +303,111 @@ const SupportTeam = () => {
                   highlightOnHover
                   pointerOnHover
                   responsive
-                  noDataComponent={<div className="empty-state text-center py-5">No team members found</div>}
+                  noDataComponent={
+                    <div className="empty-state text-center py-5">
+                      No team members found
+                    </div>
+                  }
                 />
               )}
             </div>
           </div>
         )}
 
-        <TeamMemberModal
-          show={showAddEditModal}
-          mode={modalMode}
-          member={selectedMember}
-          onClose={handleCloseModal}
-          fetchData={fetchData}
-          update={update}
-          designations={designations}
-        />
+        {/* --- Unified Modal Logic --- */}
+        {modalState.show && modalState.type !== "view" && (
+          <TeamMemberModal
+            show={modalState.show}
+            mode={modalState.type}
+            member={modalState.member}
+            onClose={closeModal}
+            fetchData={fetchData}
+            update={update}
+            designations={designations}
+            onSuccess={(msg) => {
+              showToast(msg, "success");
+              closeModal();
+            }}
+          />
+        )}
 
-        <ViewMemberModal
-          show={showViewModal}
-          member={selectedMember}
-          designations={designations}
-          getDesignationName={getDesignationName}
-          onClose={handleCloseModal}
-        />
+        {modalState.show && modalState.type === "view" && (
+          <ViewMemberModal
+            show={modalState.show}
+            member={modalState.member}
+            designations={designations}
+            getDesignationName={getDesignationName}
+            onClose={closeModal}
+          />
+        )}
+
+        {confirmDelete.show && (
+          <div className="modal fade show d-block" tabIndex="-1">
+            <div className="modal-dialog modal-sm">
+              <div className="modal-content shadow-lg rounded-3">
+                <div
+                  className="modal-header"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #1e3c72 0%, #2a5298 50%)",
+                    color: "white",
+                    borderBottom: "none",
+                    borderTopLeftRadius: "0.75rem",
+                    borderTopRightRadius: "0.75rem",
+                  }}
+                >
+                  <h5 className="modal-title">Confirm Delete</h5>
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() =>
+                      setConfirmDelete({ show: false, memberId: null })
+                    }
+                  ></button>
+                </div>
+                <div className="modal-body text-center py-4">
+                  <i className="bi bi-exclamation-triangle-fill text-warning display-4 mb-3"></i>
+                  <p className="mb-0 fw-semibold">
+                    Are you sure you want to delete this team member?
+                  </p>
+                </div>
+                <div className="modal-footer justify-content-center border-top-0 pb-4">
+                  <button
+                    className="btn btn-outline-secondary rounded-pill px-4"
+                    onClick={() =>
+                      setConfirmDelete({ show: false, memberId: null })
+                    }
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn-danger rounded-pill px-4"
+                    onClick={async () => {
+                      try {
+                        setSubmitting(true);
+                        await remove(confirmDelete.memberId);
+                        showToast(
+                          "Team member deleted successfully",
+                          "success"
+                        );
+                      } catch (err) {
+                        showToast(
+                          err.message || "Failed to delete supporter",
+                          "error"
+                        );
+                      } finally {
+                        setSubmitting(false);
+                        setConfirmDelete({ show: false, memberId: null });
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

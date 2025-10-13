@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import PasswordInput from "../components/Password";
 import "../style/SignIn.css";
 
 const SignIn = () => {
@@ -54,6 +53,12 @@ const SignIn = () => {
       <div className="col-12 col-md-5 col-lg-4">
         <div className="card signin-card">
           <div className="card-body">
+            <img
+              src="https://www.techfifoinnovations.com/img/4.png"
+              alt="TechFIFO Logo"
+              className="logo-img"
+              style={{ display: "block", margin: "0 auto 1.5rem", maxWidth: "150px" }}
+            />
             <h2 className="card-title text-center">Admin Sign In</h2>
 
             {errors.general && (
@@ -78,11 +83,13 @@ const SignIn = () => {
 
               <div className="mb-3">
                 <label className="label">Password</label>
-                <PasswordInput
+                <input
+                  type="password"
+                  className={`form-control ${errors.password ? "is-invalid" : ""}`}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={errors.password ? "is-invalid" : ""}
+                  placeholder="Enter your password"
                 />
                 {errors.password && (
                   <div className="invalid-feedback">{errors.password}</div>

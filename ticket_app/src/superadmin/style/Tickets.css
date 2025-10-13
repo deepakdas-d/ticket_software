@@ -1,13 +1,12 @@
-/* Tickets.css */
-
 /* Layout */
 .tickets-layout {
-  background-color: #f8f9fa;
+  background-color: #e6f0fa; /* Light blue background */
 }
 
 .tickets-main {
   overflow-y: auto;
   transition: padding 0.3s ease;
+  background-color: #e6f0fa; /* Light blue background for main content */
 }
 
 /* Animations and Transitions */
@@ -92,6 +91,11 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.filter-button {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+}
+
 .badge {
   transition: transform 0.2s ease;
 }
@@ -100,9 +104,15 @@
   transform: scale(1.05);
 }
 
-/* Modal theme header */
+/* Header and Modal theme */
+.theme-header {
+  background: linear-gradient(180deg, #1e3c72, #2a5298); /* Gradient for header */
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
 .theme-modal-header {
-  background-color: #1653d5; /* your theme blue */
+  background: linear-gradient(180deg, #1e3c72, #2a5298); /* Gradient for modal header */
   color: #fff;
   transition: background-color 0.3s ease;
 }
@@ -162,15 +172,15 @@
 }
 
 .pagination .page-link:hover:not(.disabled) {
-  background-color: #1653d5;
+  background: linear-gradient(180deg, #1e3c72, #2a5298); /* Gradient for pagination hover */
   color: white;
   transform: scale(1.1);
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #1653d5;
-   color: #fff !important;   
-  border-color: #1653d5;
+  background: linear-gradient(180deg, #1e3c72, #2a5298); /* Gradient for active pagination */
+  color: #fff !important;   
+  border-color: #1e3c72;
 }
 
 /* Responsiveness */
@@ -261,5 +271,10 @@
     width: 32px;
     height: 32px;
     font-size: 0.875rem;
+  }
+
+  .filter-button {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
   }
 }

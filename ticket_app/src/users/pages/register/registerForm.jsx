@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { validateRegisterForm } from "./validateRegisterForm";
 import { registerUser } from "../../services/userauthservice";
-import OtpVerification from "./OtpVerification";
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -8,99 +9,128 @@ function RegisterForm() {
     email: "",
     password: "",
     confirmPassword: "",
-    phone_number: "",
+    phone: "",
   });
-
-  const [isOtpStep, setIsOtpStep] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setError("");
+  const clearForm = () => {
+    setFormData({
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      phone: "",
+    });
+    setErrors({});
+  };
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = validateRegisterForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
-    setLoading(true);
-
     try {
-      const result = await registerUser(formData);
-      console.log("Register response:", result);
-
-      if (result.success || result.message?.includes("OTP")) {
-        setIsOtpStep(true);
-      } else {
-        setError(result.message || "Registration failed");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Something went wrong.");
-    } finally {
-      setLoading(false);
+      await registerUser(formData);
+      alert("Registration Successful!");
+      clearForm();
+    } catch (error) {
+      alert("Registration Failed!");
     }
   };
 
-  if (isOtpStep) {
-    return (
-      <OtpVerification
-        email={formData.email}
-        onSuccess={() => alert("Registration complete!")}
-      />
-    );
-  }
-
   return (
-    <div className="register-form">
+    <form onSubmit={handleSubmit} className="register-form">
       <h2>Register</h2>
-      <form onSubmit={handleRegister}>
+
+      {/* Username */}
+      <div className="form-group">
+        <label htmlFor="username">Username</label>
         <input
+          id="username"
           type="text"
-          name="username"
-          placeholder="Username"
+          placeholder="Enter username"
           value={formData.username}
           onChange={handleChange}
         />
+        {errors.username && <p className="error">{errors.username}</p>}
+      </div>
+
+      {/* Email */}
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
         <input
+          id="email"
           type="email"
-          name="email"
-          placeholder="Email"
+          placeholder="Enter email"
           value={formData.email}
           onChange={handleChange}
         />
+        {errors.email && <p className="error">{errors.email}</p>}
+      </div>
+
+      {/* Password */}
+      <div className="form-group">
+        <label htmlFor="password">Password</label>
         <input
+          id="password"
           type="password"
-          name="password"
-          placeholder="Password"
+          placeholder="Enter password"
           value={formData.password}
           onChange={handleChange}
         />
+        {errors.password && <p className="error">{errors.password}</p>}
+      </div>
+
+      {/* Confirm Password */}
+      <div className="form-group">
+        <label htmlFor="confirmPassword">Confirm Password</label>
         <input
+          id="confirmPassword"
           type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
+          placeholder="Re-enter password"
           value={formData.confirmPassword}
           onChange={handleChange}
         />
+        {errors.confirmPassword && (
+          <p className="error">{errors.confirmPassword}</p>
+        )}
+      </div>
+
+      {/* Phone */}
+      <div className="form-group">
+        <label htmlFor="phone">Phone Number</label>
         <input
+          id="phone"
           type="text"
-          name="phone_number"
-          placeholder="Phone Number"
-          value={formData.phone_number}
+          placeholder="Enter phone number"
+          value={formData.phone}
           onChange={handleChange}
         />
-        <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
-      </form>
-      {error && <p className="error">{error}</p>}
-    </div>
+        {errors.phone && <p className="error">{errors.phone}</p>}
+      </div>
+
+      <button type="submit" className="register-button">
+        Register
+      </button>
+       
+
+      <div className="login_link">
+        <p>
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
+      </div>
+    </form>
   );
 }
 

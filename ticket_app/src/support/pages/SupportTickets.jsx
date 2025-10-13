@@ -85,77 +85,79 @@ const ComplaintTable = () => {
     refresh();
   };
 
-  const columns = [
-    { name: "ID", selector: (row) => row.id, sortable: true, width: "80px" },
-    {
-      name: "Customer",
-      selector: (row) => row.customer_name,
-      sortable: true,
-      width: "150px",
-    },
-    {
-      name: "Email",
-      selector: (row) => row.customer_email,
-      sortable: true,
-      width: "200px",
-    },
-    { name: "Phone", selector: (row) => row.customer_phone, width: "130px" },
-    {
-      name: "Subject",
-      selector: (row) => row.subject,
-      sortable: true,
-      width: "200px",
-      wrap: true,
-    },
-    {
-      name: "Status",
-      selector: (row) => row.status,
-      sortable: true,
-      width: "120px",
-      cell: (row) => (
-        <span
-          className={`status-badge status-${row.status
-            .toLowerCase()
-            .replace(" ", "-")}`}
+ const columns = [
+  { name: "ID", selector: (row) => row.ticket_id, sortable: true, minWidth: "80px" },
+  {
+    name: "Customer",
+    selector: (row) => row.customer_name,
+    sortable: true,
+    minWidth: "150px",
+  },
+  {
+    name: "Email",
+    selector: (row) => row.customer_email,
+    sortable: true,
+    minWidth: "200px",
+    wrap: true,
+  },
+  { name: "Phone", selector: (row) => row.customer_phone, minWidth: "120px" },
+  {
+    name: "Subject",
+    selector: (row) => row.subject,
+    sortable: true,
+    wrap: true,
+    minWidth: "200px",
+  },
+  {
+    name: "Status",
+    selector: (row) => row.status,
+    sortable: true,
+    minWidth: "100px",
+    cell: (row) => (
+      <span
+        className={`status-badge status-${row.status
+          .toLowerCase()
+          .replace(" ", "-")}`}
+      >
+        {row.status}
+      </span>
+    ),
+  },
+  {
+    name: "Actions",
+    cell: (row) => (
+      <div className="action-buttons">
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => setSelectedComplaint(row)}
         >
-          {row.status}
-        </span>
-      ),
-    },
-    {
-      name: "Actions",
-      cell: (row) => (
-        <div className="action-buttons">
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => setSelectedComplaint(row)}
-          >
-            View
-          </Button>
-          <Button
-            variant="warning"
-            size="sm"
-            onClick={() => {
-              setComplaintForReassign(row);
-              setShowReassign(true);
-            }}
-          >
-            Reassign
-          </Button>
-          <Button
-            variant="info"
-            size="sm"
-            onClick={() => navigate(`/messages/${row.ticket_id}`)}
-          >
-            Messages
-          </Button>
-        </div>
-      ),
-      width: "230px",
-      right: true,
-    },
-  ];
+          View
+        </Button>
+        <Button
+          variant="warning"
+          size="sm"
+          onClick={() => {
+            setComplaintForReassign(row);
+            setShowReassign(true);
+          }}
+        >
+          Reassign
+        </Button>
+        <Button
+          variant="info"
+          size="sm"
+          onClick={() => navigate(`/messages/${row.ticket_id}`)}
+        >
+          Messages
+        </Button>
+      </div>
+    ),
+    minWidth: "230px",
+    right: true,
+  },
+];
+
 
   if (error?.status === 403)
     return <PermissionDenied message={error.message || "Access denied."} />;
