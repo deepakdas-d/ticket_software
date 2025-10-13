@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import TeamMemberModal from "../components/TeamMemberModal";
+import TeamMemberModal from "../components/Modals/TeamMemberModal";
 import ViewMemberModal from "../components/ViewMemberModal";
 import { useSupporters } from "../hooks/useSupporters";
 import { fetchDesignations } from "../services/designationService";

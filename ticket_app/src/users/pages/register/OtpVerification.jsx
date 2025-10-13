@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { verifyOtp } from "../../services/userauthservice";
+import "./otpverification.css"
 
 function OtpVerification({ email }) {
   const [otp, setOtp] = useState("");

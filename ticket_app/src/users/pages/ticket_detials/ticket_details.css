@@ -11,7 +11,14 @@
   margin: 0 auto;
 }
 
-/* Back Button */
+/* Header Section */
+.detail-header {
+  background: linear-gradient(to right, #1e40af, #274e8d);
+  padding: 2rem;
+  color: white;
+  border-bottom: 4px solid #1e3a8a;
+}
+
 .back-button {
   display: inline-flex;
   align-items: center;
@@ -55,6 +62,7 @@
   font-size: 28px;
   font-weight: 700;
   line-height: 1.3;
+  color: white;
 }
 
 .ticket-meta {

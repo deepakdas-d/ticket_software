@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { useDesignations } from "../hooks/useDesignations";
-import { addDesignation } from "../services/designationService";
-import { useRegisterSupporter } from "../hooks/useRegisterSupporter";
-import { fetchPermissions } from "../services/supporterService";
-import { assignPermissions } from "../services/supportTeamService";
+import { useDesignations } from "../../hooks/useDesignations";
+import { addDesignation } from "../../services/designationService";
+import { useRegisterSupporter } from "../../hooks/useRegisterSupporter";
+import { fetchPermissions } from "../../services/supporterService";
+import { assignPermissions } from "../../services/supportTeamService";
 import "./modal.css"
 const TeamMemberModal = ({
   show,
@@ -239,7 +239,7 @@ const handleSubmit = async (e) => {
                 {designationsLoading ? (
                   <div>Loading designations...</div>
                 ) : designationsError ? (
-                  <div className="error-container">{designationsError}</div>
+                  <div className="modal-error-container">{designationsError}</div>
                 ) : (
                   <>
                     <select
