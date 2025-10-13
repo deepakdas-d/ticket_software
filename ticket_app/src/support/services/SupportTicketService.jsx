@@ -36,7 +36,7 @@ export const fetchComplaints = async (page = 1, perPage = 10) => {
 
     if (!response.ok) {
       console.error("❌ [fetchComplaints] HTTP error:", response.status);
-      throw new Error(`Error: ${response.status}`);
+      throw new Error(`Oops: ${response.status}`);
     }
 
     const data = await response.json();
@@ -107,7 +107,7 @@ export const updateComplaintDesignation = async (complaintId, designationId) => 
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,   // ✅ correct
+        Authorization: `Bearer ${token}`,   //  correct
       },
       body: JSON.stringify({ designation_id: designationId }),
     }

@@ -19,7 +19,6 @@ import SupporterProfile from "./support/pages/SupporterProfile";
 import ComplaintTable from "./support/pages/SupportTickets";
 import MessagesPage from "./support/pages/MessagesPage";
 import SupporterProtectedRoute from "./support/components/other/SupporterProtectedRoute";
-import RedirectIfAuthenticated from "./support/components/other/RedirectIfAuthenticated";
 import SupporterLayout from "./support/components/Layout/SupporterLayout";
 
 // ==================== User Pages ==================== //
@@ -47,9 +46,9 @@ function App() {
               <Route
                 path="/supportsignin"
                 element={
-                  <RedirectIfAuthenticated>
+                 
                     <SupporterLogin />
-                  </RedirectIfAuthenticated>
+                  
                 }
               />
 

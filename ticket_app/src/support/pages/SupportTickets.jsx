@@ -162,7 +162,7 @@ const ComplaintTable = () => {
   if (error)
     return (
       <div className="alert alert-danger m-4">
-        <strong>Error:</strong> {error.message || "Failed to load complaints."}
+        <strong>Failed:</strong> {error.message || "Failed to load complaints."}
       </div>
     );
 
