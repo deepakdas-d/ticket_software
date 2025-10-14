@@ -361,7 +361,22 @@
   transform: translateX(4px);
   box-shadow: 0 2px 8px rgba(255, 99, 99, 0.2);
 }
+.sidebar-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0,0,0,0.15);
+}
 
+.menu-item i {
+  font-size: 1.1rem;
+  color: #0d6efd;
+}
+
+.logout-btn i {
+  vertical-align: middle;
+}
 /* Scrollbar */
 .menu::-webkit-scrollbar {
   width: 6px;

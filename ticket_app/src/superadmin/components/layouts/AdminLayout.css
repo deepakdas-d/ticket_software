@@ -1,0 +1,41 @@
+/* src/layouts/AdminLayout.css */
+
+/* Prevent any scrolling on the entire page */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* disables scrolling */
+}
+
+/* Layout container */
+.admin-layout {
+  display: flex;
+  height: 100vh; /* fill the entire viewport */
+  width: 100vw;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar section (assumed fixed width) */
+.admin-layout > *:first-child {
+  flex-shrink: 0;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #fff;
+  border-right: 1px solid #dee2e6;
+}
+
+/* Main content */
+.admin-main-content {
+  flex-grow: 1;
+  padding: 1.5rem;
+  overflow: hidden; /* prevent internal scrolling */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Optional: style for spinner state */
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}

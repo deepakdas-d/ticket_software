@@ -127,7 +127,7 @@ const SupportTeam = () => {
       name: "Designation",
       selector: (row) => getDesignationName(row.designation),
       sortable: true,
-      width: "180px",
+      width: "220px",
       cell: (row) => (
         <span className="badge designation-badge">
           <i className="bi bi-award me-1"></i>
@@ -137,7 +137,7 @@ const SupportTeam = () => {
     },
     {
       name: "Actions",
-      width: "160px",
+      width: "200px",
       cell: (row) => (
         <div className="btn-group btn-group-sm" role="group">
           <button

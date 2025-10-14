@@ -1,12 +1,12 @@
 /* Layout */
 .tickets-layout {
-  background-color: #e6f0fa; /* Light blue background */
+  background-color: #e6f0fa;
 }
 
 .tickets-main {
   overflow-y: auto;
   transition: padding 0.3s ease;
-  background-color: #e6f0fa; /* Light blue background for main content */
+  background-color: #e6f0fa;
 }
 
 /* Animations and Transitions */
@@ -47,8 +47,17 @@
     opacity: 1;
   }
   50% {
-    opacity: .5;
+    opacity: 0.5;
   }
+}
+
+/* Modal and Backdrop */
+.modal {
+  z-index: 1050!important;
+}
+
+.modal-backdrop {
+  z-index: 1040;
 }
 
 /* Table Enhancements */
@@ -106,13 +115,13 @@
 
 /* Header and Modal theme */
 .theme-header {
-  background: linear-gradient(180deg, #1e3c72, #2a5298); /* Gradient for header */
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
   color: #fff;
   transition: background-color 0.3s ease;
 }
 
 .theme-modal-header {
-  background: linear-gradient(180deg, #1e3c72, #2a5298); /* Gradient for modal header */
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
   color: #fff;
   transition: background-color 0.3s ease;
 }
@@ -137,7 +146,7 @@
   transform: scale(1.02);
 }
 
-/* Filter Section with Smoother Transition */
+/* Filter Section */
 .filter-section {
   overflow: hidden;
   max-height: 0;
@@ -147,7 +156,7 @@
 }
 
 .filter-section.show {
-  max-height: 200px; /* Adjusted for content */
+  max-height: 200px;
   opacity: 1;
   transform: translateY(0);
 }
@@ -172,14 +181,14 @@
 }
 
 .pagination .page-link:hover:not(.disabled) {
-  background: linear-gradient(180deg, #1e3c72, #2a5298); /* Gradient for pagination hover */
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
   color: white;
   transform: scale(1.1);
 }
 
 .pagination .page-item.active .page-link {
-  background: linear-gradient(180deg, #1e3c72, #2a5298); /* Gradient for active pagination */
-  color: #fff !important;   
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
+  color: #fff !important;
   border-color: #1e3c72;
 }
 
@@ -190,7 +199,7 @@
   }
 
   .filter-section.show {
-    max-height: 300px; /* More room on mobile */
+    max-height: 300px;
   }
 
   .filter-section .row > div {
@@ -226,47 +235,44 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
-  /* Stack table rows on very small screens if needed */
-  @media (max-width: 576px) {
-    .tickets-table thead {
-      display: none;
-    }
-
-    .tickets-table tbody tr {
-      display: block;
-      margin-bottom: 1rem;
-      border: 1px solid #dee2e6;
-      border-radius: 0.375rem;
-      padding: 1rem;
-      background: white;
-    }
-
-    .tickets-table tbody tr td {
-      display: block;
-      text-align: right;
-      padding: 0.25rem 0;
-      border: none;
-      position: relative;
-      padding-left: 50%;
-    }
-
-    .tickets-table tbody tr td:before {
-      content: attr(data-label);
-      position: absolute;
-      left: 6px;
-      width: 45%;
-      font-weight: 600;
-      text-align: left;
-    }
-
-    .tickets-table tbody tr td[data-label]:last-child {
-      border-bottom: none;
-    }
-  }
 }
 
 @media (max-width: 576px) {
+  .tickets-table thead {
+    display: none;
+  }
+
+  .tickets-table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background: white;
+  }
+
+  .tickets-table tbody tr td {
+    display: block;
+    text-align: right;
+    padding: 0.25rem 0;
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .tickets-table tbody tr td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .tickets-table tbody tr td[data-label]:last-child {
+    border-bottom: none;
+  }
+
   .pagination .page-link {
     width: 32px;
     height: 32px;

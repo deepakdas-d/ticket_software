@@ -1,8 +1,9 @@
 // src/layouts/AdminLayout.jsx
 import React, { useContext } from "react";
 import { Outlet, Navigate } from "react-router-dom";
-import Sidebar from "..//sidebar/Sidebar";
+import Sidebar from "../sidebar/Sidebar";
 import { AuthContext } from "../../context/AuthContext";
+import "./AdminLayout.css"; // ✅ Import the CSS file
 
 const AdminLayout = () => {
   const { user, isAuthLoading } = useContext(AuthContext);
@@ -21,12 +22,12 @@ const AdminLayout = () => {
   }
 
   return (
-    <div className="d-flex">
-      {/* Sidebar stays fixed */}
+    <div className="admin-layout">
+      {/* Sidebar fixed on the left */}
       <Sidebar user={user} />
-      
-      {/* Main Content changes via nested routes */}
-      <div className="flex-grow-1 p-4">
+
+      {/* Main content area */}
+      <div className="admin-main-content">
         <Outlet />
       </div>
     </div>

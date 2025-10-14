@@ -260,47 +260,71 @@ const ComplaintTable = () => {
             </Form>
           </div>
 
-          <div className="table-wrapper">
-            <DataTable
-              columns={columns}
-              data={filteredComplaints}
-              progressPending={loading}
-              pagination
-              paginationPerPage={10}
-              paginationRowsPerPageOptions={[10, 20, 30, 50]}
-              highlightOnHover
-              striped
-              responsive
-              customStyles={{
-                table: { style: { minWidth: "1100px" } },
-                headRow: {
-                  style: {
-                    backgroundColor: "#1e3c72",
-                    color: "#fff",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    minHeight: "50px",
-                  },
-                },
-                rows: {
-                  style: {
-                    minHeight: "60px",
-                    fontSize: "14px",
-                    "&:nth-of-type(odd)": { backgroundColor: "#f9fbff" },
-                    "&:hover": {
-                      backgroundColor: "#e6f0ff",
-                      cursor: "pointer",
-                    },
-                  },
-                },
-                cells: { style: { padding: "12px 10px" } },
-              }}
-              noDataComponent={
-                <div className="no-data">No complaints found</div>
-              }
-            />
-          </div>
-
+    <div className="table-wrapper">
+  <div className="table-scroll-container">
+    <DataTable
+      columns={columns}
+      data={filteredComplaints}
+      progressPending={loading}
+      pagination
+      paginationPerPage={10}
+      paginationRowsPerPageOptions={[10, 20, 30, 50]}
+      highlightOnHover
+      striped
+      responsive
+      fixedHeader // ✅ Enable fixed header
+      fixedHeaderScrollHeight="calc(70vh - 120px)" // ✅ Set scroll height
+      customStyles={{
+        table: { 
+          style: { 
+            minWidth: "1100px",
+            marginBottom: 0 
+          } 
+        },
+        headRow: {
+          style: {
+            backgroundColor: "#1e3c72",
+            color: "#fff",
+            fontSize: "14px",
+            fontWeight: "600",
+            minHeight: "50px",
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+          },
+        },
+        headCells: {
+          style: {
+            backgroundColor: "#1e3c72",
+            color: "#fff",
+            fontWeight: "600",
+          },
+        },
+        rows: {
+          style: {
+            minHeight: "60px",
+            fontSize: "14px",
+            "&:nth-of-type(odd)": { backgroundColor: "#f9fbff" },
+            "&:hover": {
+              backgroundColor: "#e6f0ff",
+              cursor: "pointer",
+            },
+          },
+        },
+        cells: { 
+          style: { 
+            padding: "12px 10px",
+            whiteSpace: "normal",
+            wordBreak: "break-word"
+          } 
+        },
+      }}
+      noDataComponent={
+        <div className="no-data">No complaints found</div>
+      }
+    />
+  </div>
+</div>
           <ComplaintModal
             complaint={selectedComplaint}
             onHide={() => setSelectedComplaint(null)}

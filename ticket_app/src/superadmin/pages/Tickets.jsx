@@ -10,7 +10,7 @@ const Tickets = () => {
   const navigate = useNavigate();
   const { tickets, loading, error, fetchData } = useTickets();
 
-  const [showFilters, setShowFilters] = useState(true); // filter toggle
+  const [showFilters, setShowFilters] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -96,9 +96,7 @@ const Tickets = () => {
     <div className="d-flex vh-100 tickets-layout">
       <div className="flex-grow-1 p-3 p-md-4 tickets-main">
         <div className="mb-2 mb-md-0">
-          <h2
-            className="fw-bold animate-slide-in text-white p-2 rounded theme-header"
-          >
+          <h2 className="fw-bold animate-slide-in text-white p-2 rounded theme-header">
             Customer Complaints
           </h2>
           <p className="text-muted mb-0">
@@ -114,7 +112,7 @@ const Tickets = () => {
           </button>
         </div>
 
-        {/* Filter section with enhanced transition */}
+        {/* Filter section */}
         <div className={`filter-section mb-3 ${showFilters ? "show" : "hide"}`}>
           <div className="row g-2 g-md-3 align-items-end">
             <div className="col-12 col-md-2">
@@ -132,7 +130,6 @@ const Tickets = () => {
                 <option value="in_progress">In Progress</option>
               </select>
             </div>
-
             <div className="col-12 col-md-2">
               <label className="form-label d-md-none small fw-bold">
                 Designation
@@ -149,7 +146,6 @@ const Tickets = () => {
                 ))}
               </select>
             </div>
-
             <div className="col-6 col-md-2">
               <label className="form-label d-md-none small fw-bold">
                 From Date
@@ -175,7 +171,6 @@ const Tickets = () => {
                 onChange={(e) => setDateTo(e.target.value)}
               />
             </div>
-
             <div className="col-12 col-md-3">
               <label className="form-label d-md-none small fw-bold">
                 Search
@@ -194,7 +189,7 @@ const Tickets = () => {
           </div>
         </div>
 
-        {/* Tickets table with enhanced hover and responsive stacking */}
+        {/* Tickets table */}
         <div className="table-responsive shadow-sm rounded bg-white p-3 animate-fade-in">
           <table className="table table-hover align-middle tickets-table">
             <thead className="table-light">
@@ -270,7 +265,7 @@ const Tickets = () => {
           </table>
         </div>
 
-        {/* Pagination with smooth transitions */}
+        {/* Pagination */}
         {totalPages > 1 && (
           <nav className="d-flex justify-content-center mt-3">
             <ul className="pagination animate-fade-in">
@@ -317,93 +312,105 @@ const Tickets = () => {
           </nav>
         )}
 
-        {/* Enhanced Ticket modal with backdrop and full-screen on mobile */}
-        {isModalOpen && selectedTicket && (
-          <div
-            className={`modal fade ${isModalOpen ? "show" : ""}`}
-            tabIndex="-1"
-            style={{ display: isModalOpen ? "block" : "none" }}
-          >
+        {/* Modal with backdrop rendered before */}
+        {isModalOpen && (
+          <>
             <div
-              className={`modal-dialog modal-lg modal-dialog-centered ${
-                window.innerWidth < 768 ? "modal-fullscreen" : ""
-              }`}
-            >
-              <div className="modal-content animate-slide-in">
-                <div className="modal-header theme-modal-header">
-                  <h5 className="modal-title fw-bold">
-                    Ticket #{selectedTicket.id}
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={closeModal}
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  <div className="row g-3">
-                    <div className="col-md-6">
-                      <p>
-                        <strong>Customer Name:</strong>{" "}
-                        {selectedTicket.customer_name}
-                      </p>
-                      <p>
-                        <strong>Email:</strong> {selectedTicket.customer_email}
-                      </p>
-                      <p>
-                        <strong>Phone:</strong> {selectedTicket.customer_phone}
-                      </p>
+              className="modal-backdrop fade show"
+              onClick={closeModal}
+            ></div>
+            {selectedTicket && (
+              <div
+                className={`modal fade ${isModalOpen ? "show" : ""}`}
+                tabIndex="-1"
+                style={{ display: isModalOpen ? "block" : "none" }}
+              >
+                <div
+                  className={`modal-dialog modal-lg modal-dialog-centered ${
+                    window.innerWidth < 768 ? "modal-fullscreen" : ""
+                  }`}
+                >
+                  <div className="modal-content animate-slide-in">
+                    <div className="modal-header theme-modal-header">
+                      <h5 className="modal-title fw-bold">
+                        Ticket #{selectedTicket.id}
+                      </h5>
+                      <button
+                        type="button"
+                        className="btn-close"
+                        onClick={closeModal}
+                      ></button>
                     </div>
-                    <div className="col-md-6">
-                      <p>
-                        <strong>Subject:</strong> {selectedTicket.subject}
-                      </p>
-                      <p>
-                        <strong>Description:</strong>{" "}
-                        {selectedTicket.description}
-                      </p>
-                    </div>
-                    <div className="col-12">
-                      <p>
-                        <strong>Status:</strong>{" "}
-                        <span className="badge bg-info animate-pulse">
-                          {selectedTicket.status}
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Designation:</strong>{" "}
-                        {selectedTicket.designation_name || "-"}
-                      </p>
-                      <p>
-                        <strong>Created At:</strong>{" "}
-                        {new Date(selectedTicket.created_at).toLocaleString()}
-                      </p>
-                    </div>
-                    {selectedTicket.image && (
-                      <div className="col-12">
-                        <div className="ticket-image-preview">
-                          <strong>Image:</strong>
-                          <img
-                            src={selectedTicket.image}
-                            alt="Ticket attachment"
-                            className="img-fluid rounded mt-2 animate-fade-in"
-                          />
+                    <div className="modal-body">
+                      <div className="row g-3">
+                        <div className="col-md-6">
+                          <p>
+                            <strong>Customer Name:</strong>{" "}
+                            {selectedTicket.customer_name}
+                          </p>
+                          <p>
+                            <strong>Email:</strong>{" "}
+                            {selectedTicket.customer_email}
+                          </p>
+                          <p>
+                            <strong>Phone:</strong>{" "}
+                            {selectedTicket.customer_phone}
+                          </p>
                         </div>
+                        <div className="col-md-6">
+                          <p>
+                            <strong>Subject:</strong> {selectedTicket.subject}
+                          </p>
+                          <p>
+                            <strong>Description:</strong>{" "}
+                            {selectedTicket.description}
+                          </p>
+                        </div>
+                        <div className="col-12">
+                          <p>
+                            <strong>Status:</strong>{" "}
+                            <span className="badge bg-info animate-pulse">
+                              {selectedTicket.status}
+                            </span>
+                          </p>
+                          <p>
+                            <strong>Designation:</strong>{" "}
+                            {selectedTicket.designation_name || "-"}
+                          </p>
+                          <p>
+                            <strong>Created At:</strong>{" "}
+                            {new Date(
+                              selectedTicket.created_at
+                            ).toLocaleString()}
+                          </p>
+                        </div>
+                        {selectedTicket.image && (
+                          <div className="col-12">
+                            <div className="ticket-image-preview">
+                              <strong>Image:</strong>
+                              <img
+                                src={selectedTicket.image}
+                                alt="Ticket attachment"
+                                className="img-fluid rounded mt-2 animate-fade-in"
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
+                    <div className="modal-footer">
+                      <button
+                        className="btn btn-secondary"
+                        onClick={closeModal}
+                      >
+                        Close
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="modal-footer">
-                  <button className="btn btn-secondary" onClick={closeModal}>
-                    Close
-                  </button>
-                </div>
               </div>
-            </div>
-          </div>
-        )}
-        {isModalOpen && (
-          <div className="modal-backdrop fade show" onClick={closeModal}></div>
+            )}
+          </>
         )}
       </div>
     </div>
