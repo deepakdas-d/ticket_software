@@ -14,12 +14,11 @@ const messageService = {
         `${API_BASE_URL}/tickets/complaints/${ticket_id}/messages/`,
         { headers }
       );
-      return response.data; // Assuming API returns an array of messages
+      return response.data;
     } catch (error) {
-      throw {
-        status: error.response?.status,
-        message: error.response?.data?.message || "Failed to fetch messages",
-      };
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch messages"
+      );
     }
   },
 
@@ -35,12 +34,11 @@ const messageService = {
         { message },
         { headers }
       );
-      return response.data; // Assuming API returns the sent message
+      return response.data;
     } catch (error) {
-      throw {
-        status: error.response?.status,
-        message: error.response?.data?.message || "Failed to send message",
-      };
+      throw new Error(
+        error.response?.data?.message || "Failed to send message"
+      );
     }
   },
 };

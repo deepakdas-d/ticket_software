@@ -1,11 +1,7 @@
 /* src/layouts/AdminLayout.css */
 
 /* Prevent any scrolling on the entire page */
-html, body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden; /* disables scrolling */
-}
+
 
 /* Layout container */
 .admin-layout {

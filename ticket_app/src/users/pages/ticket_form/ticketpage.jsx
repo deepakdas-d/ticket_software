@@ -83,7 +83,7 @@ function TicketsPage() {
                 <span className={`status-badge status-${ticket.status.toLowerCase().replace(/\s+/g, '-')}`}>
                   {ticket.status}
                 </span>
-                <button className="view-btn" onClick={() => handleViewDetails(ticket.id)}>
+                <button className="view-btn" onClick={() => handleViewDetails(ticket.ticket_id)}>
                   View Details
                 </button>
               </div>

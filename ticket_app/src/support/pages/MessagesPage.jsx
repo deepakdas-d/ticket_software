@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Spinner, Alert, Form, Button } from "react-bootstrap";
 import { FaArrowLeft, FaPaperPlane } from "react-icons/fa";
@@ -8,9 +8,18 @@ import "../styles/MessagesPage.css";
 const MessagesPage = () => {
   const { ticket_id } = useParams();
   const navigate = useNavigate();
-  const { messages, loading, error, sendMessage } = useMessages(ticket_id);
+  const { messages, loading, error, sendMessage, refresh } =
+    useMessages(ticket_id);
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const chatBodyRef = useRef(null);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -41,6 +50,9 @@ const MessagesPage = () => {
         <Alert variant="danger">
           <strong>Error:</strong> {error}
         </Alert>
+        <Button onClick={refresh} variant="primary" className="mt-2">
+          Retry
+        </Button>
       </Container>
     );
   }
@@ -57,7 +69,7 @@ const MessagesPage = () => {
       </div>
 
       {/* Chat Body */}
-      <div className="chat-body">
+      <div className="chat-body" ref={chatBodyRef}>
         <div className="chat-inner">
           {messages.length === 0 ? (
             <div className="text-center text-muted mt-3">No messages yet.</div>
@@ -66,13 +78,11 @@ const MessagesPage = () => {
               <div
                 key={msg.id}
                 className={`chat-bubble ${
-                  msg.sender_role === "supporter" ? "sent" : "received"
+                  msg.sender_role === "supporter"
+                    ? "user-message" // LEFT (gray bubble)
+                    : "supporter-message" // RIGHT (blue bubble)
                 }`}
               >
-                <div className="chat-meta">
-                  <strong>{msg.sender_name}</strong>{" "}
-                  <small>{new Date(msg.created_at).toLocaleString()}</small>
-                </div>
                 <div className="chat-text">{msg.message}</div>
                 {msg.image && (
                   <img
@@ -91,20 +101,22 @@ const MessagesPage = () => {
       <Form className="message-input-container" onSubmit={handleSendMessage}>
         <Form.Group className="d-flex align-items-center">
           <Form.Control
-            type="text"
+            as="textarea"
+            rows={1}
             placeholder="Type a message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             disabled={sending}
             className="message-input"
+            style={{ resize: "none" }}
           />
           <Button
             variant="primary"
             type="submit"
             disabled={sending || !newMessage.trim()}
-            className="ms-2"
+            className="ms-2 send-button"
           >
-            <FaPaperPlane />
+            {sending ? <Spinner size="sm" /> : <FaPaperPlane />}
           </Button>
         </Form.Group>
       </Form>

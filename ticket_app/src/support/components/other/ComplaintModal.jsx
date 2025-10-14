@@ -147,7 +147,7 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
                     className="form-control-custom"
                   >
                     <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
+                    <option value="in_progress">In Progress</option>
                     <option value="Closed">Closed</option>
                   </Form.Select>
                 </Form.Group>

@@ -28,7 +28,7 @@ const ComplaintTable = () => {
   // Mapping for filter values
   const statusMap = {
     open: "open",
-    in_progress: "In Progress",
+    in_progress: "in_progress",
     closed: "Closed",
   };
 
@@ -74,7 +74,7 @@ const ComplaintTable = () => {
   const handleStatusUpdated = ({ complaint, successMessage }) => {
     // Update any complaint list state here if needed
     setAlertMessage(successMessage);
-
+ refresh();
     // Auto-hide alert after 3 seconds
     setTimeout(() => setAlertMessage(null), 3000);
   };
@@ -85,79 +85,83 @@ const ComplaintTable = () => {
     refresh();
   };
 
- const columns = [
-  { name: "ID", selector: (row) => row.ticket_id, sortable: true, minWidth: "80px" },
-  {
-    name: "Customer",
-    selector: (row) => row.customer_name,
-    sortable: true,
-    minWidth: "150px",
-  },
-  {
-    name: "Email",
-    selector: (row) => row.customer_email,
-    sortable: true,
-    minWidth: "200px",
-    wrap: true,
-  },
-  { name: "Phone", selector: (row) => row.customer_phone, minWidth: "120px" },
-  {
-    name: "Subject",
-    selector: (row) => row.subject,
-    sortable: true,
-    wrap: true,
-    minWidth: "200px",
-  },
-  {
-    name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
-    minWidth: "100px",
-    cell: (row) => (
-      <span
-        className={`status-badge status-${row.status
-          .toLowerCase()
-          .replace(" ", "-")}`}
-      >
-        {row.status}
-      </span>
-    ),
-  },
-  {
-    name: "Actions",
-    cell: (row) => (
-      <div className="action-buttons">
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={() => setSelectedComplaint(row)}
+  const columns = [
+    {
+      name: "ID",
+      selector: (row) => row.ticket_id,
+      sortable: true,
+      minWidth: "80px",
+    },
+    {
+      name: "Customer",
+      selector: (row) => row.customer_name,
+      sortable: true,
+      minWidth: "150px",
+    },
+    {
+      name: "Email",
+      selector: (row) => row.customer_email,
+      sortable: true,
+      minWidth: "200px",
+      wrap: true,
+    },
+    { name: "Phone", selector: (row) => row.customer_phone, minWidth: "120px" },
+    {
+      name: "Subject",
+      selector: (row) => row.subject,
+      sortable: true,
+      wrap: true,
+      minWidth: "200px",
+    },
+    {
+      name: "Status",
+      selector: (row) => row.status,
+      sortable: true,
+      minWidth: "100px",
+      cell: (row) => (
+        <span
+          className={`status-badge status-${row.status
+            .toLowerCase()
+            .replace(" ", "-")}`}
         >
-          View
-        </Button>
-        <Button
-          variant="warning"
-          size="sm"
-          onClick={() => {
-            setComplaintForReassign(row);
-            setShowReassign(true);
-          }}
-        >
-          Reassign
-        </Button>
-        <Button
-          variant="info"
-          size="sm"
-          onClick={() => navigate(`/messages/${row.ticket_id}`)}
-        >
-          Messages
-        </Button>
-      </div>
-    ),
-    minWidth: "230px",
-    right: true,
-  },
-];
-
+          {row.status}
+        </span>
+      ),
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <div className="action-buttons">
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => setSelectedComplaint(row)}
+          >
+            View
+          </Button>
+          <Button
+            variant="warning"
+            size="sm"
+            onClick={() => {
+              setComplaintForReassign(row);
+              setShowReassign(true);
+            }}
+          >
+            Reassign
+          </Button>
+          <Button
+            variant="info"
+            size="sm"
+            onClick={() => navigate(`/messages/${row.ticket_id}`)}
+          >
+            Messages
+          </Button>
+        </div>
+      ),
+      minWidth: "230px",
+      right: true,
+    },
+  ];
 
   if (error?.status === 403)
     return <PermissionDenied message={error.message || "Access denied."} />;
@@ -260,71 +264,71 @@ const ComplaintTable = () => {
             </Form>
           </div>
 
-    <div className="table-wrapper">
-  <div className="table-scroll-container">
-    <DataTable
-      columns={columns}
-      data={filteredComplaints}
-      progressPending={loading}
-      pagination
-      paginationPerPage={10}
-      paginationRowsPerPageOptions={[10, 20, 30, 50]}
-      highlightOnHover
-      striped
-      responsive
-      fixedHeader // ✅ Enable fixed header
-      fixedHeaderScrollHeight="calc(70vh - 120px)" // ✅ Set scroll height
-      customStyles={{
-        table: { 
-          style: { 
-            minWidth: "1100px",
-            marginBottom: 0 
-          } 
-        },
-        headRow: {
-          style: {
-            backgroundColor: "#1e3c72",
-            color: "#fff",
-            fontSize: "14px",
-            fontWeight: "600",
-            minHeight: "50px",
-            position: "sticky",
-            top: 0,
-            zIndex: 10,
-          },
-        },
-        headCells: {
-          style: {
-            backgroundColor: "#1e3c72",
-            color: "#fff",
-            fontWeight: "600",
-          },
-        },
-        rows: {
-          style: {
-            minHeight: "60px",
-            fontSize: "14px",
-            "&:nth-of-type(odd)": { backgroundColor: "#f9fbff" },
-            "&:hover": {
-              backgroundColor: "#e6f0ff",
-              cursor: "pointer",
-            },
-          },
-        },
-        cells: { 
-          style: { 
-            padding: "12px 10px",
-            whiteSpace: "normal",
-            wordBreak: "break-word"
-          } 
-        },
-      }}
-      noDataComponent={
-        <div className="no-data">No complaints found</div>
-      }
-    />
-  </div>
-</div>
+          <div className="table-wrapper">
+            <div className="table-scroll-container">
+              <DataTable
+                columns={columns}
+                data={filteredComplaints}
+                progressPending={loading}
+                pagination
+                paginationPerPage={10}
+                paginationRowsPerPageOptions={[10, 20, 30, 50]}
+                highlightOnHover
+                striped
+                responsive
+                fixedHeader // ✅ Enable fixed header
+                fixedHeaderScrollHeight="calc(70vh - 120px)" // ✅ Set scroll height
+                customStyles={{
+                  table: {
+                    style: {
+                      minWidth: "1100px",
+                      marginBottom: 0,
+                    },
+                  },
+                  headRow: {
+                    style: {
+                      backgroundColor: "#1e3c72",
+                      color: "#fff",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      minHeight: "50px",
+                      position: "sticky",
+                      top: 0,
+                      zIndex: 10,
+                    },
+                  },
+                  headCells: {
+                    style: {
+                      backgroundColor: "#1e3c72",
+                      color: "#fff",
+                      fontWeight: "600",
+                    },
+                  },
+                  rows: {
+                    style: {
+                      minHeight: "60px",
+                      fontSize: "14px",
+                      "&:nth-of-type(odd)": { backgroundColor: "#f9fbff" },
+                      "&:hover": {
+                        backgroundColor: "#e6f0ff",
+                        cursor: "pointer",
+                      },
+                    },
+                  },
+                  cells: {
+                    style: {
+                      padding: "12px 10px",
+                      whiteSpace: "normal",
+                      wordBreak: "break-word",
+                    },
+                  },
+                }}
+                noDataComponent={
+                  <div className="no-data">No complaints found</div>
+                }
+              />
+            </div>
+          </div>
           <ComplaintModal
             complaint={selectedComplaint}
             onHide={() => setSelectedComplaint(null)}

@@ -30,52 +30,49 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
+  background-color: #f8f9fa;
 }
 
 .chat-inner {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Chat bubbles */
 .chat-bubble {
-  max-width: 75%;
-  padding: 10px 14px;
+  max-width: 70%;
+  padding: 12px 16px;
   border-radius: 18px;
   word-wrap: break-word;
-  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.chat-bubble.sent {
-  align-self: flex-end;
-  background-color: #0d6efd;
-  color: white;
-  border-bottom-right-radius: 4px;
-}
-
-.chat-bubble.received {
-  align-self: flex-start;
+.chat-bubble.supporter-message {
+  align-self: flex-start; /* LEFT alignment for supporter messages */
   background-color: #e9ecef;
   color: #212529;
   border-bottom-left-radius: 4px;
 }
 
-/* Metadata */
-.chat-meta {
-  font-size: 0.8rem;
-  margin-bottom: 5px;
-  opacity: 0.8;
+.chat-bubble.user-message {
+  align-self: flex-end; /* RIGHT alignment for user messages */
+  background-color: #0d6efd;
+  color: white;
+  border-bottom-right-radius: 4px;
 }
 
 /* Text & Image */
 .chat-text {
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.4;
 }
 
 .chat-image {
-  max-width: 180px;
+  max-width: 200px;
   margin-top: 8px;
   border-radius: 10px;
   border: 1px solid #dee2e6;
@@ -84,13 +81,49 @@
 /* Message Input */
 .message-input-container {
   background-color: #fff;
-  padding: 10px 16px;
+  padding: 12px 16px;
   border-top: 1px solid #dee2e6;
   position: sticky;
   bottom: 0;
   z-index: 10;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .message-input {
-  border-radius: 20px;
+  border-radius: 25px;
+  border: 1px solid #dee2e6;
+  padding: 10px 16px;
+  resize: none;
+  overflow-y: auto;
+  max-height: 100px;
+
+}
+
+.send-button {
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    flex: 1; 
+}
+
+/* Scrollbar styling */
+.chat-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.chat-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
