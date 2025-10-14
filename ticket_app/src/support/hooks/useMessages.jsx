@@ -11,7 +11,6 @@ const useMessages = (ticket_id) => {
     setError(null);
     try {
       const data = await messageService.getMessages(ticket_id);
-      // Sort messages by created_at in ascending order (oldest first)
       const sortedMessages = data.sort((a, b) => 
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );
@@ -29,12 +28,9 @@ const useMessages = (ticket_id) => {
     }
   }, [ticket_id]);
 
-  // No polling - only refresh when explicitly called
-
-  const sendMessage = async (message) => {
+  const sendMessage = async (messageData) => {
     try {
-      await messageService.sendMessage(ticket_id, message);
-      // Refresh messages after successful send to get the actual message with correct data
+      await messageService.sendMessage(ticket_id, messageData);
       await fetchMessages();
     } catch (err) {
       setError(err.message || "Failed to send message");

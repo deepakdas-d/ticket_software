@@ -171,7 +171,7 @@ const handleSubmit = async (e) => {
             </h5>
             <button
               type="button"
-              className="btn-close"
+               className="btn-close btn-close-white"
               onClick={() => onClose(false)}
             ></button>
           </div>
@@ -304,7 +304,7 @@ const handleSubmit = async (e) => {
                           className="form-check-label"
                           htmlFor={`perm-${perm.id}`}
                         >
-                          {perm.name} ({perm.codename})
+                          {perm.name} 
                         </label>
                       </div>
                     ))}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
 import { fetchDesignations, getSupporterProfile } from "../../services/SupportServices";
 import { updateComplaintDesignation } from "../../services/SupportTicketService";
+import "./reassign-modal.css"; // ✅ Import the new CSS
 
 const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
   const [designations, setDesignations] = useState([]);
@@ -11,7 +12,7 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
   const [selectedDesignation, setSelectedDesignation] = useState("");
   const [hasReassignPermission, setHasReassignPermission] = useState(false);
 
-  // Fetch supporter profile and check permissions
+  // ✅ Fetch supporter profile and check permissions
   useEffect(() => {
     if (show) {
       const fetchPermissions = async () => {
@@ -26,12 +27,11 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
           setHasReassignPermission(false);
         }
       };
-
       fetchPermissions();
     }
   }, [show]);
 
-  // Fetch designations
+  // ✅ Fetch designations
   useEffect(() => {
     if (show) {
       setLoading(true);
@@ -49,14 +49,13 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
 
   const handleSave = async () => {
     if (!selectedDesignation || !hasReassignPermission) return;
-
     try {
       setSaving(true);
       const updated = await updateComplaintDesignation(
         complaint.id,
         selectedDesignation
       );
-      onReassigned(updated); // pass updated complaint back
+      onReassigned(updated);
       setSaving(false);
       onHide();
     } catch (err) {
@@ -66,8 +65,14 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered size="lg">
-      <Modal.Header closeButton>
+    <Modal
+      show={show}
+      onHide={onHide}
+      size="lg"
+      centered
+      className="reassign-modal" //  Apply CSS class
+    >
+      <Modal.Header closeButton >
         <Modal.Title>Reassign Complaint</Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -76,7 +81,6 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
             <Spinner animation="border" />
           </div>
         ) : error ? (
-          // Handle errors
           error.status === 403 ? (
             <Alert variant="warning" className="mt-3">
               You do not have permission to reassign this complaint.

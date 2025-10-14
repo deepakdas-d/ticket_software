@@ -156,7 +156,7 @@ const UsersPage = () => {
 
         {selectedUser && (
           <div className="modal">
-            <div className="modal-content theme-modal-header">
+            <div className="user-modal-content theme-modal-header">
               <button onClick={handleCloseModal} className="modal-close">Close</button>
               <h2 className="modal-title">User Details</h2>
               <p><strong>ID:</strong> {selectedUser.id}</p>

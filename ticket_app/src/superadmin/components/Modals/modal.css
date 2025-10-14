@@ -10,3 +10,9 @@
   margin-top: 6px;
   border: 1px solid #ffd8a8; /* subtle border */
 }
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: white!important;
+}

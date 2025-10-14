@@ -52,7 +52,7 @@
 .dashboard-main {
   flex: 1;
   margin-left: 250px; /* leave space for sidebar */
-  padding: 20px;
+  padding: 2px;
   transition: margin-left 0.3s ease-in-out;
 }
 

@@ -1,6 +1,12 @@
 /* Modal Container */
 .complaint-modal .modal-dialog {
-  max-width: 800px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  min-height: 100vh !important; /* vertically center */
+  width: 600px !important;      /* ✅ set your desired width */
+  max-width: 1200px !important;    /* responsive on small screens */
 }
 
 .complaint-modal .modal-content {
@@ -8,7 +14,7 @@
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   border: none;
-   width: 800px;
+   width: 1500px;
 }
 
 /* Modal Header */

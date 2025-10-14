@@ -350,7 +350,7 @@ setTicket(refreshed);
         {/* ---- Modal ---- */}
         {showUpdateModal && (
           <div className="modal-overlay">
-            <div className="modal-content">
+            <div className="ticket_details-modal-content">
               <h3>Add Description </h3>
               <textarea
                 value={newDescription}

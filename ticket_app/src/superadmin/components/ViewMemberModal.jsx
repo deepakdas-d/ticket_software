@@ -62,12 +62,16 @@ const ViewMemberModal = ({ show, member, onClose }) => {
         <div className="modal-content">
           {/* Header */}
           <div className="modal-header">
-            <h5 className="modal-title" id="viewMemberModalLabel">
+            <h5
+              className="modal-title"
+              id="viewMemberModalLabel"
+              style={{ color: "white" }}
+            >
               View Team Member
             </h5>
             <button
               type="button"
-              className="btn-close"
+              className="btn-close btn-close-white"
               onClick={onClose}
               aria-label="Close"
             ></button>
@@ -120,7 +124,11 @@ const ViewMemberModal = ({ show, member, onClose }) => {
 
           {/* Footer */}
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+            >
               Close
             </button>
           </div>

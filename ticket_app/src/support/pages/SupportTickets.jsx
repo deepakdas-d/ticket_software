@@ -3,7 +3,7 @@ import DataTable from "react-data-table-component";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import SupporterSidebar from "../components/SideBar/SupporterSidebar";
 import ComplaintModal from "../components/other/ComplaintModal";
-import ReassignModal from "../components/other/ReassignModal";
+import ReassignModal from "../components/Reassign_Modal/ReassignModal";
 import PermissionDenied from "../components/other/PermissionDenied";
 import { useComplaints } from "../hooks/useComplaints";
 import { useNavigate } from "react-router-dom";

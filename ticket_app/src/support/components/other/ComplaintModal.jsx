@@ -68,7 +68,7 @@ const ComplaintModal = ({ complaint, onHide, onStatusUpdated }) => {
   };
 
   return (
-    <Modal show={!!complaint} onHide={onHide} className="complaint-modal">
+    <Modal show={!!complaint} onHide={onHide} className="complaint-modal" >
       {/* Modal Header */}
       <Modal.Header closeButton className="complaint-modal-header">
         <Modal.Title>Complaint Details</Modal.Title>

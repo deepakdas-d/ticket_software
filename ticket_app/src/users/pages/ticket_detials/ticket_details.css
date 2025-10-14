@@ -479,7 +479,7 @@
   backdrop-filter: blur(4px);
 }
 
-.modal-content {
+.ticket_details-modal-content {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;

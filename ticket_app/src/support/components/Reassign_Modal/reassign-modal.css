@@ -1,0 +1,21 @@
+/* reassign-modal.css */
+
+/* Force the entire modal (dialog) to be centered on screen */
+.modal.reassign-modal .modal-dialog {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  min-height: 100vh; /* ensures vertical centering */
+}
+
+/* Optional: give modal content a clean, slightly elevated look */
+.modal.reassign-modal .modal-content {
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Optional: center the modal body content as well */
+.modal.reassign-modal .modal-body {
+  text-align: center;
+}
