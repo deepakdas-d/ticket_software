@@ -36,11 +36,26 @@ function TicketFormPage() {
 
     await createTicket(authToken, subject, description, file, designationId);
 
-    setSubject("");
-    setDescription("");
-    setFile(null);
-    setDesignationId("");[]
-    alert("Ticket submitted successfully!");
+    try {
+      await createTicket(authToken, subject, description, file, designationId);
+      setShowModal(true);
+      
+      // Reset form
+      setSubject("");
+      setDescription("");
+      setFile(null);
+      setDesignationId("");
+    } catch (error) {
+      console.error(error);
+      setError("Oops! Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate("/tickets");
   };
 
   return (

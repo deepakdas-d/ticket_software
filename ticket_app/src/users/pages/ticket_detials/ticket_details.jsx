@@ -192,6 +192,78 @@ function TicketDetailPage() {
             </div>
           )}
         </div>
+
+        {/* Updates */}
+        {ticket.description_updates?.length > 0 && (
+          <div className="ticket-section">
+            <h2>Updates</h2>
+            {ticket.description_updates.map((update, idx) => (
+              <div key={idx} className="update-item">
+                <p>{update.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Communications */}
+        {ticket.communications?.length > 0 && (
+          <div className="ticket-section">
+            <h2>Response</h2>
+            {ticket.communications.map((comm, idx) => (
+              <div key={idx} className="comm-item">
+                <div className="comm-header">
+                  <strong>{comm.sender}</strong> -{" "}
+                  {new Date(comm.created_at).toLocaleString()}
+                </div>
+                <div
+                  className="comm-content"
+                  dangerouslySetInnerHTML={{ __html: comm.email_content }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+       
+
+        {/* ---- Add Description or Image Button ---- */}
+       {ticket?.status?.toLowerCase() !== "closed" && (
+  <div className="ticket-section add-update-section">
+    <button
+      className="add-update-btn"
+      onClick={() => setShowUpdateModal(true)}
+    >
+      + Add More Description 
+    </button>
+  </div>
+)}
+
+
+
+        {/* ---- Modal ---- */}
+        {showUpdateModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>Add Description </h3>
+              <textarea
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+                placeholder="Enter your new description..."
+              />
+              {/* <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setNewImage(e.target.files[0])}
+              /> */}
+              <div className="modal-actions">
+                <button onClick={() => setShowUpdateModal(false)}>Cancel</button>
+                <button onClick={handleUpdateSubmit} disabled={updating}>
+                  {updating ? "Updating..." : "Submit"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
