@@ -343,7 +343,7 @@ const SupportTeam = () => {
 
         {confirmDelete.show && (
           <div className="modal fade show d-block" tabIndex="-1">
-            <div className="modal-dialog modal-sm">
+            <div className="modal-dialog modal-lg">
               <div className="modal-content shadow-lg rounded-3">
                 <div
                   className="modal-header"

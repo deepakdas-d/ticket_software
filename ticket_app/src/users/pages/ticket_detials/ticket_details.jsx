@@ -31,9 +31,8 @@ const [sendingMessage, setSendingMessage] = useState(false); // loader
 const handleSendMessage = async () => {
   try {
     setSendingMessage(true);
-    const newMsg = await sendTicketMessage(ticketId, newMessage, authToken);
+    const newMsg = await sendTicketMessage(ticketId, newMessage, newImage, authToken);
 
-    // Instant optimistic display
     const tempMsg = {
       ...newMsg,
       sender_role: "user",
@@ -41,8 +40,8 @@ const handleSendMessage = async () => {
     };
     setMessages((prev) => [tempMsg, ...prev]);
     setNewMessage("");
+    setNewImage(null);
 
-    // Then refresh from backend
     const refreshedMessages = await getTicketMessages(ticketId, authToken);
     setMessages(refreshedMessages);
   } catch (err) {
@@ -51,6 +50,7 @@ const handleSendMessage = async () => {
     setSendingMessage(false);
   }
 };
+
 
 
 
@@ -194,7 +194,7 @@ setTicket(refreshed);
           </div>
         </div>
 
-        {/* Supporter Remarks
+        {/* Supporter Remarks */}
         {ticket.remarks && (
           <div className="ticket-section supporter-remarks-section">
             <div className="remarks-header">
@@ -219,7 +219,7 @@ setTicket(refreshed);
               <p>{ticket.remarks}</p>
             </div>
           </div>
-        )} */}
+        )}
 
       
 
@@ -228,19 +228,40 @@ setTicket(refreshed);
   <div className="ticket-section reply-section">
     <h2>Reply</h2>
     <textarea
-      rows={3}
-      placeholder="Type your message..."
-      value={newMessage}
-      onChange={(e) => setNewMessage(e.target.value)}
-      className="reply-textarea"
+  rows={3}
+  placeholder="Type your message..."
+  value={newMessage}
+  onChange={(e) => setNewMessage(e.target.value)}
+  className="reply-textarea"
+/>
+
+{/* 🖼️ Image input */}
+<input
+  type="file"
+  accept="image/*"
+  onChange={(e) => setNewImage(e.target.files[0])}
+  className="image-input"
+/>
+
+{newImage && (
+  <div className="image-preview">
+    <img
+      src={URL.createObjectURL(newImage)}
+      alt="Preview"
+      className="preview-thumb"
     />
-    <button
-      onClick={handleSendMessage}
-      disabled={sendingMessage || !newMessage.trim()}
-      className="send-btn"
-    >
-      {sendingMessage ? "Sending..." : "Send"}
-    </button>
+    <button onClick={() => setNewImage(null)}>Remove</button>
+  </div>
+)}
+
+<button
+  onClick={handleSendMessage}
+  disabled={sendingMessage || (!newMessage.trim() && !newImage)}
+  className="send-btn"
+>
+  {sendingMessage ? "Sending..." : "Send"}
+</button>
+
   </div>
 )}
 
@@ -350,7 +371,7 @@ setTicket(refreshed);
         {/* ---- Modal ---- */}
         {showUpdateModal && (
           <div className="modal-overlay">
-            <div className="ticket_details-modal-content">
+            <div className="modal-content">
               <h3>Add Description </h3>
               <textarea
                 value={newDescription}

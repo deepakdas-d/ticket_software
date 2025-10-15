@@ -63,7 +63,7 @@ Dashboard container
 .dashboard-main {
   flex: 1;
   margin-left: 250px; /* leave space for sidebar */
-  padding: 2px;
+  padding: 20px;
   transition: margin-left 0.3s ease-in-out;
 }
 

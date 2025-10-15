@@ -21,7 +21,8 @@ export const useLogin = () => {
       if (data.access && data.refresh) {
         login(data.access, data.refresh);
       }
-      navigate("/profile");
+     navigate("/profile", { replace: true });
+
       return true;
     } catch (err) {
       setError(err.message);

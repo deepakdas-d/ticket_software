@@ -55,7 +55,7 @@
 
 .messages-chat-time {
   font-size: 0.75rem;
-  color: #080000;
+  color: #eddfdfa4;
   margin-top: 4px;
   text-align: right;
 }
@@ -90,7 +90,7 @@
 /* Supporter message (left) */
 .messages-supporter-message {
   align-self: flex-start;
-  background-color: #2a52983e; /* dark blue theme */
+  background-color: #374151; /* dark blue theme */
   color: #ffffff; /* white text for contrast */
   padding: 8px 12px;
   border-radius: 12px;
@@ -101,7 +101,7 @@
 /* User message (right) */
 .messages-user-message {
   align-self: flex-end;
-  background-color: #5a7fc7; /* lighter blue for user bubble */
+  background-color: #3b82f6; /* lighter blue for user bubble */
   color: #ffffff;
   border: 1px solid #486194; /* subtle border */
   padding: 8px 12px;

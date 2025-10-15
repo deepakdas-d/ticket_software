@@ -221,16 +221,25 @@ export const getTicketMessages = async (ticketId, authToken) => {
  * @param {string} authToken - User authentication token
  * @returns {Promise<Object>} - The saved message object
  */
-export const sendTicketMessage = async (ticketId, message, authToken) => {
-  if (!message.trim()) throw new Error("Message cannot be empty");
+export const sendTicketMessage = async (ticketId, message, imageFile, authToken) => {
+  if (!message.trim() && !imageFile) throw new Error("Please enter a message or attach an image");
+
+  const BASE_URL = import.meta.env.VITE_API_URL;
+
+  // Use FormData for text + file upload
+  const formData = new FormData();
+  formData.append("message", message);
+  if (imageFile) {
+    formData.append("image", imageFile);
+  }
 
   const res = await fetch(`${BASE_URL}/tickets/complaints/${ticketId}/messages/send/`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
+      // ❌ DON'T set Content-Type manually for FormData — browser will handle it
     },
-    body: JSON.stringify({ message }),
+    body: formData,
   });
 
   if (!res.ok) {
@@ -238,8 +247,6 @@ export const sendTicketMessage = async (ticketId, message, authToken) => {
     throw new Error(errText || "Failed to send message");
   }
 
-  return res.json(); // Returns the saved message object
+  return res.json();
 };
-
-
 

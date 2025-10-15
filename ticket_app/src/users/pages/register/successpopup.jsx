@@ -1,6 +1,6 @@
 // SuccessPopup.jsx
 import React from 'react';
-import './Success.css';
+import './success.css';
 
 function SuccessPopup({ message, onClose }) {
   return (

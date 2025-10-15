@@ -149,7 +149,7 @@ export const AdminAuthProvider = ({ children }) => {
       persistAuth(userObj, { access: json.access, refresh: json.refresh });
       setUser(userObj);
 
-      navigate("/admindashboard");
+      window.location.replace("/supportdashboard");
     } catch (err) {
       if (err.name === "TypeError") {
         throw new Error("Network error. Please check your connection.");

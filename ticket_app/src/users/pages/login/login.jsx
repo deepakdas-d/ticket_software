@@ -1,15 +1,24 @@
 
 
   // export default Login;
-  import { useState } from "react";
-  import { Link } from "react-router-dom";
+  import { useState,useEffect  } from "react";
+  import { Link ,useNavigate } from "react-router-dom";
   import { useLogin } from "../../hooks/authhooks";
+  import { useAuth } from "../../context/authcontext.jsx";
   import "./login.css";
 
-  function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const { handleLogin, loading, error } = useLogin();
+ function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { handleLogin, loading, error } = useLogin();
+  const { authToken } = useAuth();   // ✅ Access current login state
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authToken) {
+      navigate("/profile", { replace: true }); // redirect logged-in user
+    }
+  }, [authToken, navigate]);
 
     const clearForm = () => {
       setEmail("");
