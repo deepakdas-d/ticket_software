@@ -157,8 +157,7 @@ const MessagesPage = () => {
               : "messages-supporter-message"
           }`}
         >
-          {/* Sender name */}
-          <div className="messages-sender-name">{msg.sender_name}</div>
+         
 
           {/* Message text */}
           <div className="messages-chat-text">{msg.message}</div>

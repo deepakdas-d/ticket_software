@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
 import { fetchDesignations, getSupporterProfile } from "../../services/SupportServices";
 import { updateComplaintDesignation } from "../../services/SupportTicketService";
-import "./reassign-modal.css"; // ✅ Import the new CSS
+import "./reassign-modal.css"; 
 
 const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
   const [designations, setDesignations] = useState([]);
@@ -72,7 +72,8 @@ const ReassignModal = ({ complaint, show, onHide, onReassigned }) => {
       centered
       className="reassign-modal" //  Apply CSS class
     >
-      <Modal.Header closeButton >
+      <Modal.Header closeButton style={{  color: "white" }}
+ >
         <Modal.Title>Reassign Complaint</Modal.Title>
       </Modal.Header>
       <Modal.Body>

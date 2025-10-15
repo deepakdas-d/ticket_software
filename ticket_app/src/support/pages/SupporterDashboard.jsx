@@ -146,7 +146,7 @@ const SupporterDashboard = () => {
               </div>
 
               <div style={styles.statCard}>
-                <span style={styles.statLabel}>Resolved</span>
+                <span style={styles.statLabel}>Closed</span>
                 <span style={{ ...styles.statValue, color: "#10B981" }}>
                   {reports?.closed_complaints ?? 0}
                 </span>

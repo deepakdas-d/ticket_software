@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../components/sidebar/Sidebar";
 import Chart from "chart.js/auto";
 import "../style/Dashboard.css";
-import useTicketCounts from "../services/useTicketCounts"; //  using new service
+import useTicketCounts from "../services/useTicketCounts";
 import ErrorMessage from "../components/ErrorMessage";
 
 const Dashboard = () => {
@@ -13,7 +12,11 @@ const Dashboard = () => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
-  const { counts, loading: countsLoading, error: countsError } = useTicketCounts();
+  const {
+    counts,
+    loading: countsLoading,
+    error: countsError,
+  } = useTicketCounts();
 
   useEffect(() => {
     if (!isAuthLoading && !user) {
@@ -32,17 +35,21 @@ const Dashboard = () => {
 
       const ctx = chartRef.current.getContext("2d");
 
-      const openGradient = ctx.createLinearGradient(0, 0, 0, 400);
-      openGradient.addColorStop(0, "rgba(54, 162, 235, 0.8)");
-      openGradient.addColorStop(1, "rgba(54, 162, 235, 0.2)");
+      // Theme gradients with 135deg direction
+      const themeGradient = ctx.createLinearGradient(400, 0, 0, 400);
+      themeGradient.addColorStop(0, "rgba(30, 60, 114, 0.8)"); // #1e3c72
+      themeGradient.addColorStop(0.5, "rgba(42, 82, 152, 0.8)"); // #2a5298
+      themeGradient.addColorStop(1, "rgba(42, 82, 152, 0.2)");
 
-      const progressGradient = ctx.createLinearGradient(0, 0, 0, 400);
-      progressGradient.addColorStop(0, "rgba(255, 193, 7, 0.8)");
-      progressGradient.addColorStop(1, "rgba(255, 193, 7, 0.2)");
+      const progressGradient = ctx.createLinearGradient(400, 0, 0, 400);
+      progressGradient.addColorStop(0, "rgba(30, 60, 114, 0.9)");
+      progressGradient.addColorStop(0.5, "rgba(42, 82, 152, 0.9)");
+      progressGradient.addColorStop(1, "rgba(42, 82, 152, 0.3)");
 
-      const closedGradient = ctx.createLinearGradient(0, 0, 0, 400);
-      closedGradient.addColorStop(0, "rgba(40, 167, 69, 0.8)");
-      closedGradient.addColorStop(1, "rgba(40, 167, 69, 0.2)");
+      const closedGradient = ctx.createLinearGradient(400, 0, 0, 400);
+      closedGradient.addColorStop(0, "rgba(30, 60, 114, 0.7)");
+      closedGradient.addColorStop(0.5, "rgba(42, 82, 152, 0.7)");
+      closedGradient.addColorStop(1, "rgba(30, 60, 114, 0.1)");
 
       chartInstance.current = new Chart(chartRef.current, {
         type: "bar",
@@ -52,11 +59,15 @@ const Dashboard = () => {
             {
               label: "Number of Tickets",
               data: chartData.counts,
-              backgroundColor: [openGradient, progressGradient, closedGradient],
+              backgroundColor: [
+                themeGradient,
+                progressGradient,
+                closedGradient,
+              ],
               borderColor: [
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 193, 7, 1)",
-                "rgba(40, 167, 69, 1)",
+                "rgba(30, 60, 114, 1)", // #1e3c72
+                "rgba(42, 82, 152, 1)", // #2a5298
+                "rgba(30, 60, 114, 0.8)",
               ],
               borderWidth: 2,
               borderRadius: 8,
@@ -73,11 +84,7 @@ const Dashboard = () => {
             title: {
               display: true,
               text: "Ticket Status Distribution",
-              font: {
-                size: 18,
-                weight: "bold",
-                family: "'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
-              },
+              font: { size: 18, weight: "bold" },
               color: "#2c3e50",
               padding: 20,
             },
@@ -107,7 +114,9 @@ const Dashboard = () => {
                 title: (context) => `${context[0].label}`,
                 label: (context) => {
                   const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                  const percentage = ((context.parsed.y / total) * 100).toFixed(1);
+                  const percentage = ((context.parsed.y / total) * 100).toFixed(
+                    1
+                  );
                   return `Count: ${context.parsed.y} (${percentage}%)`;
                 },
               },
@@ -125,7 +134,10 @@ const Dashboard = () => {
               ticks: {
                 color: "#6c757d",
                 font: { size: 11 },
-                stepSize: Math.max(1, Math.ceil(Math.max(...chartData.counts) / 5)),
+                stepSize: Math.max(
+                  1,
+                  Math.ceil(Math.max(...chartData.counts) / 5)
+                ),
               },
               border: { color: "#e9ecef" },
             },
@@ -152,16 +164,20 @@ const Dashboard = () => {
   }
 
   if (countsError) {
-    return <ErrorMessage message={countsError} onRetry={() => window.location.reload()} />;
+    return (
+      <ErrorMessage
+        message={countsError}
+        onRetry={() => window.location.reload()}
+      />
+    );
   }
 
   if (!user) return null;
 
   return (
     <div className="d-flex vh-100">
-     
       <div className="main-content flex-grow-1 p-4">
-        {/* ✅ Cards Row */}
+        {/*  Cards Row */}
         <div className="row mb-4">
           <div className="col-md-4">
             <div className="card shadow-sm border-0">

@@ -51,12 +51,7 @@
   flex-direction: column;
 }
 
-.messages-sender-name {
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin-bottom: 4px;
-  color: #ffffff;
-}
+
 
 .messages-chat-time {
   font-size: 0.75rem;
@@ -95,9 +90,8 @@
 /* Supporter message (left) */
 .messages-supporter-message {
   align-self: flex-start;
-  background-color: #2a5298; /* dark blue theme */
+  background-color: #2a52983e; /* dark blue theme */
   color: #ffffff; /* white text for contrast */
-  border: 1px solid #1f3c73; /* slightly darker blue for border */
   padding: 8px 12px;
   border-radius: 12px;
   max-width: 70%;
